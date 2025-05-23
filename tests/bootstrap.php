@@ -6,12 +6,6 @@
  */
 
 /**
- * Banner iframe plugin
- *
- * @package Banner_Iframe
- */
-
-/**
  * PHPUnit bootstrap file
  */
 
@@ -22,9 +16,38 @@ if ( ! $_tests_dir ) {
 	$_tests_dir = rtrim( sys_get_temp_dir(), '/\\' ) . '/wordpress-tests-lib';
 }
 
-// Forward custom PHPUnit Polyfills autoloader file as required by WordPress.
+// Find the appropriate PHPUnit Polyfills path.
 if ( ! defined( 'WP_TESTS_PHPUNIT_POLYFILLS_PATH' ) ) {
-	define( 'WP_TESTS_PHPUNIT_POLYFILLS_PATH', dirname( __DIR__ ) . '/vendor/yoast/phpunit-polyfills/phpunitpolyfills-autoload.php' );
+	// Check standard composer installation path.
+	$composer_polyfills_path = dirname( __DIR__ ) . '/vendor/yoast/phpunit-polyfills/phpunitpolyfills-autoload.php';
+
+	if ( file_exists( $composer_polyfills_path ) ) {
+		define( 'WP_TESTS_PHPUNIT_POLYFILLS_PATH', $composer_polyfills_path );
+	} else {
+		// Try global vendor paths.
+		$global_paths = array(
+			dirname( dirname( __DIR__ ) ) . '/vendor/yoast/phpunit-polyfills/phpunitpolyfills-autoload.php',
+			'/vendor/yoast/phpunit-polyfills/phpunitpolyfills-autoload.php',
+		);
+
+		foreach ( $global_paths as $global_path ) {
+			if ( file_exists( $global_path ) ) {
+				define( 'WP_TESTS_PHPUNIT_POLYFILLS_PATH', $global_path );
+				break;
+			}
+		}
+
+		// If still not defined, just define it and let WP's error handling report the issue.
+		if ( ! defined( 'WP_TESTS_PHPUNIT_POLYFILLS_PATH' ) ) {
+			// Look for the polyfills package directory.
+			$composer_json = dirname( __DIR__ ) . '/composer.json';
+			if ( file_exists( $composer_json ) ) {
+				echo "PHPUnit Polyfills not found. Please run: composer require yoast/phpunit-polyfills --dev\n";
+			}
+
+			define( 'WP_TESTS_PHPUNIT_POLYFILLS_PATH', dirname( __DIR__ ) . '/vendor/yoast/phpunit-polyfills/phpunitpolyfills-autoload.php' );
+		}
+	}
 }
 
 // Give access to tests_add_filter() function.
