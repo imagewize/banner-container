@@ -1,0 +1,17 @@
+{
+  "name": "banner-iframe-plugin",
+  "version": "1.0.1",
+  "description": "A WordPress plugin to add banner iframes to different locations in your WordPress theme.",
+  "scripts": {
+    "build": "wp-scripts build",
+    "start": "wp-scripts start",
+    "lint:css": "wp-scripts lint-style",
+    "lint:js": "wp-scripts lint-js",
+    "test:js": "wp-scripts test-unit-js"
+  },
+  "author": "Your Name",
+  "license": "GPL-2.0-or-later",
+  "devDependencies": {
+    "@wordpress/scripts": "^26.5.0"
+  }
+}

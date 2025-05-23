@@ -1,0 +1,37 @@
+# Composer
+/vendor/
+composer.lock
+
+# phpcs
+.phpcs.xml
+phpcs.xml
+
+# Deployment
+/svn-deploy/
+
+# PHPUnit
+.phpunit.result.cache
+
+# WordPress
+*.log
+wp-config.php
+wp-content/advanced-cache.php
+wp-content/backup-*/
+wp-content/blogs.dir/
+wp-content/cache/
+wp-content/upgrade/
+wp-content/uploads/
+wp-content/wp-cache-config.php
+wp-content/plugins/hello.php
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# IDE and System Files
+.idea/
+.vscode/
+*.swp
+.DS_Store
+Thumbs.db
