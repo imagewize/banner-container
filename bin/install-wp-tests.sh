@@ -210,8 +210,18 @@ install_db() {
 		fi
 	fi
 
-	# create database
-	mysqladmin create $DB_NAME --user="$DB_USER" --password="$DB_PASS"$EXTRA
+	# Check if database exists
+	DB_EXISTS=$(mysql --user="$DB_USER" --password="$DB_PASS"$EXTRA -e "SHOW DATABASES LIKE '$DB_NAME'" | grep "$DB_NAME" > /dev/null; echo "$?")
+	
+	if [ "$DB_EXISTS" -eq 0 ]; then
+		echo "Database $DB_NAME already exists, skipping creation"
+		# Drop and recreate tables to ensure a clean test environment
+		echo "Dropping existing WordPress tables..."
+		mysql --user="$DB_USER" --password="$DB_PASS"$EXTRA -e "DROP DATABASE $DB_NAME; CREATE DATABASE $DB_NAME"
+	else
+		# create database
+		mysqladmin create $DB_NAME --user="$DB_USER" --password="$DB_PASS"$EXTRA
+	fi
 }
 
 install_wp
