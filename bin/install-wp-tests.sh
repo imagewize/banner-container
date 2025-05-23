@@ -25,6 +25,14 @@ download() {
     fi
 }
 
+# Make sure a directory exists before attempting to write to it
+ensure_dir_exists() {
+    local dir=$(dirname "$1")
+    if [ ! -d "$dir" ]; then
+        mkdir -p "$dir"
+    fi
+}
+
 # Function to check if SVN is installed
 has_svn() {
     if command -v svn >/dev/null 2>&1; then
@@ -81,26 +89,26 @@ download_svn_files() {
 }
 
 if [[ $WP_VERSION =~ ^[0-9]+\.[0-9]+\$ ]]; then
-	WP_TESTS_TAG="branches/$WP_VERSION"
+    WP_TESTS_TAG="branches/$WP_VERSION"
 elif [[ $WP_VERSION =~ ^[0-9]+\.[0-9]+\.[0-9]+\$ ]]; then
-	if [[ $WP_VERSION =~ [0-9]+\.[0-9]+\.[0] ]]; then
-		# version x.x.0 means the first release of the major version, so strip off the .0 and download version x.x
-		WP_TESTS_TAG="tags/${WP_VERSION%??}"
-	else
-		WP_TESTS_TAG="tags/$WP_VERSION"
-	fi
+    if [[ $WP_VERSION =~ [0-9]+\.[0-9]+\.[0] ]]; then
+        # version x.x.0 means the first release of the major version, so strip off the .0 and download version x.x
+        WP_TESTS_TAG="tags/${WP_VERSION%??}"
+    else
+        WP_TESTS_TAG="tags/$WP_VERSION"
+    fi
 elif [[ $WP_VERSION == 'nightly' || $WP_VERSION == 'trunk' ]]; then
-	WP_TESTS_TAG="trunk"
+    WP_TESTS_TAG="trunk"
 else
-	# http serves a single offer, whereas https serves multiple. we only want one
-	download http://api.wordpress.org/core/version-check/1.7/ /tmp/wp-latest.json
-	grep '[0-9]+\.[0-9]+(\.[0-9]+)?' /tmp/wp-latest.json
-	LATEST_VERSION=$(grep -o '"version":"[^"]*' /tmp/wp-latest.json | sed 's/"version":"//')
-	if [[ -z "$LATEST_VERSION" ]]; then
-		echo "Latest WordPress version could not be found"
-		exit 1
-	fi
-	WP_TESTS_TAG="tags/$LATEST_VERSION"
+    # http serves a single offer, whereas https serves multiple. we only want one
+    download http://api.wordpress.org/core/version-check/1.7/ /tmp/wp-latest.json
+    grep '[0-9]+\.[0-9]+(\.[0-9]+)?' /tmp/wp-latest.json || true
+    LATEST_VERSION=$(grep -o '"version":"[^"]*' /tmp/wp-latest.json | sed 's/"version":"//')
+    if [[ -z "$LATEST_VERSION" ]]; then
+        echo "Latest WordPress version could not be found"
+        exit 1
+    fi
+    WP_TESTS_TAG="tags/$LATEST_VERSION"
 fi
 
 set -ex
@@ -149,22 +157,55 @@ install_test_suite() {
 			svn co --quiet https://develop.svn.wordpress.org/${WP_TESTS_TAG}/tests/phpunit/data/ $WP_TESTS_DIR/data
 		else
 			echo "SVN not installed. Using alternative download method..."
-			# Use direct HTTP downloads instead of GitHub
-			download https://develop.svn.wordpress.org/${WP_TESTS_TAG}/tests/phpunit/includes/bootstrap.php $WP_TESTS_DIR/includes/bootstrap.php
-            download https://develop.svn.wordpress.org/${WP_TESTS_TAG}/tests/phpunit/includes/factory.php $WP_TESTS_DIR/includes/factory.php
-            download https://develop.svn.wordpress.org/${WP_TESTS_TAG}/tests/phpunit/includes/testcase.php $WP_TESTS_DIR/includes/testcase.php
-            download https://develop.svn.wordpress.org/${WP_TESTS_TAG}/tests/phpunit/includes/trac.php $WP_TESTS_DIR/includes/trac.php
-            download https://develop.svn.wordpress.org/${WP_TESTS_TAG}/tests/phpunit/includes/utils.php $WP_TESTS_DIR/includes/utils.php
-            download https://develop.svn.wordpress.org/${WP_TESTS_TAG}/tests/phpunit/includes/exceptions.php $WP_TESTS_DIR/includes/exceptions.php
-            download https://develop.svn.wordpress.org/${WP_TESTS_TAG}/tests/phpunit/includes/abstract-testcase.php $WP_TESTS_DIR/includes/abstract-testcase.php
-            
-            # Create data directory
-            mkdir -p $WP_TESTS_DIR/data
+			
+			# First create all required directories
+			mkdir -p $WP_TESTS_DIR/includes
+			mkdir -p $WP_TESTS_DIR/data
+			
+			# Array of common files to download
+			declare -a files=(
+				"bootstrap.php"
+				"factory.php"
+				"testcase.php"
+				"trac.php"
+				"utils.php"
+				"exceptions.php"
+				"abstract-testcase.php"
+				"mock-mailer.php"
+				"install.php"
+			)
+			
+			# Download each file with proper error handling
+			for file in "${files[@]}"; do
+				target_file="$WP_TESTS_DIR/includes/$file"
+				source_url="https://develop.svn.wordpress.org/${WP_TESTS_TAG}/tests/phpunit/includes/$file"
+				
+				echo "Downloading $file from $source_url"
+				download "$source_url" "$target_file"
+				
+				# Check if file was downloaded successfully
+				if [ ! -s "$target_file" ]; then
+					echo "Warning: Failed to download $file. Testing may be incomplete."
+					# Try to get it from trunk as fallback
+					echo "Trying from trunk instead..."
+					download "https://develop.svn.wordpress.org/trunk/tests/phpunit/includes/$file" "$target_file"
+				fi
+			done
+			
+			# Download a sample data file 
+			download "https://develop.svn.wordpress.org/${WP_TESTS_TAG}/tests/phpunit/data/plugins/hello.php" "$WP_TESTS_DIR/data/plugins/hello.php"
 		fi
 	fi
 
-	if [ ! -f wp-tests-config.php ]; then
-		download https://develop.svn.wordpress.org/${WP_TESTS_TAG}/wp-tests-config-sample.php "$WP_TESTS_DIR"/wp-tests-config.php
+	if [ ! -f "$WP_TESTS_DIR/wp-tests-config.php" ]; then
+		download https://develop.svn.wordpress.org/${WP_TESTS_TAG}/wp-tests-config-sample.php "$WP_TESTS_DIR/wp-tests-config.php"
+		
+		# Check if the config sample was successfully downloaded
+		if [ ! -s "$WP_TESTS_DIR/wp-tests-config.php" ]; then
+			echo "Failed to download wp-tests-config-sample.php. Trying from trunk..."
+			download https://develop.svn.wordpress.org/trunk/wp-tests-config-sample.php "$WP_TESTS_DIR/wp-tests-config.php"
+		fi
+		
 		# remove all forward slashes in the end
 		WP_CORE_DIR=$(echo $WP_CORE_DIR | sed "s:/\+$::")
 		sed $ioption "s:dirname( __FILE__ ) . '/src/':'$WP_CORE_DIR/':" "$WP_TESTS_DIR"/wp-tests-config.php
@@ -173,7 +214,6 @@ install_test_suite() {
 		sed $ioption "s/yourpasswordhere/$DB_PASS/" "$WP_TESTS_DIR"/wp-tests-config.php
 		sed $ioption "s|localhost|${DB_HOST}|" "$WP_TESTS_DIR"/wp-tests-config.php
 	fi
-
 }
 
 install_db() {
