@@ -25,6 +25,43 @@ download() {
     fi
 }
 
+has_svn() {
+    if command -v svn >/dev/null 2>&1; then
+        return 0
+    else
+        return 1
+    fi
+}
+
+download_wp_tests() {
+    local TESTS_URL="https://github.com/WordPress/wordpress-develop/archive/$WP_TESTS_TAG.zip"
+    local TEMP_DIR="$TMPDIR/wp-tests-temp"
+    
+    mkdir -p "$TEMP_DIR"
+    download "$TESTS_URL" "$TEMP_DIR/tests.zip"
+    
+    if command -v unzip >/dev/null 2>&1; then
+        unzip -q "$TEMP_DIR/tests.zip" -d "$TEMP_DIR"
+        
+        # Find the extracted directory name
+        local EXTRACT_DIR=$(ls "$TEMP_DIR" | grep "wordpress-develop-")
+        
+        # Create the includes and data directories if they don't exist
+        mkdir -p "$WP_TESTS_DIR/includes"
+        mkdir -p "$WP_TESTS_DIR/data"
+        
+        # Copy the necessary files
+        cp -rf "$TEMP_DIR/$EXTRACT_DIR/tests/phpunit/includes/"* "$WP_TESTS_DIR/includes/"
+        cp -rf "$TEMP_DIR/$EXTRACT_DIR/tests/phpunit/data/"* "$WP_TESTS_DIR/data/"
+        
+        # Clean up
+        rm -rf "$TEMP_DIR"
+    else
+        echo "Error: 'unzip' command not found. Please install unzip or svn to continue."
+        exit 1
+    fi
+}
+
 if [[ $WP_VERSION =~ ^[0-9]+\.[0-9]+\-(beta|RC)[0-9]+$ ]]; then
 	WP_BRANCH=${WP_VERSION%\-*}
 	WP_TESTS_TAG="branches/$WP_BRANCH"
@@ -107,8 +144,14 @@ install_test_suite() {
 	if [ ! -d $WP_TESTS_DIR ]; then
 		# set up testing suite
 		mkdir -p $WP_TESTS_DIR
-		svn co --quiet https://develop.svn.wordpress.org/${WP_TESTS_TAG}/tests/phpunit/includes/ $WP_TESTS_DIR/includes
-		svn co --quiet https://develop.svn.wordpress.org/${WP_TESTS_TAG}/tests/phpunit/data/ $WP_TESTS_DIR/data
+		
+		if has_svn; then
+			svn co --quiet https://develop.svn.wordpress.org/${WP_TESTS_TAG}/tests/phpunit/includes/ $WP_TESTS_DIR/includes
+			svn co --quiet https://develop.svn.wordpress.org/${WP_TESTS_TAG}/tests/phpunit/data/ $WP_TESTS_DIR/data
+		else
+			echo "SVN not found, using direct download instead..."
+			download_wp_tests
+		fi
 	fi
 
 	if [ ! -f wp-tests-config.php ]; then
