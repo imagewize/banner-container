@@ -3,7 +3,7 @@
  * Plugin Name: Banner Iframe Plugin
  * Plugin URI: https://yourwebsite.com/banner-iframe-plugin
  * Description: Add banner iframes to different locations in your WordPress theme.
- * Version: 1.0.0
+ * Version: 1.0.1
  * Author: Your Name
  * Author URI: https://yourwebsite.com
  * License: GPL-2.0+
@@ -16,7 +16,7 @@ if (!defined('WPINC')) {
 }
 
 // Define plugin constants
-define('BANNER_IFRAME_VERSION', '1.0.0');
+define('BANNER_IFRAME_VERSION', '1.0.1');
 define('BANNER_IFRAME_PATH', plugin_dir_path(__FILE__));
 define('BANNER_IFRAME_URL', plugin_dir_url(__FILE__));
 
@@ -33,11 +33,14 @@ add_action('admin_enqueue_scripts', 'banner_iframe_admin_styles');
 
 // Initialize the plugin
 function banner_iframe_init() {
+    // Initialize main plugin class
     $banner_iframe = new Banner_Iframe();
     $banner_iframe->init();
     
-    // Initialize welcome page
-    new Banner_Iframe_Welcome();
+    // Initialize welcome page (only needed for admin)
+    if (is_admin()) {
+        new Banner_Iframe_Welcome();
+    }
 }
 add_action('plugins_loaded', 'banner_iframe_init');
 

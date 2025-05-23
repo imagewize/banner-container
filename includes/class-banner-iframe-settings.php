@@ -49,6 +49,15 @@ class Banner_Iframe_Settings {
         // Allow theme/plugins to modify available locations
         $this->banner_locations = apply_filters('banner_iframe_locations', $this->banner_locations);
     }
+    
+    /**
+     * Get the banner locations
+     *
+     * @return array Banner locations
+     */
+    public function get_banner_locations() {
+        return $this->banner_locations;
+    }
 
     /**
      * Add admin menu page.
