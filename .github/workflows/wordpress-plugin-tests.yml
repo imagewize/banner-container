@@ -45,7 +45,17 @@ jobs:
           # Verify the setup by listing files in the test directory
           echo "Verifying test environment setup:"
           ls -la /tmp/wordpress-tests-lib/includes/
-          ls -la /tmp/wordpress-tests-lib/includes/phpunit6/
+      
+      - name: Verify PHPUnit adapter file
+        run: |
+          # Verify the phpunit-adapter-testcase.php file was created
+          if [ -f "/tmp/wordpress-tests-lib/includes/phpunit-adapter-testcase.php" ]; then
+            echo "PHPUnit adapter file exists!"
+            cat /tmp/wordpress-tests-lib/includes/phpunit-adapter-testcase.php
+          else
+            echo "PHPUnit adapter file is missing!"
+            exit 1
+          fi
       
       - name: Run tests
         run: |

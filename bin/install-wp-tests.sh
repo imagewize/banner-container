@@ -13,7 +13,7 @@ WP_VERSION=${5-latest}
 SKIP_DB_CREATE=${6-false}
 
 TMPDIR=${TMPDIR-/tmp}
-TMPDIR=$(echo $TMPDIR | sed -e "s/\/$//")
+TMPDIR=$(echo $TMPDIR | sed -e "s:/\+$::")
 WP_TESTS_DIR=${WP_TESTS_DIR-$TMPDIR/wordpress-tests-lib}
 WP_CORE_DIR=${WP_CORE_DIR-$TMPDIR/wordpress/}
 
@@ -238,6 +238,27 @@ require_once dirname( dirname( __FILE__ ) ) . '/testcase-xmlrpc.php';
 require_once dirname( dirname( __FILE__ ) ) . '/testcase-rest-api.php';
 require_once dirname( dirname( __FILE__ ) ) . '/testcase-rest-controller.php';
 require_once dirname( dirname( __FILE__ ) ) . '/testcase-rest-post-type-controller.php';
+EOF
+    fi
+
+    # Create phpunit-adapter-testcase.php file if it doesn't exist
+    if [ ! -f "$WP_TESTS_DIR/includes/phpunit-adapter-testcase.php" ]; then
+        echo "Creating phpunit-adapter-testcase.php file..."
+        cat > "$WP_TESTS_DIR/includes/phpunit-adapter-testcase.php" << 'EOF'
+<?php
+/**
+ * PHPUnit adapter to support newer PHPUnit versions with WordPress tests
+ */
+
+// Support PHPUnit 9.x
+if (class_exists('PHPUnit\Framework\TestCase') && !class_exists('PHPUnit_Framework_TestCase')) {
+    class PHPUnit_Framework_TestCase extends \PHPUnit\Framework\TestCase {}
+}
+
+// Support PHPUnit 8.x
+if (method_exists('\PHPUnit\Framework\TestCase', 'setUpBeforeClass') && !method_exists('\PHPUnit\Framework\TestCase', 'setupBeforeClass')) {
+    require_once dirname(__FILE__) . '/testcase.php';
+}
 EOF
     fi
 }
