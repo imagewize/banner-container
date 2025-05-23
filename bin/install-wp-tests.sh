@@ -88,6 +88,18 @@ download_svn_files() {
     rm -f "$TMP_LIST"
 }
 
+# Safely download a file ensuring its directory exists
+safe_download() {
+    local source=$1
+    local target=$2
+    
+    # Make sure the target directory exists
+    ensure_dir_exists "$target"
+    
+    # Download the file
+    download "$source" "$target"
+}
+
 if [[ $WP_VERSION =~ ^[0-9]+\.[0-9]+\$ ]]; then
     WP_TESTS_TAG="branches/$WP_VERSION"
 elif [[ $WP_VERSION =~ ^[0-9]+\.[0-9]+\.[0-9]+\$ ]]; then
@@ -109,6 +121,12 @@ else
         exit 1
     fi
     WP_TESTS_TAG="tags/$LATEST_VERSION"
+fi
+
+# Use the correct tag for WordPress 5.8
+if [[ $WP_VERSION == "5.8" ]]; then
+    # For WordPress 5.8, we need to use a specific tag
+    WP_TESTS_TAG="tags/5.8"
 fi
 
 set -ex
@@ -161,6 +179,7 @@ install_test_suite() {
 			# First create all required directories
 			mkdir -p $WP_TESTS_DIR/includes
 			mkdir -p $WP_TESTS_DIR/data
+			mkdir -p $WP_TESTS_DIR/data/plugins
 			
 			# Array of common files to download
 			declare -a files=(
@@ -181,29 +200,36 @@ install_test_suite() {
 				source_url="https://develop.svn.wordpress.org/${WP_TESTS_TAG}/tests/phpunit/includes/$file"
 				
 				echo "Downloading $file from $source_url"
-				download "$source_url" "$target_file"
+				safe_download "$source_url" "$target_file"
 				
 				# Check if file was downloaded successfully
 				if [ ! -s "$target_file" ]; then
 					echo "Warning: Failed to download $file. Testing may be incomplete."
 					# Try to get it from trunk as fallback
 					echo "Trying from trunk instead..."
-					download "https://develop.svn.wordpress.org/trunk/tests/phpunit/includes/$file" "$target_file"
+					safe_download "https://develop.svn.wordpress.org/trunk/tests/phpunit/includes/$file" "$target_file"
 				fi
 			done
 			
-			# Download a sample data file 
-			download "https://develop.svn.wordpress.org/${WP_TESTS_TAG}/tests/phpunit/data/plugins/hello.php" "$WP_TESTS_DIR/data/plugins/hello.php"
-		fi
-	fi
+			# Create the plugins directory and download a sample data file 
+			mkdir -p "$WP_TESTS_DIR/data/plugins"
+			safe_download "https://develop.svn.wordpress.org/${WP_TESTS_TAG}/tests/phpunit/data/plugins/hello.php" "$WP_TESTS_DIR/data/plugins/hello.php"
+			
+			# Check if file was downloaded successfully
+			if [ ! -s "$WP_TESTS_DIR/data/plugins/hello.php" ]; then
+				echo "Warning: Failed to download hello.php plugin. Trying from trunk..."
+				safe_download "https://develop.svn.wordpress.org/trunk/tests/phpunit/data/plugins/hello.php" "$WP_TESTS_DIR/data/plugins/hello.php"
+			fi
+        fi
+    fi
 
-	if [ ! -f "$WP_TESTS_DIR/wp-tests-config.php" ]; then
-		download https://develop.svn.wordpress.org/${WP_TESTS_TAG}/wp-tests-config-sample.php "$WP_TESTS_DIR/wp-tests-config.php"
+    if [ ! -f "$WP_TESTS_DIR/wp-tests-config.php" ]; then
+        safe_download "https://develop.svn.wordpress.org/${WP_TESTS_TAG}/wp-tests-config-sample.php" "$WP_TESTS_DIR/wp-tests-config.php"
 		
 		# Check if the config sample was successfully downloaded
 		if [ ! -s "$WP_TESTS_DIR/wp-tests-config.php" ]; then
 			echo "Failed to download wp-tests-config-sample.php. Trying from trunk..."
-			download https://develop.svn.wordpress.org/trunk/wp-tests-config-sample.php "$WP_TESTS_DIR/wp-tests-config.php"
+			safe_download "https://develop.svn.wordpress.org/trunk/wp-tests-config-sample.php" "$WP_TESTS_DIR/wp-tests-config.php"
 		fi
 		
 		# remove all forward slashes in the end
