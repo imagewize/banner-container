@@ -1,5 +1,11 @@
 <?php
 /**
+ * Banner iframe plugin
+ *
+ * @package Banner_Iframe
+ */
+
+/**
  * Deploy script for WordPress.org Plugin Directory
  *
  * Steps:
@@ -11,7 +17,7 @@
  * Note: You still need to manually commit to SVN
  */
 
-// Exit if run from CLI
+// Exit if run from CLI.
 if ( 'cli' !== php_sapi_name() ) {
 	die( 'This script can only be run from the command line.' );
 }
@@ -19,7 +25,7 @@ if ( 'cli' !== php_sapi_name() ) {
 echo "WordPress.org Plugin Directory Deployment Script\n";
 echo "----------------------------------------------\n\n";
 
-// Get plugin slug from user input
+// Get plugin slug from user input.
 echo 'Enter the WordPress.org plugin slug: ';
 $plugin_slug = trim( fgets( STDIN ) );
 
@@ -27,7 +33,7 @@ if ( empty( $plugin_slug ) ) {
 	die( "\nERROR: Plugin slug cannot be empty.\n" );
 }
 
-// Get plugin version
+// Get plugin version.
 echo 'Enter the version to deploy (e.g. 1.1.0): ';
 $plugin_version = trim( fgets( STDIN ) );
 
@@ -35,7 +41,47 @@ if ( empty( $plugin_version ) ) {
 	die( "\nERROR: Plugin version cannot be empty.\n" );
 }
 
-// Set paths
+/**
+ * Recursively remove a directory and its contents.
+ *
+ * @param string $dir Directory to remove.
+ * @return bool True on success, false on failure.
+ */
+function rrmdir( $dir ) {
+	global $wp_filesystem;
+
+	// Initialize the WordPress Filesystem.
+	if ( empty( $wp_filesystem ) ) {
+		require_once ABSPATH . '/wp-admin/includes/file.php';
+		WP_Filesystem();
+	}
+
+	if ( ! file_exists( $dir ) ) {
+		return true;
+	}
+
+	if ( ! is_dir( $dir ) ) {
+		return $wp_filesystem->delete( $dir );
+	}
+
+	$items = scandir( $dir );
+	if ( false === $items ) {
+		return false;
+	}
+
+	foreach ( $items as $item ) {
+		if ( '.' === $item || '..' === $item ) {
+			continue;
+		}
+		if ( ! rrmdir( $dir . DIRECTORY_SEPARATOR . $item ) ) {
+			return false;
+		}
+	}
+
+	return $wp_filesystem->rmdir( $dir );
+}
+
+// Set paths.
 $root_path    = __DIR__;
 $deploy_path  = $root_path . '/svn-deploy';
 $exclude_list = array(
@@ -58,26 +104,29 @@ $exclude_list = array(
 	'.DS_Store',
 );
 
-// Create clean directory for SVN
+// Create clean directory for SVN.
 if ( file_exists( $deploy_path ) ) {
 	echo "Removing existing SVN directory...\n";
-	system( "rm -rf $deploy_path" );
+	if ( ! rrmdir( $deploy_path ) ) {
+		die( esc_html( "ERROR: Could not remove existing directory $deploy_path\n" ) );
+	}
 }
 
 echo "Creating SVN directory...\n";
-mkdir( $deploy_path );
+// Replace mkdir() calls with wp_mkdir_p().
+wp_mkdir_p( $deploy_path );
 
 echo "Copying files to SVN directory...\n";
 foreach ( new RecursiveIteratorIterator( new RecursiveDirectoryIterator( $root_path ) ) as $filename ) {
-	// Skip directories
+	// Skip directories.
 	if ( $filename->isDir() ) {
 		continue;
 	}
 
-	// Get the relative path
+	// Get the relative path.
 	$relative_filename = str_replace( $root_path . '/', '', $filename );
 
-	// Skip files/directories in the exclude list
+	// Skip files/directories in the exclude list.
 	$skip = false;
 	foreach ( $exclude_list as $excluded ) {
 		if ( strpos( $relative_filename, $excluded ) === 0 ) {
@@ -90,13 +139,17 @@ foreach ( new RecursiveIteratorIterator( new RecursiveDirectoryIterator( $root_p
 		continue;
 	}
 
-	// Create directory if it doesn't exist
+	// Create directory if it doesn't exist.
 	$dest_dir = dirname( $deploy_path . '/' . $relative_filename );
 	if ( ! file_exists( $dest_dir ) ) {
-		mkdir( $dest_dir, 0755, true );
+		// Replace mkdir() with wp_mkdir_p().
+		if ( ! wp_mkdir_p( $dest_dir ) ) {
+			// Escaped the output string.
+			die( esc_html( "ERROR: Could not create directory $dest_dir\n" ) );
+		}
 	}
 
-	// Copy the file
+	// Copy the file.
 	copy( $filename, $deploy_path . '/' . $relative_filename );
 }
 
@@ -107,13 +160,13 @@ echo "\nDeployment preparation complete!\n";
 echo "The plugin files are now ready in the 'svn-deploy' directory.\n\n";
 echo "Next steps for SVN deployment:\n";
 echo "1. If this is your first time, check out the SVN repository:\n";
-echo "   svn co https://plugins.svn.wordpress.org/$plugin_slug svn\n";
+echo esc_html( "   svn co https://plugins.svn.wordpress.org/$plugin_slug svn\n" );
 echo "2. Copy the contents of 'svn-deploy' to 'svn/trunk/'\n";
 echo "3. Create a new tag:\n";
-echo "   svn cp svn/trunk svn/tags/$plugin_version\n";
+echo esc_html( "   svn cp svn/trunk svn/tags/$plugin_version\n" );
 echo "4. Commit the changes:\n";
 echo "   cd svn\n";
 echo "   svn stat\n";
-echo "   svn ci -m \"Release $plugin_version\"\n";
+echo esc_html( "   svn ci -m \"Release $plugin_version\"\n" );
 
 echo "\nDone!\n";

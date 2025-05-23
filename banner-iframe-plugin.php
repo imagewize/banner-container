@@ -1,5 +1,11 @@
 <?php
 /**
+ * Banner iframe plugin
+ *
+ * @package Banner_Iframe
+ */
+
+/**
  * Plugin Name: Banner Iframe Plugin
  * Plugin URI: https://yourwebsite.com/banner-iframe-plugin
  * Description: Add banner iframes to different locations in your WordPress theme.
@@ -15,38 +21,44 @@ if ( ! defined( 'WPINC' ) ) {
 	die;
 }
 
-// Define plugin constants
+// Define plugin constants.
 define( 'BANNER_IFRAME_VERSION', '1.1.0' );
 define( 'BANNER_IFRAME_PATH', plugin_dir_path( __FILE__ ) );
 define( 'BANNER_IFRAME_URL', plugin_dir_url( __FILE__ ) );
 
-// Include required files
+// Include required files.
 require_once BANNER_IFRAME_PATH . 'includes/class-banner-iframe-settings.php';
 require_once BANNER_IFRAME_PATH . 'includes/class-banner-iframe.php';
 require_once BANNER_IFRAME_PATH . 'includes/class-banner-iframe-welcome.php';
 
-// Enqueue admin styles
+/**
+ * Enqueue admin styles.
+ */
 function banner_iframe_admin_styles() {
 	wp_enqueue_style( 'banner-iframe-admin', BANNER_IFRAME_URL . 'admin/css/banner-iframe-admin.css', array(), BANNER_IFRAME_VERSION );
 }
 add_action( 'admin_enqueue_scripts', 'banner_iframe_admin_styles' );
 
-// Initialize the plugin
+/**
+ * Initialize the plugin.
+ */
 function banner_iframe_init() {
-	// Initialize main plugin class
+	// Initialize main plugin class.
 	$banner_iframe = new Banner_Iframe();
 	$banner_iframe->init();
 
-	// Initialize welcome page (only needed for admin)
+	// Initialize welcome page (only needed for admin).
 	if ( is_admin() ) {
 		new Banner_Iframe_Welcome();
 	}
 }
 add_action( 'plugins_loaded', 'banner_iframe_init' );
 
-// Plugin activation hook
+/**
+ * Plugin activation hook.
+ */
 function banner_iframe_activate() {
-	// Set transient for welcome page redirect
+	// Set transient for welcome page redirect.
 	set_transient( 'banner_iframe_activation_redirect', true, 30 );
 }
 register_activation_hook( __FILE__, 'banner_iframe_activate' );

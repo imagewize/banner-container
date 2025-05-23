@@ -1,10 +1,15 @@
 <?php
 /**
- * Banner Iframe Plugin - Welcome Page
+ * Banner iframe plugin
+ *
+ * @package Banner_Iframe
+ */
+
+/**
+ * The welcome page class for the plugin.
  *
  * @since      1.0.0
  */
-
 class Banner_Iframe_Welcome {
 
 	/**
@@ -22,8 +27,8 @@ class Banner_Iframe_Welcome {
 	public function add_welcome_page() {
 		add_submenu_page(
 			'banner-iframe-settings',
-			__( 'Welcome to Banner Iframe Plugin', 'banner-iframe-plugin' ),
-			__( 'Welcome', 'banner-iframe-plugin' ),
+			esc_html__( 'Welcome to Banner Iframe Plugin', 'banner-iframe-plugin' ),
+			esc_html__( 'Welcome', 'banner-iframe-plugin' ),
 			'manage_options',
 			'banner-iframe-welcome',
 			array( $this, 'display_welcome_page' )
@@ -44,9 +49,34 @@ class Banner_Iframe_Welcome {
 		if ( get_transient( 'banner_iframe_activation_redirect' ) ) {
 			delete_transient( 'banner_iframe_activation_redirect' );
 			if ( ! isset( $_GET['activate-multi'] ) ) {
-				wp_redirect( admin_url( 'admin.php?page=banner-iframe-welcome' ) );
+				// Add nonce check before redirecting.
+				if ( ! isset( $_GET['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_GET['_wpnonce'] ), 'banner_iframe_activation_redirect' ) ) {
+					wp_die( esc_html__( 'Security check failed. Please try again.', 'banner-iframe-plugin' ) );
+				}
+				wp_safe_redirect( admin_url( 'admin.php?page=banner-iframe-welcome' ) );
 				exit;
 			}
+		}
+	}
+
+	/**
+	 * Process the form submission
+	 */
+	public function process_form() {
+		// Check if form was submitted.
+		if ( isset( $_POST['banner_iframe_welcome_submit'] ) ) {
+			// Verify nonce for security.
+			if ( ! isset( $_POST['banner_iframe_welcome_nonce'] ) ||
+				! wp_verify_nonce( sanitize_key( $_POST['banner_iframe_welcome_nonce'] ), 'banner_iframe_welcome_action' ) ) {
+				wp_die( esc_html__( 'Security check failed. Please try again.', 'banner-iframe-plugin' ) );
+			}
+
+			// Process form data here.
+			update_option( 'banner_iframe_welcome_dismissed', true );
+
+			// Redirect to plugin settings page.
+			wp_safe_redirect( admin_url( 'admin.php?page=banner-iframe-settings' ) );
+			exit;
 		}
 	}
 
@@ -56,48 +86,47 @@ class Banner_Iframe_Welcome {
 	public function display_welcome_page() {
 		?>
 		<div class="wrap about-wrap banner-iframe-welcome-wrap">
-			<h1><?php _e( 'Welcome to Banner Iframe Plugin', 'banner-iframe-plugin' ); ?></h1>
+			<h1><?php esc_html_e( 'Welcome to Banner Iframe Plugin', 'banner-iframe-plugin' ); ?></h1>
 			
 			<div class="about-text">
-				<?php _e( 'Thank you for installing Banner Iframe Plugin! This plugin allows you to easily add banner iframes to different locations in your WordPress theme.', 'banner-iframe-plugin' ); ?>
+				<?php esc_html_e( 'Thank you for installing Banner Iframe Plugin! This plugin allows you to easily add banner iframes to different locations in your WordPress theme.', 'banner-iframe-plugin' ); ?>
 			</div>
 			
 			<div class="banner-iframe-notice">
-				<h4><?php _e( 'Plugin Information', 'banner-iframe-plugin' ); ?></h4>
+				<h4><?php esc_html_e( 'Plugin Information', 'banner-iframe-plugin' ); ?></h4>
 				<p>
 					<span class="dashicons dashicons-yes" style="color:green;"></span> 
-					<?php _e( 'Banner Iframe Plugin is ready to use!', 'banner-iframe-plugin' ); ?>
+					<?php esc_html_e( 'Banner Iframe Plugin is ready to use!', 'banner-iframe-plugin' ); ?>
 				</p>
 			</div>
 			
 			<div class="banner-iframe-section">
-				<h2><?php _e( 'Getting Started', 'banner-iframe-plugin' ); ?></h2>
-				<p><?php _e( 'To configure your banner iframes:', 'banner-iframe-plugin' ); ?></p>
-				<ol>
-					<li><?php _e( 'Go to the Banner Iframes settings page in your WordPress admin', 'banner-iframe-plugin' ); ?></li>
-					<li><?php _e( 'Enable the locations where you want to display banners', 'banner-iframe-plugin' ); ?></li>
-					<li><?php _e( 'Enter your iframe or banner HTML code for each location', 'banner-iframe-plugin' ); ?></li>
-					<li><?php _e( 'For content banners, choose placement options (top, bottom, or after a specific paragraph)', 'banner-iframe-plugin' ); ?></li>
-					<li><?php _e( 'Save your settings', 'banner-iframe-plugin' ); ?></li>
-				</ol>
-				
-				<p>
-					<a href="<?php echo admin_url( 'admin.php?page=banner-iframe-settings' ); ?>" class="button button-primary">
-						<?php _e( 'Configure Banner Iframe Settings', 'banner-iframe-plugin' ); ?>
-					</a>
-				</p>
-			</div>
-			
-			<div class="banner-iframe-section">
-				<h2><?php _e( 'Available Banner Locations', 'banner-iframe-plugin' ); ?></h2>
-				<ul style="list-style: disc; margin-left: 20px;">
-					<li><?php _e( 'Header (before &lt;/head&gt;)', 'banner-iframe-plugin' ); ?></li>
-					<li><?php _e( 'Footer (before &lt;/body&gt;)', 'banner-iframe-plugin' ); ?></li>
-					<li><?php _e( 'Within Content (with options for placement)', 'banner-iframe-plugin' ); ?></li>
-					<li><?php _e( 'Before Sidebar', 'banner-iframe-plugin' ); ?></li>
-					<li><?php _e( 'In Navigation Menu', 'banner-iframe-plugin' ); ?></li>
+				<h2><?php esc_html_e( 'Getting Started', 'banner-iframe-plugin' ); ?></h2>
+				<p><?php esc_html_e( 'To configure your banner iframes:', 'banner-iframe-plugin' ); ?></p>
+				<ul>
+					<li><?php esc_html_e( 'Enable the locations where you want to display banners', 'banner-iframe-plugin' ); ?></li>
+					<li><?php esc_html_e( 'Enter your iframe or banner HTML code for each location', 'banner-iframe-plugin' ); ?></li>
+					<li><?php esc_html_e( 'For content banners, choose placement options (top, bottom, or after a specific paragraph)', 'banner-iframe-plugin' ); ?></li>
+					<li><?php esc_html_e( 'Save your settings', 'banner-iframe-plugin' ); ?></li>
 				</ul>
 			</div>
+
+			<div class="banner-iframe-section">
+				<h2><?php esc_html_e( 'Available Banner Locations', 'banner-iframe-plugin' ); ?></h2>
+				<ul>
+					<li><?php esc_html_e( 'Header (before &lt;/head&gt;)', 'banner-iframe-plugin' ); ?></li>
+					<li><?php esc_html_e( 'Footer (before &lt;/body&gt;)', 'banner-iframe-plugin' ); ?></li>
+					<li><?php esc_html_e( 'Within Content (with options for placement)', 'banner-iframe-plugin' ); ?></li>
+					<li><?php esc_html_e( 'Before Sidebar', 'banner-iframe-plugin' ); ?></li>
+					<li><?php esc_html_e( 'In Navigation Menu', 'banner-iframe-plugin' ); ?></li>
+				</ul>
+			</div>
+
+			<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
+				<input type="hidden" name="action" value="banner_iframe_welcome_action">
+				<?php wp_nonce_field( 'banner_iframe_welcome_action', 'banner_iframe_welcome_nonce' ); ?>
+				<?php submit_button( esc_html__( 'Go to Settings', 'banner-iframe-plugin' ), 'primary large', 'banner_iframe_welcome_submit' ); ?>
+			</form>
 		</div>
 		<?php
 	}

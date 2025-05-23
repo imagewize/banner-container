@@ -1,5 +1,17 @@
 <?php
 /**
+ * Banner iframe plugin
+ *
+ * @package Banner_Iframe
+ */
+
+/**
+ * Banner iframe plugin
+ *
+ * @package Banner_Iframe
+ */
+
+/**
  * PHPUnit bootstrap file
  */
 
@@ -14,7 +26,7 @@ if ( ! $_tests_dir ) {
 	$_tests_dir = rtrim( sys_get_temp_dir(), '/\\' ) . '/wordpress-tests-lib';
 }
 
-// If the tests directory doesn't exist, try to create it
+// If the tests directory doesn't exist, try to create it.
 if ( ! file_exists( $_tests_dir . '/includes/functions.php' ) ) {
 	echo "Warning: The WordPress test environment is not set up correctly.\n";
 	echo "Please see https://make.wordpress.org/core/handbook/testing/automated-testing/phpunit/ for more information.\n";

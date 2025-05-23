@@ -23,7 +23,9 @@
     "scripts": {
         "phpcs": "phpcs --standard=WordPress --extensions=php --ignore=*/vendor/* .",
         "phpcbf": "phpcbf --standard=WordPress --extensions=php --ignore=*/vendor/* .",
-        "test": "phpunit"
+        "test": "phpunit",
+        "phpcs-fix": "php fix-wordpress-standards.php",
+        "phpcs-strict": "phpcs --standard=WordPress -s --extensions=php --ignore=*/vendor/* ."
     },
     "config": {
         "allow-plugins": {
