@@ -49,9 +49,9 @@ function _manually_load_plugin() {
  * @see tests_add_filter() This function is provided by WordPress testing framework
  */
 if ( function_exists( 'tests_add_filter' ) ) {
-    tests_add_filter( 'muplugins_loaded', '_manually_load_plugin' );
+	tests_add_filter( 'muplugins_loaded', '_manually_load_plugin' );
 } else {
-    echo "WARNING: WordPress testing functions not available. Make sure the test environment is set up correctly." . PHP_EOL;
+	echo 'WARNING: WordPress testing functions not available. Make sure the test environment is set up correctly.' . PHP_EOL;
 }
 
 // Start up the WP testing environment.
