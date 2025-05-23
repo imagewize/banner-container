@@ -26,6 +26,11 @@ if ( ! $_tests_dir ) {
 	$_tests_dir = rtrim( sys_get_temp_dir(), '/\\' ) . '/wordpress-tests-lib';
 }
 
+// Forward custom PHPUnit Polyfills autoloader file as required by WordPress.
+if ( ! defined( 'WP_TESTS_PHPUNIT_POLYFILLS_PATH' ) ) {
+	define( 'WP_TESTS_PHPUNIT_POLYFILLS_PATH', dirname( __DIR__ ) . '/vendor/yoast/phpunit-polyfills/phpunitpolyfills-autoload.php' );
+}
+
 // If the tests directory doesn't exist, try to create it.
 if ( ! file_exists( $_tests_dir . '/includes/functions.php' ) ) {
 	echo "Warning: The WordPress test environment is not set up correctly.\n";
