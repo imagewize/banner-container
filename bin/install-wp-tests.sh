@@ -42,45 +42,42 @@ download_svn_files() {
     # Create target directory if it doesn't exist
     mkdir -p "$TARGET_DIR"
     
-    # Create a temporary directory for downloaded files
-    local TMP_ZIP="$TMPDIR/svn-download-$RANDOM.zip"
+    echo "SVN not installed. Using alternative download method from SVN HTTP interface..."
     
-    # Convert SVN URL to HTTP archive URL
-    # Format: https://github.com/WordPress/wordpress-develop/archive/refs/tags/[VERSION].zip
-    # or: https://github.com/WordPress/wordpress-develop/archive/[BRANCH].zip
+    # Strip trailing slashes from SVN URL
+    SVN_URL=$(echo $SVN_URL | sed 's/\/$//')
     
-    if [[ $SVN_URL == *"/tags/"* ]]; then
-        local VERSION=$(echo $SVN_URL | sed -n 's/.*\/tags\/\([^\/]*\)\/.*/\1/p')
-        local ARCHIVE_URL="https://github.com/WordPress/wordpress-develop/archive/refs/tags/$VERSION.zip"
-    elif [[ $SVN_URL == *"/trunk/"* ]]; then
-        local ARCHIVE_URL="https://github.com/WordPress/wordpress-develop/archive/refs/heads/trunk.zip"
-    elif [[ $SVN_URL == *"/branches/"* ]]; then
-        local BRANCH=$(echo $SVN_URL | sed -n 's/.*\/branches\/\([^\/]*\)\/.*/\1/p')
-        local ARCHIVE_URL="https://github.com/WordPress/wordpress-develop/archive/refs/heads/$BRANCH.zip"
-    fi
+    # Create a temporary file for the directory listing
+    local TMP_LIST="$TMPDIR/svn-listing-$RANDOM.txt"
     
-    echo "SVN not found. Downloading from GitHub instead: $ARCHIVE_URL"
+    # Download the directory listing
+    download "$SVN_URL/" "$TMP_LIST"
     
-    # Download the ZIP file
-    download "$ARCHIVE_URL" "$TMP_ZIP"
-    
-    # Unzip the archive
-    if command -v unzip >/dev/null 2>&1; then
-        # Extract only the needed directories from the archive
-        if [[ $SVN_URL == *"/tests/phpunit/includes/"* ]]; then
-            mkdir -p "$TARGET_DIR"
-            unzip -q -j "$TMP_ZIP" "wordpress-develop-*/tests/phpunit/includes/*" -d "$TARGET_DIR"
-        elif [[ $SVN_URL == *"/tests/phpunit/data/"* ]]; then
-            mkdir -p "$TARGET_DIR"
-            unzip -q -j "$TMP_ZIP" "wordpress-develop-*/tests/phpunit/data/*" -d "$TARGET_DIR"
-        fi
+    # Parse the HTML to extract file names (basic approach)
+    if [ -s "$TMP_LIST" ]; then
+        # Extract hrefs from the HTML that aren't parent directory links
+        grep -o 'href="[^"]*"' "$TMP_LIST" | grep -v '\.\.' | sed 's/href="//' | sed 's/"//' | while read -r file; do
+            # Skip if it's a directory (ends with /)
+            if [[ $file == */ ]]; then
+                # Recursive call for subdirectories
+                download_svn_files "$SVN_URL/$file" "$TARGET_DIR/$(basename "$file")"
+            else
+                # Download individual file
+                echo "Downloading $file"
+                download "$SVN_URL/$file" "$TARGET_DIR/$file"
+            fi
+        done
     else
-        echo "Error: unzip command not found. Please install unzip or SVN to continue."
-        exit 1
+        echo "Failed to get file listing from $SVN_URL"
+        
+        # Fallback: Try to download wp-tests-config-sample.php directly
+        if [[ $SVN_URL == *"/wp-tests-config-sample.php"* ]]; then
+            download "$SVN_URL" "$TARGET_DIR/$(basename "$SVN_URL")"
+        fi
     fi
     
     # Clean up
-    rm -f "$TMP_ZIP"
+    rm -f "$TMP_LIST"
 }
 
 if [[ $WP_VERSION =~ ^[0-9]+\.[0-9]+\$ ]]; then
@@ -152,8 +149,17 @@ install_test_suite() {
 			svn co --quiet https://develop.svn.wordpress.org/${WP_TESTS_TAG}/tests/phpunit/data/ $WP_TESTS_DIR/data
 		else
 			echo "SVN not installed. Using alternative download method..."
-			download_svn_files "https://develop.svn.wordpress.org/${WP_TESTS_TAG}/tests/phpunit/includes/" "$WP_TESTS_DIR/includes"
-			download_svn_files "https://develop.svn.wordpress.org/${WP_TESTS_TAG}/tests/phpunit/data/" "$WP_TESTS_DIR/data"
+			# Use direct HTTP downloads instead of GitHub
+			download https://develop.svn.wordpress.org/${WP_TESTS_TAG}/tests/phpunit/includes/bootstrap.php $WP_TESTS_DIR/includes/bootstrap.php
+            download https://develop.svn.wordpress.org/${WP_TESTS_TAG}/tests/phpunit/includes/factory.php $WP_TESTS_DIR/includes/factory.php
+            download https://develop.svn.wordpress.org/${WP_TESTS_TAG}/tests/phpunit/includes/testcase.php $WP_TESTS_DIR/includes/testcase.php
+            download https://develop.svn.wordpress.org/${WP_TESTS_TAG}/tests/phpunit/includes/trac.php $WP_TESTS_DIR/includes/trac.php
+            download https://develop.svn.wordpress.org/${WP_TESTS_TAG}/tests/phpunit/includes/utils.php $WP_TESTS_DIR/includes/utils.php
+            download https://develop.svn.wordpress.org/${WP_TESTS_TAG}/tests/phpunit/includes/exceptions.php $WP_TESTS_DIR/includes/exceptions.php
+            download https://develop.svn.wordpress.org/${WP_TESTS_TAG}/tests/phpunit/includes/abstract-testcase.php $WP_TESTS_DIR/includes/abstract-testcase.php
+            
+            # Create data directory
+            mkdir -p $WP_TESTS_DIR/data
 		fi
 	fi
 
