@@ -34,35 +34,57 @@ has_svn() {
 }
 
 download_wp_tests() {
-    local TESTS_URL="https://github.com/WordPress/wordpress-develop/archive/$WP_TESTS_TAG.zip"
-    local TEMP_DIR="$TMPDIR/wp-tests-temp"
+    # Instead of using GitHub, download directly from WordPress SVN over HTTP
+    echo "Downloading WordPress test suite files..."
     
-    mkdir -p "$TEMP_DIR"
-    download "$TESTS_URL" "$TEMP_DIR/tests.zip"
+    # Create directories
+    mkdir -p "$WP_TESTS_DIR/includes"
+    mkdir -p "$WP_TESTS_DIR/data"
     
-    if command -v unzip >/dev/null 2>&1; then
-        unzip -q "$TEMP_DIR/tests.zip" -d "$TEMP_DIR"
-        
-        # Find the extracted directory name
-        local EXTRACT_DIR=$(ls "$TEMP_DIR" | grep "wordpress-develop-")
-        
-        # Create the includes and data directories if they don't exist
-        mkdir -p "$WP_TESTS_DIR/includes"
-        mkdir -p "$WP_TESTS_DIR/data"
-        
-        # Copy the necessary files
-        cp -rf "$TEMP_DIR/$EXTRACT_DIR/tests/phpunit/includes/"* "$WP_TESTS_DIR/includes/"
-        cp -rf "$TEMP_DIR/$EXTRACT_DIR/tests/phpunit/data/"* "$WP_TESTS_DIR/data/"
-        
-        # Clean up
-        rm -rf "$TEMP_DIR"
-    else
-        echo "Error: 'unzip' command not found. Please install unzip or svn to continue."
-        exit 1
+    # Convert SVN path format to HTTP URL format
+    local SVN_BASE_URL="https://develop.svn.wordpress.org"
+    local HTTP_PATH=""
+    
+    if [[ $WP_TESTS_TAG == trunk ]]; then
+        HTTP_PATH="$SVN_BASE_URL/trunk"
+    elif [[ $WP_TESTS_TAG == branches/* ]]; then
+        # Replace 'branches/' with 'branches/'
+        HTTP_PATH="$SVN_BASE_URL/$WP_TESTS_TAG"
+    elif [[ $WP_TESTS_TAG == tags/* ]]; then
+        # Replace 'tags/' with 'tags/'
+        HTTP_PATH="$SVN_BASE_URL/$WP_TESTS_TAG"
     fi
+    
+    # Download includes directory files one by one
+    echo "Downloading test includes files..."
+    download "$HTTP_PATH/tests/phpunit/includes/bootstrap.php" "$WP_TESTS_DIR/includes/bootstrap.php"
+    download "$HTTP_PATH/tests/phpunit/includes/factory.php" "$WP_TESTS_DIR/includes/factory.php"
+    download "$HTTP_PATH/tests/phpunit/includes/functions.php" "$WP_TESTS_DIR/includes/functions.php"
+    download "$HTTP_PATH/tests/phpunit/includes/mock-fs.php" "$WP_TESTS_DIR/includes/mock-fs.php"
+    download "$HTTP_PATH/tests/phpunit/includes/mock-image-editor.php" "$WP_TESTS_DIR/includes/mock-image-editor.php"
+    download "$HTTP_PATH/tests/phpunit/includes/mock-mailer.php" "$WP_TESTS_DIR/includes/mock-mailer.php"
+    download "$HTTP_PATH/tests/phpunit/includes/testcase.php" "$WP_TESTS_DIR/includes/testcase.php"
+    download "$HTTP_PATH/tests/phpunit/includes/testcase-canonical.php" "$WP_TESTS_DIR/includes/testcase-canonical.php"
+    download "$HTTP_PATH/tests/phpunit/includes/testcase-rest-api.php" "$WP_TESTS_DIR/includes/testcase-rest-api.php"
+    download "$HTTP_PATH/tests/phpunit/includes/testcase-rest-controller.php" "$WP_TESTS_DIR/includes/testcase-rest-controller.php"
+    download "$HTTP_PATH/tests/phpunit/includes/testcase-rest-post-type-controller.php" "$WP_TESTS_DIR/includes/testcase-rest-post-type-controller.php"
+    download "$HTTP_PATH/tests/phpunit/includes/testcase-xmlrpc.php" "$WP_TESTS_DIR/includes/testcase-xmlrpc.php"
+    
+    # Download basic data files
+    echo "Downloading test data files..."
+    download "$HTTP_PATH/tests/phpunit/data/plugins/hello.php" "$WP_TESTS_DIR/data/plugins/hello.php"
+    
+    # Ensure plugins directory exists
+    mkdir -p "$WP_TESTS_DIR/data/plugins"
+    
+    # Create empty index.php files to match WordPress structure
+    echo "<?php\n// Silence is golden." > "$WP_TESTS_DIR/data/index.php"
+    echo "<?php\n// Silence is golden." > "$WP_TESTS_DIR/data/plugins/index.php"
+    
+    echo "WordPress test suite downloaded successfully via HTTP."
 }
 
-if [[ $WP_VERSION =~ ^[0-9]+\.[0-9]+\-(beta|RC)[0-9]+$ ]]; then
+if [[ $WP_VERSION =~ ^[0-9]+\.[0-9]+\- ]]; then
 	WP_BRANCH=${WP_VERSION%\-*}
 	WP_TESTS_TAG="branches/$WP_BRANCH"
 
