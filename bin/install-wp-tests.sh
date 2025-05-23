@@ -39,7 +39,7 @@ download_wp_tests() {
     
     # Create directories
     mkdir -p "$WP_TESTS_DIR/includes"
-    mkdir -p "$WP_TESTS_DIR/data"
+    mkdir -p "$WP_TESTS_DIR/data/plugins"
     
     # Convert SVN path format to HTTP URL format
     local SVN_BASE_URL="https://develop.svn.wordpress.org"
@@ -74,12 +74,11 @@ download_wp_tests() {
     echo "Downloading test data files..."
     download "$HTTP_PATH/tests/phpunit/data/plugins/hello.php" "$WP_TESTS_DIR/data/plugins/hello.php"
     
-    # Ensure plugins directory exists
-    mkdir -p "$WP_TESTS_DIR/data/plugins"
-    
     # Create empty index.php files to match WordPress structure
-    echo "<?php\n// Silence is golden." > "$WP_TESTS_DIR/data/index.php"
-    echo "<?php\n// Silence is golden." > "$WP_TESTS_DIR/data/plugins/index.php"
+    echo "<?php
+// Silence is golden." > "$WP_TESTS_DIR/data/index.php"
+    echo "<?php
+// Silence is golden." > "$WP_TESTS_DIR/data/plugins/index.php"
     
     echo "WordPress test suite downloaded successfully via HTTP."
 }
