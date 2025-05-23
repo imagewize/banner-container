@@ -264,8 +264,27 @@ install_db() {
 		fi
 	fi
 
-	# create database
-	mysqladmin create $DB_NAME --user="$DB_USER" --password="$DB_PASS"$EXTRA
+	# Check if the database already exists
+	echo "Checking if database exists..."
+	mysql --user="$DB_USER" --password="$DB_PASS"$EXTRA -e "USE $DB_NAME;" 2>/dev/null
+	
+	if [ $? -eq 0 ]; then
+		echo "Database $DB_NAME already exists. Skipping database creation."
+	else
+		# create database
+		echo "Creating database $DB_NAME..."
+		mysqladmin create $DB_NAME --user="$DB_USER" --password="$DB_PASS"$EXTRA || {
+			echo "Could not create database $DB_NAME. Checking if it already exists..."
+			mysql --user="$DB_USER" --password="$DB_PASS"$EXTRA -e "USE $DB_NAME;" 2>/dev/null
+			
+			if [ $? -eq 0 ]; then
+				echo "Database $DB_NAME exists after all. Continuing..."
+			else
+				echo "Error: Could not create or find database $DB_NAME. Please create it manually."
+				exit 1
+			fi
+		}
+	fi
 }
 
 install_wp
