@@ -7,6 +7,9 @@
 
 /**
  * PHPUnit bootstrap file
+ *
+ * @phpcs:disable WordPress.WP.AlternativeFunctions.file_system_operations_mkdir
+ * @phpcs:disable WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents
  */
 
 // Path to the WordPress test environment.
