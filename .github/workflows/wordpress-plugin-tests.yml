@@ -45,6 +45,7 @@ jobs:
           # Verify the setup by listing files in the test directory
           echo "Verifying test environment setup:"
           ls -la /tmp/wordpress-tests-lib/includes/
+          ls -la /tmp/wordpress-tests-lib/includes/phpunit6/
       
       - name: Run tests
         run: |

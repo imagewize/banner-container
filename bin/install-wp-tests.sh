@@ -39,6 +39,8 @@ download_wp_tests() {
     
     # Create directories
     mkdir -p "$WP_TESTS_DIR/includes"
+    mkdir -p "$WP_TESTS_DIR/includes/phpunit6"
+    mkdir -p "$WP_TESTS_DIR/includes/phpunit7"
     mkdir -p "$WP_TESTS_DIR/data/plugins"
     
     # Convert SVN path format to HTTP URL format
@@ -72,6 +74,10 @@ download_wp_tests() {
     download "$HTTP_PATH/tests/phpunit/includes/testcase-rest-post-type-controller.php" "$WP_TESTS_DIR/includes/testcase-rest-post-type-controller.php"
     download "$HTTP_PATH/tests/phpunit/includes/testcase-xmlrpc.php" "$WP_TESTS_DIR/includes/testcase-xmlrpc.php"
     download "$HTTP_PATH/tests/phpunit/includes/install.php" "$WP_TESTS_DIR/includes/install.php"
+    
+    # PHPUnit compatibility files
+    download "$HTTP_PATH/tests/phpunit/includes/phpunit6/compat.php" "$WP_TESTS_DIR/includes/phpunit6/compat.php"
+    download "$HTTP_PATH/tests/phpunit/includes/phpunit7/compat.php" "$WP_TESTS_DIR/includes/phpunit7/compat.php"
     
     # Additional required files
     download "$HTTP_PATH/tests/phpunit/includes/class-basic-object.php" "$WP_TESTS_DIR/includes/class-basic-object.php"
@@ -201,6 +207,39 @@ install_test_suite() {
 		sed $ioption "s|localhost|${DB_HOST}|" "$WP_TESTS_DIR"/wp-tests-config.php
 	fi
 
+    # After setting up the test suite, verify that required PHPUnit compatibility files exist
+    # If not, attempt to create them
+    if [ ! -f "$WP_TESTS_DIR/includes/phpunit6/compat.php" ]; then
+        echo "PHPUnit 6 compatibility file missing, creating..."
+        mkdir -p "$WP_TESTS_DIR/includes/phpunit6"
+        cat > "$WP_TESTS_DIR/includes/phpunit6/compat.php" << 'EOF'
+<?php
+// PHPUnit 6 compatibility file
+// This is a simplified version for testing purposes
+
+require_once dirname( dirname( __FILE__ ) ) . '/testcase.php';
+require_once dirname( dirname( __FILE__ ) ) . '/testcase-xmlrpc.php';
+require_once dirname( dirname( __FILE__ ) ) . '/testcase-rest-api.php';
+require_once dirname( dirname( __FILE__ ) ) . '/testcase-rest-controller.php';
+require_once dirname( dirname( __FILE__ ) ) . '/testcase-rest-post-type-controller.php';
+EOF
+    fi
+
+    if [ ! -f "$WP_TESTS_DIR/includes/phpunit7/compat.php" ]; then
+        echo "PHPUnit 7 compatibility file missing, creating..."
+        mkdir -p "$WP_TESTS_DIR/includes/phpunit7"
+        cat > "$WP_TESTS_DIR/includes/phpunit7/compat.php" << 'EOF'
+<?php
+// PHPUnit 7 compatibility file
+// This is a simplified version for testing purposes
+
+require_once dirname( dirname( __FILE__ ) ) . '/testcase.php';
+require_once dirname( dirname( __FILE__ ) ) . '/testcase-xmlrpc.php';
+require_once dirname( dirname( __FILE__ ) ) . '/testcase-rest-api.php';
+require_once dirname( dirname( __FILE__ ) ) . '/testcase-rest-controller.php';
+require_once dirname( dirname( __FILE__ ) ) . '/testcase-rest-post-type-controller.php';
+EOF
+    fi
 }
 
 install_db() {

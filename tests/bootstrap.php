@@ -16,6 +16,35 @@ if ( ! $_tests_dir ) {
 	$_tests_dir = rtrim( sys_get_temp_dir(), '/\\' ) . '/wordpress-tests-lib';
 }
 
+// Make sure the phpunit6 directory exists.
+if ( ! is_dir( $_tests_dir . '/includes/phpunit6' ) ) {
+	// Using mkdir directly in the bootstrap as WP_Filesystem is not available yet.
+	// This is for testing environment setup only.
+	@mkdir( $_tests_dir . '/includes/phpunit6', 0777, true );
+}
+
+// Create phpunit6 compatibility file if it doesn't exist.
+if ( ! file_exists( $_tests_dir . '/includes/phpunit6/compat.php' ) ) {
+	// Using file_put_contents directly as WP_Filesystem is not available in the bootstrap.
+	// This is for testing environment setup only.
+	@file_put_contents(
+		$_tests_dir . '/includes/phpunit6/compat.php',
+		"<?php
+/**
+ * PHPUnit 6 compatibility file
+ * 
+ * This is a simplified version for testing purposes.
+ */
+
+require_once dirname( dirname( __FILE__ ) ) . '/testcase.php';
+require_once dirname( dirname( __FILE__ ) ) . '/testcase-xmlrpc.php';
+require_once dirname( dirname( __FILE__ ) ) . '/testcase-rest-api.php';
+require_once dirname( dirname( __FILE__ ) ) . '/testcase-rest-controller.php';
+require_once dirname( dirname( __FILE__ ) ) . '/testcase-rest-post-type-controller.php';
+"
+	);
+}
+
 // Find the appropriate PHPUnit Polyfills path.
 if ( ! defined( 'WP_TESTS_PHPUNIT_POLYFILLS_PATH' ) ) {
 	// Check standard composer installation path.
