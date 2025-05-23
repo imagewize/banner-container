@@ -15,10 +15,6 @@
  * PHPUnit bootstrap file
  */
 
-// First, we need to load the WordPress test environment.
-// This is typically set up with the WordPress-develop project.
-// If you're running tests locally, you'll need to set up the test environment.
-
 // Path to the WordPress test environment.
 $_tests_dir = getenv( 'WP_TESTS_DIR' );
 
@@ -31,14 +27,13 @@ if ( ! defined( 'WP_TESTS_PHPUNIT_POLYFILLS_PATH' ) ) {
 	define( 'WP_TESTS_PHPUNIT_POLYFILLS_PATH', dirname( __DIR__ ) . '/vendor/yoast/phpunit-polyfills/phpunitpolyfills-autoload.php' );
 }
 
-// If the tests directory doesn't exist, try to create it.
+// Give access to tests_add_filter() function.
 if ( ! file_exists( $_tests_dir . '/includes/functions.php' ) ) {
-	echo "Warning: The WordPress test environment is not set up correctly.\n";
-	echo "Please see https://make.wordpress.org/core/handbook/testing/automated-testing/phpunit/ for more information.\n";
+	echo "Could not find $_tests_dir/includes/functions.php, have you run bin/install-wp-tests.sh ?" . PHP_EOL;
 	exit( 1 );
 }
 
-// Give access to tests_add_filter() function.
+// Load the WordPress tests functions.
 require_once $_tests_dir . '/includes/functions.php';
 
 /**
@@ -47,7 +42,17 @@ require_once $_tests_dir . '/includes/functions.php';
 function _manually_load_plugin() {
 	require dirname( __DIR__ ) . '/banner-iframe-plugin.php';
 }
-tests_add_filter( 'muplugins_loaded', '_manually_load_plugin' );
+
+/**
+ * Register the plugin loading function.
+ *
+ * @see tests_add_filter() This function is provided by WordPress testing framework
+ */
+if ( function_exists( 'tests_add_filter' ) ) {
+    tests_add_filter( 'muplugins_loaded', '_manually_load_plugin' );
+} else {
+    echo "WARNING: WordPress testing functions not available. Make sure the test environment is set up correctly." . PHP_EOL;
+}
 
 // Start up the WP testing environment.
 require $_tests_dir . '/includes/bootstrap.php';
