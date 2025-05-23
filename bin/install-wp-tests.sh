@@ -25,6 +25,64 @@ download() {
     fi
 }
 
+# Function to check if SVN is installed
+has_svn() {
+    if command -v svn >/dev/null 2>&1; then
+        return 0
+    else
+        return 1
+    fi
+}
+
+# Function to download files from SVN repository via HTTP when SVN isn't available
+download_svn_files() {
+    local SVN_URL=$1
+    local TARGET_DIR=$2
+    
+    # Create target directory if it doesn't exist
+    mkdir -p "$TARGET_DIR"
+    
+    # Create a temporary directory for downloaded files
+    local TMP_ZIP="$TMPDIR/svn-download-$RANDOM.zip"
+    
+    # Convert SVN URL to HTTP archive URL
+    # Format: https://github.com/WordPress/wordpress-develop/archive/refs/tags/[VERSION].zip
+    # or: https://github.com/WordPress/wordpress-develop/archive/[BRANCH].zip
+    
+    if [[ $SVN_URL == *"/tags/"* ]]; then
+        local VERSION=$(echo $SVN_URL | sed -n 's/.*\/tags\/\([^\/]*\)\/.*/\1/p')
+        local ARCHIVE_URL="https://github.com/WordPress/wordpress-develop/archive/refs/tags/$VERSION.zip"
+    elif [[ $SVN_URL == *"/trunk/"* ]]; then
+        local ARCHIVE_URL="https://github.com/WordPress/wordpress-develop/archive/refs/heads/trunk.zip"
+    elif [[ $SVN_URL == *"/branches/"* ]]; then
+        local BRANCH=$(echo $SVN_URL | sed -n 's/.*\/branches\/\([^\/]*\)\/.*/\1/p')
+        local ARCHIVE_URL="https://github.com/WordPress/wordpress-develop/archive/refs/heads/$BRANCH.zip"
+    fi
+    
+    echo "SVN not found. Downloading from GitHub instead: $ARCHIVE_URL"
+    
+    # Download the ZIP file
+    download "$ARCHIVE_URL" "$TMP_ZIP"
+    
+    # Unzip the archive
+    if command -v unzip >/dev/null 2>&1; then
+        # Extract only the needed directories from the archive
+        if [[ $SVN_URL == *"/tests/phpunit/includes/"* ]]; then
+            mkdir -p "$TARGET_DIR"
+            unzip -q -j "$TMP_ZIP" "wordpress-develop-*/tests/phpunit/includes/*" -d "$TARGET_DIR"
+        elif [[ $SVN_URL == *"/tests/phpunit/data/"* ]]; then
+            mkdir -p "$TARGET_DIR"
+            unzip -q -j "$TMP_ZIP" "wordpress-develop-*/tests/phpunit/data/*" -d "$TARGET_DIR"
+        fi
+    else
+        echo "Error: unzip command not found. Please install unzip or SVN to continue."
+        exit 1
+    fi
+    
+    # Clean up
+    rm -f "$TMP_ZIP"
+}
+
 if [[ $WP_VERSION =~ ^[0-9]+\.[0-9]+\$ ]]; then
 	WP_TESTS_TAG="branches/$WP_VERSION"
 elif [[ $WP_VERSION =~ ^[0-9]+\.[0-9]+\.[0-9]+\$ ]]; then
@@ -88,8 +146,15 @@ install_test_suite() {
 	if [ ! -d $WP_TESTS_DIR ]; then
 		# set up testing suite
 		mkdir -p $WP_TESTS_DIR
-		svn co --quiet https://develop.svn.wordpress.org/${WP_TESTS_TAG}/tests/phpunit/includes/ $WP_TESTS_DIR/includes
-		svn co --quiet https://develop.svn.wordpress.org/${WP_TESTS_TAG}/tests/phpunit/data/ $WP_TESTS_DIR/data
+		
+		if has_svn; then
+			svn co --quiet https://develop.svn.wordpress.org/${WP_TESTS_TAG}/tests/phpunit/includes/ $WP_TESTS_DIR/includes
+			svn co --quiet https://develop.svn.wordpress.org/${WP_TESTS_TAG}/tests/phpunit/data/ $WP_TESTS_DIR/data
+		else
+			echo "SVN not installed. Using alternative download method..."
+			download_svn_files "https://develop.svn.wordpress.org/${WP_TESTS_TAG}/tests/phpunit/includes/" "$WP_TESTS_DIR/includes"
+			download_svn_files "https://develop.svn.wordpress.org/${WP_TESTS_TAG}/tests/phpunit/data/" "$WP_TESTS_DIR/data"
+		fi
 	fi
 
 	if [ ! -f wp-tests-config.php ]; then
