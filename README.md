@@ -46,5 +46,13 @@ The plugin is lightweight and only loads the necessary code on the frontend. It 
 
 ## Changelog
 
+### 1.0.1
+* Removed dependency on Advanced Custom Fields (ACF) plugin
+* Added native WordPress settings API integration
+* Improved plugin architecture for better separation of concerns
+* Enhanced code organization for better maintainability
+* Optimized admin interface with better settings controls
+* Fixed potential issues in uninstall process
+
 ### 1.0.0
 * Initial release
