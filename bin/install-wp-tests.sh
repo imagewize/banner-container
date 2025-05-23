@@ -238,6 +238,23 @@ install_db() {
 	fi
 }
 
+install_polyfills() {
+	if [ ! -f "vendor/yoast/phpunit-polyfills/phpunitpolyfills-autoload.php" ]; then
+		echo "PHPUnit Polyfills not found, attempting to install..."
+		if command -v composer >/dev/null 2>&1; then
+			composer require yoast/phpunit-polyfills --dev
+		else
+			echo "Composer not found. Please install composer and run: composer require yoast/phpunit-polyfills --dev"
+			exit 1
+		fi
+	fi
+}
+
 install_wp
 install_test_suite
 install_db
+install_polyfills
+
+echo "WordPress test environment setup completed successfully!"
+echo "Make sure to export WP_TESTS_PHPUNIT_POLYFILLS_PATH before running tests:"
+echo "export WP_TESTS_PHPUNIT_POLYFILLS_PATH=$(pwd)/vendor/yoast/phpunit-polyfills/phpunitpolyfills-autoload.php"

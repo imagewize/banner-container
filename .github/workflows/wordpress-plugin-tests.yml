@@ -1,0 +1,48 @@
+name: WordPress Plugin Tests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    services:
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: wordpress_test
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.4'
+          extensions: mbstring, intl, mysqli, zip
+          tools: composer:v2
+          coverage: none
+
+      - name: Install dependencies
+        run: |
+          composer install --prefer-dist --no-progress
+          # Explicitly install PHPUnit Polyfills
+          composer require yoast/phpunit-polyfills --dev
+      
+      - name: Setup WordPress test environment
+        run: |
+          bash bin/install-wp-tests.sh wordpress_test root root 127.0.0.1 latest
+      
+      - name: Run tests
+        run: |
+          # Make sure WordPress knows about the PHPUnit Polyfills
+          export WP_TESTS_PHPUNIT_POLYFILLS_PATH=$(pwd)/vendor/yoast/phpunit-polyfills/phpunitpolyfills-autoload.php
+          vendor/bin/phpunit
