@@ -39,10 +39,17 @@ jobs:
       
       - name: Setup WordPress test environment
         run: |
+          # Make the script executable
+          chmod +x bin/install-wp-tests.sh
           bash bin/install-wp-tests.sh wordpress_test root root 127.0.0.1 latest
+          # Verify the setup by listing files in the test directory
+          echo "Verifying test environment setup:"
+          ls -la /tmp/wordpress-tests-lib/includes/
       
       - name: Run tests
         run: |
           # Make sure WordPress knows about the PHPUnit Polyfills
+          export WP_TESTS_DIR=/tmp/wordpress-tests-lib
           export WP_TESTS_PHPUNIT_POLYFILLS_PATH=$(pwd)/vendor/yoast/phpunit-polyfills/phpunitpolyfills-autoload.php
-          vendor/bin/phpunit
+          # Run PHPUnit with verbose output
+          vendor/bin/phpunit --verbose

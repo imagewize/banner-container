@@ -71,6 +71,7 @@ download_wp_tests() {
     download "$HTTP_PATH/tests/phpunit/includes/testcase-rest-controller.php" "$WP_TESTS_DIR/includes/testcase-rest-controller.php"
     download "$HTTP_PATH/tests/phpunit/includes/testcase-rest-post-type-controller.php" "$WP_TESTS_DIR/includes/testcase-rest-post-type-controller.php"
     download "$HTTP_PATH/tests/phpunit/includes/testcase-xmlrpc.php" "$WP_TESTS_DIR/includes/testcase-xmlrpc.php"
+    download "$HTTP_PATH/tests/phpunit/includes/install.php" "$WP_TESTS_DIR/includes/install.php"
     
     # Additional required files
     download "$HTTP_PATH/tests/phpunit/includes/class-basic-object.php" "$WP_TESTS_DIR/includes/class-basic-object.php"
