@@ -57,6 +57,8 @@ download_wp_tests() {
     
     # Download includes directory files one by one
     echo "Downloading test includes files..."
+    
+    # Basic files needed for PHPUnit tests
     download "$HTTP_PATH/tests/phpunit/includes/bootstrap.php" "$WP_TESTS_DIR/includes/bootstrap.php"
     download "$HTTP_PATH/tests/phpunit/includes/factory.php" "$WP_TESTS_DIR/includes/factory.php"
     download "$HTTP_PATH/tests/phpunit/includes/functions.php" "$WP_TESTS_DIR/includes/functions.php"
@@ -69,6 +71,18 @@ download_wp_tests() {
     download "$HTTP_PATH/tests/phpunit/includes/testcase-rest-controller.php" "$WP_TESTS_DIR/includes/testcase-rest-controller.php"
     download "$HTTP_PATH/tests/phpunit/includes/testcase-rest-post-type-controller.php" "$WP_TESTS_DIR/includes/testcase-rest-post-type-controller.php"
     download "$HTTP_PATH/tests/phpunit/includes/testcase-xmlrpc.php" "$WP_TESTS_DIR/includes/testcase-xmlrpc.php"
+    
+    # Additional required files
+    download "$HTTP_PATH/tests/phpunit/includes/class-basic-object.php" "$WP_TESTS_DIR/includes/class-basic-object.php"
+    download "$HTTP_PATH/tests/phpunit/includes/class-basic-subclass.php" "$WP_TESTS_DIR/includes/class-basic-subclass.php"
+    download "$HTTP_PATH/tests/phpunit/includes/class-wp-rest-response.php" "$WP_TESTS_DIR/includes/class-wp-rest-response.php"
+    download "$HTTP_PATH/tests/phpunit/includes/class-wp-rest-request.php" "$WP_TESTS_DIR/includes/class-wp-rest-request.php"
+    download "$HTTP_PATH/tests/phpunit/includes/class-wp-rest-server.php" "$WP_TESTS_DIR/includes/class-wp-rest-server.php"
+    download "$HTTP_PATH/tests/phpunit/includes/class-wp-test-rest-controller.php" "$WP_TESTS_DIR/includes/class-wp-test-rest-controller.php"
+    download "$HTTP_PATH/tests/phpunit/includes/class-wp-test-rest-post-type-controller.php" "$WP_TESTS_DIR/includes/class-wp-test-rest-post-type-controller.php"
+    download "$HTTP_PATH/tests/phpunit/includes/class-wp-test-spy-rest-server.php" "$WP_TESTS_DIR/includes/class-wp-test-spy-rest-server.php"
+    download "$HTTP_PATH/tests/phpunit/includes/class-wp-fake-block-type.php" "$WP_TESTS_DIR/includes/class-wp-fake-block-type.php"
+    download "$HTTP_PATH/tests/phpunit/includes/class-wp-sitemaps-test-provider.php" "$WP_TESTS_DIR/includes/class-wp-sitemaps-test-provider.php"
     
     # Download basic data files
     echo "Downloading test data files..."
