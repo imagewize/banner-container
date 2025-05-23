@@ -28,7 +28,7 @@ if ( empty( $plugin_slug ) ) {
 }
 
 // Get plugin version
-echo 'Enter the version to deploy (e.g. 1.0.1): ';
+echo 'Enter the version to deploy (e.g. 1.1.0): ';
 $plugin_version = trim( fgets( STDIN ) );
 
 if ( empty( $plugin_version ) ) {

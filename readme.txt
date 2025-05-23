@@ -4,7 +4,7 @@ Donate link: https://yourwebsite.com/donate
 Tags: iframe, banner, header, footer, content
 Requires at least: 5.0
 Tested up to: 6.4
-Stable tag: 1.0.1
+Stable tag: 1.1.0
 Requires PHP: 5.6
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -65,6 +65,11 @@ The plugin is lightweight and only loads the necessary code on the frontend. It 
 
 == Changelog ==
 
+= 1.1.0 =
+* Implemented PHPUnit tests for improved code reliability
+* Added continuous integration with GitHub Actions
+* Updated code to follow WordPress Coding Standards
+
 = 1.0.1 =
 * Removed dependency on Advanced Custom Fields (ACF) plugin
 * Added native WordPress settings API integration
@@ -78,5 +83,5 @@ The plugin is lightweight and only loads the necessary code on the frontend. It 
 
 == Upgrade Notice ==
 
-= 1.0.1 =
-This version removes the ACF dependency and uses native WordPress settings API. No data migration needed.
+= 1.1.0 =
+This version removes the ACF dependency, uses native WordPress settings API, adds tests and follows WordPress Coding Standards. No data migration needed.

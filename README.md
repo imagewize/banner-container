@@ -59,6 +59,11 @@ The plugin is lightweight and only loads the necessary code on the frontend. It 
 
 ## Changelog
 
+### 1.1.0
+* Implemented PHPUnit tests for improved code reliability
+* Added continuous integration with GitHub Actions
+* Updated code to follow WordPress Coding Standards
+
 ### 1.0.1
 * Removed dependency on Advanced Custom Fields (ACF) plugin
 * Added native WordPress settings API integration
