@@ -33,11 +33,14 @@ add_action('admin_enqueue_scripts', 'banner_iframe_admin_styles');
 
 // Initialize the plugin
 function banner_iframe_init() {
+    // Initialize main plugin class
     $banner_iframe = new Banner_Iframe();
     $banner_iframe->init();
     
-    // Initialize welcome page
-    new Banner_Iframe_Welcome();
+    // Initialize welcome page (only needed for admin)
+    if (is_admin()) {
+        new Banner_Iframe_Welcome();
+    }
 }
 add_action('plugins_loaded', 'banner_iframe_init');
 

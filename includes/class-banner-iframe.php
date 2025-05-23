@@ -5,13 +5,6 @@
  * @since      1.0.0
  */
 class Banner_Iframe {
-
-    /**
-     * Banner locations to display iframes
-     *
-     * @var array
-     */
-    private $banner_locations = array();
     
     /**
      * The settings page instance
@@ -19,6 +12,13 @@ class Banner_Iframe {
      * @var Banner_Iframe_Settings
      */
     private $settings;
+    
+    /**
+     * Banner locations to display iframes
+     *
+     * @var array
+     */
+    private $banner_locations = array();
 
     /**
      * Initialize the plugin.
@@ -30,25 +30,9 @@ class Banner_Iframe {
         $this->settings = new Banner_Iframe_Settings();
         $this->settings->init();
         
-        // Register banner locations and hook displays
-        $this->register_banner_locations();
+        // Get banner locations and hook displays
+        $this->banner_locations = $this->settings->get_banner_locations();
         $this->hook_banner_displays();
-    }
-
-    /**
-     * Register the banner locations
-     */
-    private function register_banner_locations() {
-        $this->banner_locations = array(
-            'wp_head' => __('Header (Before </head>)', 'banner-iframe-plugin'),
-            'wp_footer' => __('Footer (Before </body>)', 'banner-iframe-plugin'),
-            'the_content' => __('Within Content', 'banner-iframe-plugin'),
-            'get_sidebar' => __('Before Sidebar', 'banner-iframe-plugin'),
-            'wp_nav_menu_items' => __('In Navigation Menu', 'banner-iframe-plugin')
-        );
-
-        // Allow theme/plugins to modify available locations
-        $this->banner_locations = apply_filters('banner_iframe_locations', $this->banner_locations);
     }
 
     /**
