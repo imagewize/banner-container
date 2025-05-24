@@ -46,10 +46,12 @@ The plugin is lightweight and only loads the necessary code on the frontend. It 
 
 ## Changelog
 
+### 1.2.3
+* Header Placement Clarification on Options Page
 ### 1.2.2
 * settings page text area visibility improvement
 ### 1.2.1
-* prefix imwz
+* prefix iwz
 * additional renaming
 
 ### 1.2.0
