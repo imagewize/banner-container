@@ -70,11 +70,13 @@
             "vendor",
             ".git",
             ".gitignore",
+            ".github",
             "composer.json",
             "composer.lock",
             "phpunit.xml",
             "phpcs.xml",
-            ".phpcs.xml.dist"
+            ".phpcs.xml.dist",
+            "DEVELOPMENT.md"
         ]
     }
 }
