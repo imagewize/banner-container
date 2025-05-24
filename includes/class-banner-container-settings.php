@@ -304,64 +304,49 @@ class IWZ_Banner_Container_Settings {
                 ?>
                     <div class="iwz-banner-container-location-section">
                         <h2><?php echo esc_html($location_label); ?></h2>
-                        <table class="form-table">
-                            <tr>
-                                <th scope="row">
-                                    <label for="iwz_banner_<?php echo esc_attr($location_key); ?>_enabled">
-                                        <?php printf(__('Enable %s Banner', 'banner-container-plugin'), esc_html($location_label)); ?>
-                                    </label>
-                                </th>
-                                <td>
-                                    <input type="checkbox" id="iwz_banner_<?php echo esc_attr($location_key); ?>_enabled" 
-                                           name="iwz_banner_<?php echo esc_attr($location_key); ?>_enabled" 
-                                           value="1" <?php checked(1, $enabled); ?> />
-                                </td>
-                            </tr>
-                            <tr class="iwz-banner-container-code-field">
-                                <th scope="row">
-                                    <label for="iwz_banner_<?php echo esc_attr($location_key); ?>_code">
-                                        <?php printf(__('%s Banner Code', 'banner-container-plugin'), esc_html($location_label)); ?>
-                                    </label>
-                                </th>
-                                <td>
-                                    <textarea id="iwz_banner_<?php echo esc_attr($location_key); ?>_code" 
-                                              name="iwz_banner_<?php echo esc_attr($location_key); ?>_code" 
-                                              rows="6" class="large-text code"><?php echo esc_textarea($code); ?></textarea>
-                                    <p class="description">
-                                        <?php _e('Enter the iframe or banner code to insert at this location.', 'banner-container-plugin'); ?>
-                                    </p>
-                                </td>
-                            </tr>
-
-                            <?php if ($location_key === 'the_content') : ?>
-                                <?php 
-                                    $content_banners = get_option('iwz_banner_content_banners', array());
-                                    
-                                    // Migrate legacy data if exists and new data is empty
-                                    if (empty($content_banners)) {
-                                        $legacy_code = get_option('iwz_banner_the_content_code', '');
-                                        if (!empty($legacy_code)) {
-                                            $content_banners = array(array(
-                                                'code' => $legacy_code,
-                                                'position' => get_option('iwz_banner_content_position', 'top'),
-                                                'paragraph' => get_option('iwz_banner_content_paragraph', 3),
-                                                'post_types' => get_option('iwz_banner_content_post_types', array('post')),
-                                                'enabled' => true
-                                            ));
-                                        }
-                                    }
-                                    
-                                    // Ensure at least one banner for new setups
-                                    if (empty($content_banners)) {
+                        
+                        <?php if ($location_key === 'the_content') : ?>
+                            <?php 
+                                $content_banners = get_option('iwz_banner_content_banners', array());
+                                
+                                // Migrate legacy data if exists and new data is empty
+                                if (empty($content_banners)) {
+                                    $legacy_code = get_option('iwz_banner_the_content_code', '');
+                                    if (!empty($legacy_code)) {
                                         $content_banners = array(array(
-                                            'code' => '',
-                                            'position' => 'top',
-                                            'paragraph' => 3,
-                                            'post_types' => array('post'),
-                                            'enabled' => false
+                                            'code' => $legacy_code,
+                                            'position' => get_option('iwz_banner_content_position', 'top'),
+                                            'paragraph' => get_option('iwz_banner_content_paragraph', 3),
+                                            'post_types' => get_option('iwz_banner_content_post_types', array('post')),
+                                            'enabled' => true
                                         ));
                                     }
-                                ?>
+                                }
+                                
+                                // Ensure at least one banner for new setups
+                                if (empty($content_banners)) {
+                                    $content_banners = array(array(
+                                        'code' => '',
+                                        'position' => 'top',
+                                        'paragraph' => 3,
+                                        'post_types' => array('post'),
+                                        'enabled' => false
+                                    ));
+                                }
+                            ?>
+                            <table class="form-table">
+                                <tr>
+                                    <th scope="row">
+                                        <label for="iwz_banner_<?php echo esc_attr($location_key); ?>_enabled">
+                                            <?php printf(__('Enable %s Banner', 'banner-container-plugin'), esc_html($location_label)); ?>
+                                        </label>
+                                    </th>
+                                    <td>
+                                        <input type="checkbox" id="iwz_banner_<?php echo esc_attr($location_key); ?>_enabled" 
+                                               name="iwz_banner_<?php echo esc_attr($location_key); ?>_enabled" 
+                                               value="1" <?php checked(1, $enabled); ?> />
+                                    </td>
+                                </tr>
                                 <tr class="iwz-banner-container-code-field">
                                     <td colspan="2">
                                         <h3><?php _e('Content Banners', 'banner-container-plugin'); ?></h3>
@@ -484,8 +469,40 @@ class IWZ_Banner_Container_Settings {
                                         </p>
                                     </td>
                                 </tr>
-                            <?php endif; ?>
-                        </table>
+                            </table>
+                        
+                        <?php else : ?>
+                            <!-- Standard banner locations (non-content) -->
+                            <table class="form-table">
+                                <tr>
+                                    <th scope="row">
+                                        <label for="iwz_banner_<?php echo esc_attr($location_key); ?>_enabled">
+                                            <?php printf(__('Enable %s Banner', 'banner-container-plugin'), esc_html($location_label)); ?>
+                                        </label>
+                                    </th>
+                                    <td>
+                                        <input type="checkbox" id="iwz_banner_<?php echo esc_attr($location_key); ?>_enabled" 
+                                               name="iwz_banner_<?php echo esc_attr($location_key); ?>_enabled" 
+                                               value="1" <?php checked(1, $enabled); ?> />
+                                    </td>
+                                </tr>
+                                <tr class="iwz-banner-container-code-field">
+                                    <th scope="row">
+                                        <label for="iwz_banner_<?php echo esc_attr($location_key); ?>_code">
+                                            <?php printf(__('%s Banner Code', 'banner-container-plugin'), esc_html($location_label)); ?>
+                                        </label>
+                                    </th>
+                                    <td>
+                                        <textarea id="iwz_banner_<?php echo esc_attr($location_key); ?>_code" 
+                                                  name="iwz_banner_<?php echo esc_attr($location_key); ?>_code" 
+                                                  rows="6" class="large-text code"><?php echo esc_textarea($code); ?></textarea>
+                                        <p class="description">
+                                            <?php _e('Enter the iframe or banner code to insert at this location.', 'banner-container-plugin'); ?>
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                        <?php endif; ?>
                     </div>
                     <hr>
                 <?php endforeach; ?>
@@ -615,8 +632,6 @@ class IWZ_Banner_Container_Settings {
             
             // Initialize visibility on page load
             $('input[id$="_enabled"]').each(function() {
-                var checkboxId = $(this).attr('id');
-                var location = checkboxId.replace('iwz_banner_', '').replace('_enabled', '');
                 var sectionContainer = $(this).closest('.iwz-banner-container-location-section');
                 
                 if ($(this).is(':checked')) {
