@@ -6,11 +6,11 @@ A WordPress plugin to add banners to different locations in your WordPress theme
 
 The Banner Container Plugin allows you to easily add iframe codes to various locations in your WordPress site, such as:
 
-- Header (before `</head>`)
-- Footer (before `</body>`)
-- Within Content (with options for multiple banners and individual placement)
-- Before Sidebar
-- In Navigation Menu
+- Header (before `</head>`) - with support for multiple banners and device targeting
+- Footer (before `</body>`) - with support for multiple banners and device targeting
+- Within Content (with options for multiple banners, individual placement, and device targeting)
+- Before Sidebar - with support for multiple banners and device targeting
+- In Navigation Menu - with support for multiple banners and device targeting
 
 ## Requirements
 
@@ -27,11 +27,13 @@ The Banner Container Plugin allows you to easily add iframe codes to various loc
 1. Navigate to the Banner Container settings page in your WordPress admin
 2. Enable the locations where you want to display banners
 3. Enter your iframe or banner HTML code for each location
-4. For content banners, you can add multiple banners with individual settings:
+4. For all banner locations, you can add multiple banners with individual settings:
+   - Choose device targeting (all devices, desktop only, or mobile only)
+   - Enable or disable individual banners
+5. For content banners, additional options include:
    - Choose placement options (top, bottom, or after a specific paragraph)
    - Select which post types to display each banner on
-   - Enable or disable individual banners
-5. Save your settings
+6. Save your settings
 
 ## Frequently Asked Questions
 
@@ -48,6 +50,13 @@ You can add any HTML code, including iframes, JavaScript snippets, or plain HTML
 The plugin is lightweight and only loads the necessary code on the frontend. It should not cause any noticeable performance impact.
 
 ## Changelog
+
+### 1.4.0
+* Device Targeting: Add mobile/desktop targeting options for all banner locations (header, footer, content, sidebar, navigation menu)
+* Multiple Banners for All Locations: Support for multiple banners in all locations with individual device targeting
+* Enhanced Banner Management: All banner locations now support adding, removing, and managing multiple banners
+* Improved Admin Interface: Updated settings page to handle multiple banners with device targeting across all locations
+* Backward Compatibility: Seamless migration from single banner configurations to new multiple banner system
 
 ### 1.3.0
 * Multiple Banners in Content: Add multiple banners to the "Within Content" location
