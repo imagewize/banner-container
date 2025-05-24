@@ -277,7 +277,7 @@ class IWZ_Banner_Container_Settings {
                                            value="1" <?php checked(1, $enabled); ?> />
                                 </td>
                             </tr>
-                            <tr class="iwz-banner-container-code-field <?php echo $enabled ? '' : 'hidden'; ?>">
+                            <tr class="iwz-banner-container-code-field">
                                 <th scope="row">
                                     <label for="iwz_banner_<?php echo esc_attr($location_key); ?>_code">
                                         <?php printf(__('%s Banner Code', 'banner-container-plugin'), esc_html($location_label)); ?>
@@ -299,7 +299,7 @@ class IWZ_Banner_Container_Settings {
                                     $paragraph = get_option('iwz_banner_content_paragraph', 3);
                                     $post_types = get_option('iwz_banner_content_post_types', array('post'));
                                 ?>
-                                <tr class="iwz-banner-container-code-field <?php echo $enabled ? '' : 'hidden'; ?>">
+                                <tr class="iwz-banner-container-code-field">
                                     <th scope="row">
                                         <label for="iwz_banner_content_position">
                                             <?php _e('Content Banner Position', 'banner-container-plugin'); ?>
@@ -319,7 +319,7 @@ class IWZ_Banner_Container_Settings {
                                         </select>
                                     </td>
                                 </tr>
-                                <tr class="iwz-banner-container-paragraph-field <?php echo ($enabled && $position == 'after_paragraph') ? '' : 'hidden'; ?>">
+                                <tr class="iwz-banner-container-paragraph-field">
                                     <th scope="row">
                                         <label for="iwz_banner_content_paragraph">
                                             <?php _e('Paragraph Number', 'banner-container-plugin'); ?>
@@ -334,7 +334,7 @@ class IWZ_Banner_Container_Settings {
                                         </p>
                                     </td>
                                 </tr>
-                                <tr class="iwz-banner-container-code-field <?php echo $enabled ? '' : 'hidden'; ?>">
+                                <tr class="iwz-banner-container-code-field">
                                     <th scope="row">
                                         <label for="iwz_banner_content_post_types">
                                             <?php _e('Apply to Post Types', 'banner-container-plugin'); ?>
@@ -369,46 +369,63 @@ class IWZ_Banner_Container_Settings {
         jQuery(document).ready(function($) {
             // Show/hide code field based on checkbox
             $('input[id$="_enabled"]').change(function() {
-                var location = $(this).attr('id').replace('iwz_banner_', '').replace('_enabled', '');
+                var checkboxId = $(this).attr('id');
+                var location = checkboxId.replace('iwz_banner_', '').replace('_enabled', '');
+                var sectionContainer = $(this).closest('.iwz-banner-container-location-section');
+                
                 if ($(this).is(':checked')) {
-                    $('.iwz-banner-container-code-field').not('.hidden').show();
+                    // Show all code fields for this location
+                    sectionContainer.find('.iwz-banner-container-code-field').removeClass('hidden').show();
+                    
+                    // Special handling for content banner
                     if (location === 'the_content') {
                         var position = $('#iwz_banner_content_position').val();
                         if (position === 'after_paragraph') {
-                            $('.iwz-banner-container-paragraph-field').show();
+                            $('.iwz-banner-container-paragraph-field').removeClass('hidden').show();
                         }
                     }
                 } else {
-                    $('tr.iwz-banner-container-code-field').filter(function() {
-                        return $(this).find('textarea[id$="' + location + '_code"]').length > 0;
-                    }).hide();
+                    // Hide all code fields for this location
+                    sectionContainer.find('.iwz-banner-container-code-field').addClass('hidden').hide();
+                    
+                    // Special handling for content banner
                     if (location === 'the_content') {
-                        $('.iwz-banner-container-paragraph-field').hide();
+                        $('.iwz-banner-container-paragraph-field').addClass('hidden').hide();
                     }
                 }
             });
             
             // Show/hide paragraph field based on position selection
             $('#iwz_banner_content_position').change(function() {
-                if ($(this).val() === 'after_paragraph') {
-                    $('.iwz-banner-container-paragraph-field').show();
+                var contentEnabled = $('#iwz_banner_the_content_enabled').is(':checked');
+                if ($(this).val() === 'after_paragraph' && contentEnabled) {
+                    $('.iwz-banner-container-paragraph-field').removeClass('hidden').show();
                 } else {
-                    $('.iwz-banner-container-paragraph-field').hide();
+                    $('.iwz-banner-container-paragraph-field').addClass('hidden').hide();
                 }
             });
             
-            // Initialize visibility
+            // Initialize visibility on page load
             $('input[id$="_enabled"]').each(function() {
-                if (!$(this).is(':checked')) {
-                    $('tr.iwz-banner-container-code-field').filter(function() {
-                        var location = $(this).find('textarea').attr('id');
-                        return location && location.includes($(this).attr('id').replace('iwz_banner_', '').replace('_enabled', ''));
-                    }).hide();
+                var checkboxId = $(this).attr('id');
+                var location = checkboxId.replace('iwz_banner_', '').replace('_enabled', '');
+                var sectionContainer = $(this).closest('.iwz-banner-container-location-section');
+                
+                if ($(this).is(':checked')) {
+                    sectionContainer.find('.iwz-banner-container-code-field').removeClass('hidden').show();
+                } else {
+                    sectionContainer.find('.iwz-banner-container-code-field').addClass('hidden').hide();
                 }
             });
             
-            if ($('#iwz_banner_content_position').val() !== 'after_paragraph' || !$('#iwz_banner_the_content_enabled').is(':checked')) {
-                $('.iwz-banner-container-paragraph-field').hide();
+            // Initialize content banner specific fields
+            var contentEnabled = $('#iwz_banner_the_content_enabled').is(':checked');
+            var position = $('#iwz_banner_content_position').val();
+            
+            if (contentEnabled && position === 'after_paragraph') {
+                $('.iwz-banner-container-paragraph-field').removeClass('hidden').show();
+            } else {
+                $('.iwz-banner-container-paragraph-field').addClass('hidden').hide();
             }
         });
         </script>
