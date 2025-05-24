@@ -26,6 +26,7 @@ $banner_options = array(
     'iwz_banner_content_position',
     'iwz_banner_content_paragraph',
     'iwz_banner_content_post_types',
+    'iwz_banner_content_banners', // New multiple banners option
     
     // Sidebar location
     'iwz_banner_get_sidebar_enabled',

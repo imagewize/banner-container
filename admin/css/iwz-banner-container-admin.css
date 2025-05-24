@@ -2,7 +2,8 @@ textarea#iwz_banner_wp_head_code,
 textarea#iwz_banner_wp_footer_code,
 textarea#iwz_banner_the_content_code,
 textarea#iwz_banner_get_sidebar_code,
-textarea#iwz_banner_wp_nav_menu_items_code {
+textarea#iwz_banner_wp_nav_menu_items_code,
+textarea[id^="iwz_content_banner_code_"] {
     font-family: monospace;
     min-height: 150px;
 }
@@ -34,4 +35,50 @@ textarea#iwz_banner_wp_nav_menu_items_code {
 
 .iwz-banner-container-settings .acf-field-select[data-name="iwz_banner_content_position"] {
     clear: both;
+}
+
+/* Multiple content banners styling */
+.iwz-content-banner-item {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 15px;
+    margin-bottom: 15px;
+    background-color: #fafafa;
+}
+
+.iwz-content-banner-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.iwz-content-banner-header h4 {
+    margin: 0;
+    color: #333;
+}
+
+.iwz-remove-banner {
+    background-color: #dc3232;
+    color: white;
+    border-color: #dc3232;
+}
+
+.iwz-remove-banner:hover {
+    background-color: #a02622;
+    border-color: #a02622;
+}
+
+.iwz-content-banner-settings {
+    margin-bottom: 0;
+}
+
+.iwz-content-banner-settings th {
+    width: 200px;
+}
+
+#iwz-add-content-banner {
+    margin-top: 10px;
 }
