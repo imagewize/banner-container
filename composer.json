@@ -1,0 +1,82 @@
+{
+    "name": "imagewze/banner-container",
+    "description": "A WordPress plugin to add banners to different locations in your WordPress theme with device targeting and multiple banner support.",
+    "type": "wordpress-plugin",
+    "keywords": [
+        "wordpress",
+        "plugin",
+        "banner",
+        "advertisement",
+        "header",
+        "footer",
+        "content",
+        "sidebar",
+        "responsive"
+    ],
+    "homepage": "https://imagewize.com/iwz-banner-container-plugin",
+    "license": "GPL-2.0-or-later",
+    "authors": [
+        {
+            "name": "Jasper Frumau",
+            "email": "jasper@imagewize.com",
+            "homepage": "https://imagewize.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=7.4"
+    },
+    "require-dev": {
+        "wp-coding-standards/wpcs": "^3.0",
+        "phpcompatibility/phpcompatibility-wp": "^2.1",
+        "dealerdirect/phpcodesniffer-composer-installer": "^1.0",
+        "phpunit/phpunit": "^9.0",
+        "squizlabs/php_codesniffer": "^3.7"
+    },
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        },
+        "optimize-autoloader": true,
+        "sort-packages": true
+    },
+    "scripts": {
+        "phpcs": "phpcs -d memory_limit=512M --standard=WordPress --ignore=vendor,tests .",
+        "phpcbf": "phpcbf -d memory_limit=512M --standard=WordPress --ignore=vendor,tests .",
+        "phpcs-check": "phpcs -d memory_limit=512M --standard=WordPress --ignore=vendor,tests --report=summary .",
+        "test": "phpunit",
+        "lint": [
+            "@phpcs-check"
+        ],
+        "fix": [
+            "@phpcbf"
+        ]
+    },
+    "scripts-descriptions": {
+        "phpcs": "Run PHP CodeSniffer with WordPress coding standards",
+        "phpcbf": "Run PHP Code Beautifier and Fixer with WordPress coding standards",
+        "phpcs-check": "Check code against WordPress coding standards with summary report",
+        "test": "Run PHPUnit tests",
+        "lint": "Run all linting checks",
+        "fix": "Fix code style issues automatically"
+    },
+    "support": {
+        "issues": "https://github.com/imagewze/banner-container/issues",
+        "source": "https://github.com/imagewze/banner-container"
+    },
+    "archive": {
+        "exclude": [
+            "tests",
+            "vendor",
+            ".git",
+            ".gitignore",
+            ".github",
+            "composer.json",
+            "composer.lock",
+            "phpunit.xml",
+            "phpcs.xml",
+            ".phpcs.xml.dist",
+            "DEVELOPMENT.md"
+        ]
+    }
+}
