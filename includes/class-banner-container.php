@@ -4,12 +4,12 @@
  *
  * @since      1.0.0
  */
-class Banner_Iframe {
+class BANNER_CONTAINER {
     
     /**
      * The settings page instance
      *
-     * @var Banner_Iframe_Settings
+     * @var BANNER_CONTAINER_Settings
      */
     private $settings;
     
@@ -27,7 +27,7 @@ class Banner_Iframe {
      */
     public function init() {
         // Initialize settings page
-        $this->settings = new Banner_Iframe_Settings();
+        $this->settings = new BANNER_CONTAINER_Settings();
         $this->settings->init();
         
         // Get banner locations and hook displays
@@ -179,7 +179,7 @@ class Banner_Iframe {
             $banner_code = get_option('banner_wp_nav_menu_items_code', '');
             if (!empty($banner_code)) {
                 // Wrap in li for proper menu structure
-                $banner_html = '<li class="menu-item banner-iframe-menu-item">' . $banner_code . '</li>';
+                $banner_html = '<li class="menu-item banner-container-menu-item">' . $banner_code . '</li>';
                 $items .= $banner_html;
             }
         }

@@ -7,7 +7,7 @@ textarea#banner_wp_nav_menu_items_code {
     min-height: 150px;
 }
 
-.banner-iframe-location-section {
+.banner-container-location-section {
     margin-bottom: 20px;
     padding-bottom: 10px;
 }
@@ -16,22 +16,22 @@ textarea#banner_wp_nav_menu_items_code {
     display: none;
 }
 
-.banner-iframe-notice {
+.banner-container-notice {
     padding: 15px;
     background-color: #e7f7ff;
     border-left: 4px solid #2271b1;
     margin-bottom: 20px;
 }
 
-.banner-iframe-notice h4 {
+.banner-container-notice h4 {
     margin-top: 0;
     margin-bottom: 10px;
 }
 
-.banner-iframe-notice p:last-child {
+.banner-container-notice p:last-child {
     margin-bottom: 0;
 }
 
-.banner-iframe-settings .acf-field-select[data-name="banner_content_position"] {
+.banner-container-settings .acf-field-select[data-name="banner_content_position"] {
     clear: both;
 }
