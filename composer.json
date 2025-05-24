@@ -14,7 +14,7 @@
         "responsive"
     ],
     "homepage": "https://imagewize.com/iwz-banner-container-plugin",
-    "license": "GPL-2.0+",
+    "license": "GPL-2.0-or-later",
     "authors": [
         {
             "name": "Jasper Frumau",

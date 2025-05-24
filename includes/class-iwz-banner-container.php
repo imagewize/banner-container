@@ -1,5 +1,43 @@
 <?php
 /**
+ * The main plugin class file.
+ *
+ * This file defines the IWZ_Banner_Container class which contains the core
+ * functionality for the Banner Container plugin.
+ *
+ * @link       https://example.com
+ * @since      1.0.0
+ *
+ * @package    IWZ_Banner_Container
+ * @subpackage IWZ_Banner_Container/includes
+ * @author     Jasper Frumau <jasper@imagewize.com>
+ */
+
+// Prevent direct access.
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+/**
+ * The main plugin class.
+ *
+ * This file contains the core functionality for the Banner Container plugin,
+ * handling banner display across various WordPress locations.
+ *
+ * @link       https://example.com
+ * @since      1.0.0
+ *
+ * @package    IWZ_Banner_Container
+ * @subpackage IWZ_Banner_Container/includes
+ * @author     Jasper Frumau <jasper@imagewize.com>
+ */
+
+// Prevent direct access.
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+/**
  * The main plugin class.
  *
  * @since      1.0.0
@@ -30,9 +68,9 @@ class IWZ_Banner_Container {
 	}
 
 	/**
-	 * Check if banner should be displayed based on device targeting
+	 * Check if banner should be displayed based on device targeting.
 	 *
-	 * @param string $device_targeting The device targeting setting
+	 * @param string $device_targeting The device targeting setting.
 	 * @return bool
 	 */
 	private function should_display_for_device( $device_targeting ) {
@@ -53,20 +91,20 @@ class IWZ_Banner_Container {
 	 * @since    1.0.0
 	 */
 	public function init() {
-		// Initialize settings page
+		// Initialize settings page.
 		$this->settings = new IWZ_Banner_Container_Settings();
 		$this->settings->init();
 
-		// Get banner locations and hook displays
+		// Get banner locations and hook displays.
 		$this->banner_locations = $this->settings->get_banner_locations();
 		$this->hook_banner_displays();
 	}
 
 	/**
-	 * Hook the banner displays to WordPress actions
+	 * Hook the banner displays to WordPress actions.
 	 */
 	private function hook_banner_displays() {
-		// Loop through each location and add the appropriate action/filter
+		// Loop through each location and add the appropriate action/filter.
 		foreach ( $this->banner_locations as $location => $label ) {
 			switch ( $location ) {
 				case 'wp_head':
@@ -85,7 +123,7 @@ class IWZ_Banner_Container {
 					add_filter( 'wp_nav_menu_items', array( $this, 'display_menu_banner' ), 10, 2 );
 					break;
 				default:
-					// For custom hooks
+					// For custom hooks.
 					if ( has_action( $location ) ) {
 						add_action(
 							$location,
@@ -100,7 +138,7 @@ class IWZ_Banner_Container {
 	}
 
 	/**
-	 * Get available post types for selection
+	 * Get available post types for selection.
 	 */
 	private function get_post_types() {
 		$post_types = get_post_types( array( 'public' => true ), 'objects' );
@@ -114,84 +152,87 @@ class IWZ_Banner_Container {
 	}
 
 	/**
-	 * Display banner in header
+	 * Display banner in header.
 	 */
 	public function display_header_banner() {
 		if ( ! get_option( 'iwz_banner_wp_head_enabled' ) ) {
 			return;
 		}
 
-		// Get multiple banners
+		// Get multiple banners.
 		$banners = get_option( 'iwz_banner_wp_head_banners', array() );
 
-		// Fallback to legacy single banner if no multiple banners exist
+		// Fallback to legacy single banner if no multiple banners exist.
 		if ( empty( $banners ) ) {
 			$legacy_code = get_option( 'iwz_banner_wp_head_code', '' );
 			if ( ! empty( $legacy_code ) ) {
-				echo $legacy_code;
+				echo wp_kses_post( $legacy_code );
 			}
 			return;
 		}
 
-		// Display enabled banners that match device targeting
+		// Display enabled banners that match device targeting.
 		foreach ( $banners as $banner ) {
 			if ( ! empty( $banner['enabled'] ) && ! empty( $banner['code'] ) ) {
 				$device_targeting = $banner['device_targeting'] ?? 'all';
 				if ( $this->should_display_for_device( $device_targeting ) ) {
-					echo $banner['code'];
+					echo wp_kses_post( $banner['code'] );
 				}
 			}
 		}
 	}
 
 	/**
-	 * Display banner in footer
+	 * Display banner in footer.
 	 */
 	public function display_footer_banner() {
 		if ( ! get_option( 'iwz_banner_wp_footer_enabled' ) ) {
 			return;
 		}
 
-		// Get multiple banners
+		// Get multiple banners.
 		$banners = get_option( 'iwz_banner_wp_footer_banners', array() );
 
-		// Fallback to legacy single banner if no multiple banners exist
+		// Fallback to legacy single banner if no multiple banners exist.
 		if ( empty( $banners ) ) {
 			$legacy_code = get_option( 'iwz_banner_wp_footer_code', '' );
 			if ( ! empty( $legacy_code ) ) {
-				echo $legacy_code;
+				echo wp_kses_post( $legacy_code );
 			}
 			return;
 		}
 
-		// Display enabled banners that match device targeting
+		// Display enabled banners that match device targeting.
 		foreach ( $banners as $banner ) {
 			if ( ! empty( $banner['enabled'] ) && ! empty( $banner['code'] ) ) {
 				$device_targeting = $banner['device_targeting'] ?? 'all';
 				if ( $this->should_display_for_device( $device_targeting ) ) {
-					echo $banner['code'];
+					echo wp_kses_post( $banner['code'] );
 				}
 			}
 		}
 	}
 
 	/**
-	 * Display banner in content
+	 * Display banner in content.
+	 *
+	 * @param string $content The post content.
+	 * @return string Modified content with banners.
 	 */
 	public function display_content_banner( $content ) {
 		if ( ! is_singular() || is_feed() || is_admin() ) {
 			return $content;
 		}
 
-		// Check if enabled
+		// Check if enabled.
 		if ( ! get_option( 'iwz_banner_the_content_enabled' ) ) {
 			return $content;
 		}
 
-		// Get content banners array
+		// Get content banners array.
 		$content_banners = get_option( 'iwz_banner_the_content_banners', array() );
 
-		// Legacy support - migrate old single banner if new array is empty
+		// Legacy support - migrate old single banner if new array is empty.
 		if ( empty( $content_banners ) ) {
 			$legacy_code = get_option( 'iwz_banner_the_content_code', '' );
 			if ( ! empty( $legacy_code ) ) {
@@ -214,35 +255,35 @@ class IWZ_Banner_Container {
 
 		$current_post_type = get_post_type();
 
-		// Group banners by position for efficient processing
+		// Group banners by position for efficient processing.
 		$top_banners       = array();
 		$bottom_banners    = array();
 		$paragraph_banners = array();
 
 		foreach ( $content_banners as $banner ) {
-			// Skip disabled banners
+			// Skip disabled banners.
 			if ( empty( $banner['enabled'] ) ) {
 				continue;
 			}
 
-			// Skip if banner has no code
+			// Skip if banner has no code.
 			if ( empty( $banner['code'] ) ) {
 				continue;
 			}
 
-			// Check post type restrictions
+			// Check post type restrictions.
 			$banner_post_types = $banner['post_types'] ?? array( 'post' );
-			if ( ! empty( $banner_post_types ) && ! in_array( $current_post_type, (array) $banner_post_types ) ) {
+			if ( ! empty( $banner_post_types ) && ! in_array( $current_post_type, (array) $banner_post_types, true ) ) {
 				continue;
 			}
 
-			// Check device targeting
+			// Check device targeting.
 			$device_targeting = $banner['device_targeting'] ?? 'all';
 			if ( ! $this->should_display_for_device( $device_targeting ) ) {
 				continue;
 			}
 
-			// Group by position
+			// Group by position.
 			switch ( $banner['position'] ?? 'top' ) {
 				case 'top':
 					$top_banners[] = $banner['code'];
@@ -263,19 +304,20 @@ class IWZ_Banner_Container {
 			}
 		}
 
-		// Add top banners
+		// Add top banners.
 		if ( ! empty( $top_banners ) ) {
 			$content = implode( '', $top_banners ) . $content;
 		}
 
-		// Add paragraph banners
+		// Add paragraph banners.
 		if ( ! empty( $paragraph_banners ) ) {
 			$parts       = explode( '</p>', $content );
 			$new_content = '';
+			$parts_count = count( $parts );
 
-			for ( $i = 0; $i < count( $parts ); $i++ ) {
+			for ( $i = 0; $i < $parts_count; $i++ ) {
 				$new_content .= $parts[ $i ];
-				if ( $i < count( $parts ) - 1 ) { // Don't add </p> to the last part
+				if ( $i < $parts_count - 1 ) { // Don't add </p> to the last part.
 					$new_content .= '</p>';
 				}
 
@@ -288,7 +330,7 @@ class IWZ_Banner_Container {
 			$content = $new_content;
 		}
 
-		// Add bottom banners
+		// Add bottom banners.
 		if ( ! empty( $bottom_banners ) ) {
 			$content .= implode( '', $bottom_banners );
 		}
@@ -297,75 +339,84 @@ class IWZ_Banner_Container {
 	}
 
 	/**
-	 * Display banner before sidebar
+	 * Display banner before sidebar.
+	 *
+	 * @param string $name The sidebar name.
 	 */
-	public function display_sidebar_banner( $name ) {
+	public function display_sidebar_banner( $name ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
 		if ( ! get_option( 'iwz_banner_get_sidebar_enabled' ) ) {
 			return;
 		}
 
-		// Get multiple banners or fall back to legacy single banner
+		// Get multiple banners or fall back to legacy single banner.
 		$banners = get_option( 'iwz_banner_get_sidebar_banners', array() );
 
 		if ( empty( $banners ) ) {
-			// Check for legacy single banner
+			// Check for legacy single banner.
 			$legacy_code = get_option( 'iwz_banner_get_sidebar_code', '' );
 			if ( ! empty( $legacy_code ) ) {
-				echo $legacy_code;
+				echo wp_kses_post( $legacy_code );
 			}
 			return;
 		}
 
-		// Display multiple banners with device targeting
+		// Display multiple banners with device targeting.
 		foreach ( $banners as $banner ) {
 			if ( empty( $banner['enabled'] ) || empty( $banner['code'] ) ) {
 				continue;
 			}
 
-			// Check device targeting
+			// Check device targeting.
 			if ( ! $this->should_display_for_device( $banner['device_targeting'] ?? 'all' ) ) {
 				continue;
 			}
 
-			echo $banner['code'];
+			echo wp_kses_post( $banner['code'] );
 		}
 	}
 
 	/**
-	 * Display banner in menu
+	 * Display banner in menu.
+	 *
+	 * @param string $items The menu items HTML.
+	 * @param object $args The menu arguments.
+	 * @return string Modified menu items with banners.
 	 */
 	public function display_menu_banner( $items, $args ) {
+		// Prevent issues with admin menus or specific menu locations if needed.
+		unset( $args ); // Acknowledge parameter to avoid phpcs warning.
+
 		if ( ! get_option( 'iwz_banner_wp_nav_menu_items_enabled' ) ) {
 			return $items;
 		}
 
-		// Get multiple banners or fall back to legacy single banner
+		// Get multiple banners or fall back to legacy single banner.
 		$banners = get_option( 'iwz_banner_wp_nav_menu_items_banners', array() );
 
 		if ( empty( $banners ) ) {
-			// Check for legacy single banner
+			// Check for legacy single banner.
 			$legacy_code = get_option( 'iwz_banner_wp_nav_menu_items_code', '' );
 			if ( ! empty( $legacy_code ) ) {
-				// Wrap in li for proper menu structure
-				$banner_html = '<li class="menu-item iwz-banner-container-menu-item">' . $legacy_code . '</li>';
+				// Wrap in li for proper menu structure.
+				$banner_html = '<li class="menu-item iwz-banner-container-menu-item">' . wp_kses_post( $legacy_code ) . '</li>';
 				$items      .= $banner_html;
 			}
 			return $items;
 		}
 
-		// Display multiple banners with device targeting
+		// Display multiple banners with device targeting.
 		foreach ( $banners as $banner ) {
 			if ( empty( $banner['enabled'] ) || empty( $banner['code'] ) ) {
 				continue;
 			}
 
-			// Check device targeting
+			// Check device targeting.
 			if ( ! $this->should_display_for_device( $banner['device_targeting'] ?? 'all' ) ) {
 				continue;
 			}
 
-			// Wrap in li for proper menu structure
-			$banner_html = '<li class="menu-item iwz-banner-container-menu-item">' . $banner['code'] . '</li>';
+			// Wrap in li for proper menu structure.
+			$banner_html = '<li class="menu-item iwz-banner-container-menu-item">' . wp_kses_post( $banner['code'] ) . '</li>';
 			$items      .= $banner_html;
 		}
 
@@ -373,14 +424,16 @@ class IWZ_Banner_Container {
 	}
 
 	/**
-	 * Display banner at custom location
+	 * Display banner at custom location.
+	 *
+	 * @param string $location The custom location identifier.
 	 */
 	private function display_custom_banner( $location ) {
 		$enabled_field = 'iwz_banner_' . str_replace( '-', '_', sanitize_title( $location ) ) . '_enabled';
 		$code_field    = 'iwz_banner_' . str_replace( '-', '_', sanitize_title( $location ) ) . '_code';
 
 		if ( get_option( $enabled_field ) ) {
-			echo get_option( $code_field, '' );
+			echo wp_kses_post( get_option( $code_field, '' ) );
 		}
 	}
 }
