@@ -46,6 +46,8 @@ The plugin is lightweight and only loads the necessary code on the frontend. It 
 
 ## Changelog
 
+### 1.2.2
+* settings page text area visibility improvement
 ### 1.2.1
 * prefix imwz
 * additional renaming
