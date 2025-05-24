@@ -15,18 +15,21 @@ $banner_options = array(
     // Header location
     'iwz_banner_wp_head_enabled',
     'iwz_banner_wp_head_code',
+    'iwz_banner_wp_head_banners',
     
     // Footer location
     'iwz_banner_wp_footer_enabled',
     'iwz_banner_wp_footer_code',
+    'iwz_banner_wp_footer_banners',
     
     // Content location
     'iwz_banner_the_content_enabled',
     'iwz_banner_the_content_code',
+    'iwz_banner_the_content_banners',
     'iwz_banner_content_position',
     'iwz_banner_content_paragraph',
     'iwz_banner_content_post_types',
-    'iwz_banner_content_banners', // New multiple banners option
+    'iwz_banner_content_banners', // Legacy multiple banners option
     
     // Sidebar location
     'iwz_banner_get_sidebar_enabled',

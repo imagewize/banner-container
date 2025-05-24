@@ -90,37 +90,26 @@ class IWZ_Banner_Container_Settings {
     public function register_settings() {
         // Register a setting group for each location
         foreach ($this->banner_locations as $location_key => $location_label) {
-            // Register setting for enabled status
-            register_setting(
-                'iwz_banner_container_settings',
-                'iwz_banner_' . $location_key . '_enabled',
-                array(
-                    'type' => 'boolean',
-                    'sanitize_callback' => 'rest_sanitize_boolean',
-                    'default' => false,
-                )
-            );
-
-            // Register setting for iframe code
-            register_setting(
-                'iwz_banner_container_settings',
-                'iwz_banner_' . $location_key . '_code',
-                array(
-                    'type' => 'string',
-                    'sanitize_callback' => array($this, 'sanitize_iframe_code'),
-                    'default' => '',
-                )
-            );
-
-            // For content banner, add additional settings
-            if ($location_key === 'the_content') {
-                // Multiple content banners setting
+            // For head, footer, and content banners, use the new multiple banner system
+            if (in_array($location_key, array('wp_head', 'wp_footer', 'the_content'))) {
+                // Register setting for enabled status
                 register_setting(
                     'iwz_banner_container_settings',
-                    'iwz_banner_content_banners',
+                    'iwz_banner_' . $location_key . '_enabled',
+                    array(
+                        'type' => 'boolean',
+                        'sanitize_callback' => 'rest_sanitize_boolean',
+                        'default' => false,
+                    )
+                );
+
+                // Register multiple banners setting
+                register_setting(
+                    'iwz_banner_container_settings',
+                    'iwz_banner_' . $location_key . '_banners',
                     array(
                         'type' => 'array',
-                        'sanitize_callback' => array($this, 'sanitize_content_banners'),
+                        'sanitize_callback' => array($this, 'sanitize_location_banners'),
                         'default' => array(),
                     )
                 );
@@ -128,31 +117,67 @@ class IWZ_Banner_Container_Settings {
                 // Keep legacy settings for backward compatibility
                 register_setting(
                     'iwz_banner_container_settings',
-                    'iwz_banner_content_position',
+                    'iwz_banner_' . $location_key . '_code',
                     array(
                         'type' => 'string',
-                        'sanitize_callback' => 'sanitize_text_field',
-                        'default' => 'top',
+                        'sanitize_callback' => array($this, 'sanitize_iframe_code'),
+                        'default' => '',
                     )
                 );
 
+                // For content banner, add additional legacy settings
+                if ($location_key === 'the_content') {
+                    register_setting(
+                        'iwz_banner_container_settings',
+                        'iwz_banner_content_position',
+                        array(
+                            'type' => 'string',
+                            'sanitize_callback' => 'sanitize_text_field',
+                            'default' => 'top',
+                        )
+                    );
+
+                    register_setting(
+                        'iwz_banner_container_settings',
+                        'iwz_banner_content_paragraph',
+                        array(
+                            'type' => 'integer',
+                            'sanitize_callback' => 'absint',
+                            'default' => 3,
+                        )
+                    );
+
+                    register_setting(
+                        'iwz_banner_container_settings',
+                        'iwz_banner_content_post_types',
+                        array(
+                            'type' => 'array',
+                            'sanitize_callback' => array($this, 'sanitize_post_types'),
+                            'default' => array('post'),
+                        )
+                    );
+                }
+            } else {
+                // For other locations, use the original single banner system
+                // Register setting for enabled status
                 register_setting(
                     'iwz_banner_container_settings',
-                    'iwz_banner_content_paragraph',
+                    'iwz_banner_' . $location_key . '_enabled',
                     array(
-                        'type' => 'integer',
-                        'sanitize_callback' => 'absint',
-                        'default' => 3,
+                        'type' => 'boolean',
+                        'sanitize_callback' => 'rest_sanitize_boolean',
+                        'default' => false,
                     )
                 );
 
+                // Register setting for iframe code
                 register_setting(
                     'iwz_banner_container_settings',
-                    'iwz_banner_content_post_types',
+                    'iwz_banner_' . $location_key . '_code',
                     array(
-                        'type' => 'array',
-                        'sanitize_callback' => array($this, 'sanitize_post_types'),
-                        'default' => array('post'),
+                        'type' => 'string',
+                        'sanitize_callback' => array($this, 'sanitize_iframe_code'),
+                        'default' => '',
                     )
                 );
             }
@@ -222,9 +247,9 @@ class IWZ_Banner_Container_Settings {
     }
 
     /**
-     * Sanitize content banners array
+     * Sanitize location banners array (for head, footer, content)
      */
-    public function sanitize_content_banners($input) {
+    public function sanitize_location_banners($input) {
         if (!is_array($input)) {
             return array();
         }
@@ -237,11 +262,16 @@ class IWZ_Banner_Container_Settings {
             
             $sanitized_banner = array(
                 'code' => $this->sanitize_iframe_code($banner['code'] ?? ''),
-                'position' => sanitize_text_field($banner['position'] ?? 'top'),
-                'paragraph' => absint($banner['paragraph'] ?? 3),
-                'post_types' => $this->sanitize_post_types($banner['post_types'] ?? array('post')),
+                'device_targeting' => sanitize_text_field($banner['device_targeting'] ?? 'all'),
                 'enabled' => !empty($banner['enabled'])
             );
+            
+            // Add content-specific fields if they exist
+            if (isset($banner['position'])) {
+                $sanitized_banner['position'] = sanitize_text_field($banner['position']);
+                $sanitized_banner['paragraph'] = absint($banner['paragraph'] ?? 3);
+                $sanitized_banner['post_types'] = $this->sanitize_post_types($banner['post_types'] ?? array('post'));
+            }
             
             // Only add non-empty banners
             if (!empty($sanitized_banner['code'])) {
@@ -250,6 +280,13 @@ class IWZ_Banner_Container_Settings {
         }
         
         return $sanitized;
+    }
+
+    /**
+     * Sanitize content banners array (legacy method, now redirects to location banners)
+     */
+    public function sanitize_content_banners($input) {
+        return $this->sanitize_location_banners($input);
     }
 
     /**
@@ -307,7 +344,7 @@ class IWZ_Banner_Container_Settings {
                         
                         <?php if ($location_key === 'the_content') : ?>
                             <?php 
-                                $content_banners = get_option('iwz_banner_content_banners', array());
+                                $content_banners = get_option('iwz_banner_the_content_banners', array());
                                 
                                 // Migrate legacy data if exists and new data is empty
                                 if (empty($content_banners)) {
@@ -318,6 +355,7 @@ class IWZ_Banner_Container_Settings {
                                             'position' => get_option('iwz_banner_content_position', 'top'),
                                             'paragraph' => get_option('iwz_banner_content_paragraph', 3),
                                             'post_types' => get_option('iwz_banner_content_post_types', array('post')),
+                                            'device_targeting' => 'all',
                                             'enabled' => true
                                         ));
                                     }
@@ -330,6 +368,7 @@ class IWZ_Banner_Container_Settings {
                                         'position' => 'top',
                                         'paragraph' => 3,
                                         'post_types' => array('post'),
+                                        'device_targeting' => 'all',
                                         'enabled' => false
                                     ));
                                 }
@@ -374,7 +413,7 @@ class IWZ_Banner_Container_Settings {
                                                             <td>
                                                                 <input type="checkbox" 
                                                                        id="iwz_content_banner_enabled_<?php echo $index; ?>" 
-                                                                       name="iwz_banner_content_banners[<?php echo $index; ?>][enabled]" 
+                                                                       name="iwz_banner_the_content_banners[<?php echo $index; ?>][enabled]" 
                                                                        value="1" 
                                                                        <?php checked(!empty($banner['enabled'])); ?> />
                                                             </td>
@@ -387,7 +426,7 @@ class IWZ_Banner_Container_Settings {
                                                             </th>
                                                             <td>
                                                                 <textarea id="iwz_content_banner_code_<?php echo $index; ?>" 
-                                                                          name="iwz_banner_content_banners[<?php echo $index; ?>][code]" 
+                                                                          name="iwz_banner_the_content_banners[<?php echo $index; ?>][code]" 
                                                                           rows="6" 
                                                                           class="large-text code"><?php echo esc_textarea($banner['code'] ?? ''); ?></textarea>
                                                                 <p class="description">
@@ -403,7 +442,7 @@ class IWZ_Banner_Container_Settings {
                                                             </th>
                                                             <td>
                                                                 <select id="iwz_content_banner_position_<?php echo $index; ?>" 
-                                                                        name="iwz_banner_content_banners[<?php echo $index; ?>][position]" 
+                                                                        name="iwz_banner_the_content_banners[<?php echo $index; ?>][position]" 
                                                                         class="iwz-banner-position-select">
                                                                     <option value="top" <?php selected('top', $banner['position'] ?? 'top'); ?>>
                                                                         <?php _e('Top of content', 'banner-container-plugin'); ?>
@@ -426,11 +465,35 @@ class IWZ_Banner_Container_Settings {
                                                             <td>
                                                                 <input type="number" 
                                                                        id="iwz_content_banner_paragraph_<?php echo $index; ?>" 
-                                                                       name="iwz_banner_content_banners[<?php echo $index; ?>][paragraph]" 
+                                                                       name="iwz_banner_the_content_banners[<?php echo $index; ?>][paragraph]" 
                                                                        min="1" 
                                                                        value="<?php echo esc_attr($banner['paragraph'] ?? 3); ?>" />
                                                                 <p class="description">
                                                                     <?php _e('Display after which paragraph? (Enter 1 for after first paragraph, 2 for second, etc.)', 'banner-container-plugin'); ?>
+                                                                </p>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th scope="row">
+                                                                <label for="iwz_content_banner_device_<?php echo $index; ?>">
+                                                                    <?php _e('Device Targeting', 'banner-container-plugin'); ?>
+                                                                </label>
+                                                            </th>
+                                                            <td>
+                                                                <select id="iwz_content_banner_device_<?php echo $index; ?>" 
+                                                                        name="iwz_banner_the_content_banners[<?php echo $index; ?>][device_targeting]">
+                                                                    <option value="all" <?php selected('all', $banner['device_targeting'] ?? 'all'); ?>>
+                                                                        <?php _e('All Devices', 'banner-container-plugin'); ?>
+                                                                    </option>
+                                                                    <option value="desktop" <?php selected('desktop', $banner['device_targeting'] ?? 'all'); ?>>
+                                                                        <?php _e('Desktop Only', 'banner-container-plugin'); ?>
+                                                                    </option>
+                                                                    <option value="mobile" <?php selected('mobile', $banner['device_targeting'] ?? 'all'); ?>>
+                                                                        <?php _e('Mobile Only', 'banner-container-plugin'); ?>
+                                                                    </option>
+                                                                </select>
+                                                                <p class="description">
+                                                                    <?php _e('Choose which devices should display this banner.', 'banner-container-plugin'); ?>
                                                                 </p>
                                                             </td>
                                                         </tr>
@@ -446,7 +509,7 @@ class IWZ_Banner_Container_Settings {
                                                                 foreach ($this->get_post_types() as $post_type => $post_type_label) : ?>
                                                                     <label>
                                                                         <input type="checkbox" 
-                                                                               name="iwz_banner_content_banners[<?php echo $index; ?>][post_types][]" 
+                                                                               name="iwz_banner_the_content_banners[<?php echo $index; ?>][post_types][]" 
                                                                                value="<?php echo esc_attr($post_type); ?>" 
                                                                                <?php checked(in_array($post_type, (array) $banner_post_types)); ?> />
                                                                         <?php echo esc_html($post_type_label); ?>
@@ -472,36 +535,163 @@ class IWZ_Banner_Container_Settings {
                             </table>
                         
                         <?php else : ?>
-                            <!-- Standard banner locations (non-content) -->
-                            <table class="form-table">
-                                <tr>
-                                    <th scope="row">
-                                        <label for="iwz_banner_<?php echo esc_attr($location_key); ?>_enabled">
-                                            <?php printf(__('Enable %s Banner', 'banner-container-plugin'), esc_html($location_label)); ?>
-                                        </label>
-                                    </th>
-                                    <td>
-                                        <input type="checkbox" id="iwz_banner_<?php echo esc_attr($location_key); ?>_enabled" 
-                                               name="iwz_banner_<?php echo esc_attr($location_key); ?>_enabled" 
-                                               value="1" <?php checked(1, $enabled); ?> />
-                                    </td>
-                                </tr>
-                                <tr class="iwz-banner-container-code-field">
-                                    <th scope="row">
-                                        <label for="iwz_banner_<?php echo esc_attr($location_key); ?>_code">
-                                            <?php printf(__('%s Banner Code', 'banner-container-plugin'), esc_html($location_label)); ?>
-                                        </label>
-                                    </th>
-                                    <td>
-                                        <textarea id="iwz_banner_<?php echo esc_attr($location_key); ?>_code" 
-                                                  name="iwz_banner_<?php echo esc_attr($location_key); ?>_code" 
-                                                  rows="6" class="large-text code"><?php echo esc_textarea($code); ?></textarea>
-                                        <p class="description">
-                                            <?php _e('Enter the iframe or banner code to insert at this location.', 'banner-container-plugin'); ?>
-                                        </p>
-                                    </td>
-                                </tr>
-                            </table>
+                            <!-- Multiple banner locations (head, footer) -->
+                            <?php if (in_array($location_key, array('wp_head', 'wp_footer'))) : ?>
+                                <?php 
+                                    $location_banners = get_option('iwz_banner_' . $location_key . '_banners', array());
+                                    
+                                    // Migrate legacy data if exists and new data is empty
+                                    if (empty($location_banners)) {
+                                        $legacy_code = get_option('iwz_banner_' . $location_key . '_code', '');
+                                        if (!empty($legacy_code)) {
+                                            $location_banners = array(array(
+                                                'code' => $legacy_code,
+                                                'device_targeting' => 'all',
+                                                'enabled' => true
+                                            ));
+                                        }
+                                    }
+                                    
+                                    // Ensure at least one banner for new setups
+                                    if (empty($location_banners)) {
+                                        $location_banners = array(array(
+                                            'code' => '',
+                                            'device_targeting' => 'all',
+                                            'enabled' => false
+                                        ));
+                                    }
+                                ?>
+                                <table class="form-table">
+                                    <tr>
+                                        <th scope="row">
+                                            <label for="iwz_banner_<?php echo esc_attr($location_key); ?>_enabled">
+                                                <?php printf(__('Enable %s Banner', 'banner-container-plugin'), esc_html($location_label)); ?>
+                                            </label>
+                                        </th>
+                                        <td>
+                                            <input type="checkbox" id="iwz_banner_<?php echo esc_attr($location_key); ?>_enabled" 
+                                                   name="iwz_banner_<?php echo esc_attr($location_key); ?>_enabled" 
+                                                   value="1" <?php checked(1, $enabled); ?> />
+                                        </td>
+                                    </tr>
+                                    <tr class="iwz-banner-container-code-field">
+                                        <td colspan="2">
+                                            <h3><?php printf(__('%s Banners', 'banner-container-plugin'), esc_html($location_label)); ?></h3>
+                                            <p class="description">
+                                                <?php printf(__('Add multiple banners to display in the %s location. Each banner can target specific devices.', 'banner-container-plugin'), strtolower($location_label)); ?>
+                                            </p>
+                                            
+                                            <div id="iwz-<?php echo esc_attr($location_key); ?>-banners-container">
+                                                <?php foreach ($location_banners as $index => $banner) : ?>
+                                                    <div class="iwz-location-banner-item" data-index="<?php echo $index; ?>" data-location="<?php echo esc_attr($location_key); ?>">
+                                                        <div class="iwz-location-banner-header">
+                                                            <h4><?php printf(__('Banner %d', 'banner-container-plugin'), $index + 1); ?></h4>
+                                                            <button type="button" class="button iwz-remove-location-banner" <?php echo count($location_banners) <= 1 ? 'style="display:none;"' : ''; ?>>
+                                                                <?php _e('Remove', 'banner-container-plugin'); ?>
+                                                            </button>
+                                                        </div>
+                                                        
+                                                        <table class="form-table iwz-location-banner-settings">
+                                                            <tr>
+                                                                <th scope="row">
+                                                                    <label for="iwz_<?php echo $location_key; ?>_banner_enabled_<?php echo $index; ?>">
+                                                                        <?php _e('Enable Banner', 'banner-container-plugin'); ?>
+                                                                    </label>
+                                                                </th>
+                                                                <td>
+                                                                    <input type="checkbox" 
+                                                                           id="iwz_<?php echo $location_key; ?>_banner_enabled_<?php echo $index; ?>" 
+                                                                           name="iwz_banner_<?php echo $location_key; ?>_banners[<?php echo $index; ?>][enabled]" 
+                                                                           value="1" 
+                                                                           <?php checked(!empty($banner['enabled'])); ?> />
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th scope="row">
+                                                                    <label for="iwz_<?php echo $location_key; ?>_banner_code_<?php echo $index; ?>">
+                                                                        <?php _e('Banner Code', 'banner-container-plugin'); ?>
+                                                                    </label>
+                                                                </th>
+                                                                <td>
+                                                                    <textarea id="iwz_<?php echo $location_key; ?>_banner_code_<?php echo $index; ?>" 
+                                                                              name="iwz_banner_<?php echo $location_key; ?>_banners[<?php echo $index; ?>][code]" 
+                                                                              rows="6" 
+                                                                              class="large-text code"><?php echo esc_textarea($banner['code'] ?? ''); ?></textarea>
+                                                                    <p class="description">
+                                                                        <?php _e('Enter the iframe or banner code to insert.', 'banner-container-plugin'); ?>
+                                                                    </p>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th scope="row">
+                                                                    <label for="iwz_<?php echo $location_key; ?>_banner_device_<?php echo $index; ?>">
+                                                                        <?php _e('Device Targeting', 'banner-container-plugin'); ?>
+                                                                    </label>
+                                                                </th>
+                                                                <td>
+                                                                    <select id="iwz_<?php echo $location_key; ?>_banner_device_<?php echo $index; ?>" 
+                                                                            name="iwz_banner_<?php echo $location_key; ?>_banners[<?php echo $index; ?>][device_targeting]">
+                                                                        <option value="all" <?php selected('all', $banner['device_targeting'] ?? 'all'); ?>>
+                                                                            <?php _e('All Devices', 'banner-container-plugin'); ?>
+                                                                        </option>
+                                                                        <option value="desktop" <?php selected('desktop', $banner['device_targeting'] ?? 'all'); ?>>
+                                                                            <?php _e('Desktop Only', 'banner-container-plugin'); ?>
+                                                                        </option>
+                                                                        <option value="mobile" <?php selected('mobile', $banner['device_targeting'] ?? 'all'); ?>>
+                                                                            <?php _e('Mobile Only', 'banner-container-plugin'); ?>
+                                                                        </option>
+                                                                    </select>
+                                                                    <p class="description">
+                                                                        <?php _e('Choose which devices should display this banner.', 'banner-container-plugin'); ?>
+                                                                    </p>
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    </div>
+                                                <?php endforeach; ?>
+                                            </div>
+                                            
+                                            <p>
+                                                <button type="button" class="iwz-add-location-banner button" data-location="<?php echo esc_attr($location_key); ?>">
+                                                    <?php _e('Add Another Banner', 'banner-container-plugin'); ?>
+                                                </button>
+                                            </p>
+                                        </td>
+                                    </tr>
+                                </table>
+                            
+                            <?php else : ?>
+                                <!-- Standard banner locations (sidebar, menu) -->
+                                <table class="form-table">
+                                    <tr>
+                                        <th scope="row">
+                                            <label for="iwz_banner_<?php echo esc_attr($location_key); ?>_enabled">
+                                                <?php printf(__('Enable %s Banner', 'banner-container-plugin'), esc_html($location_label)); ?>
+                                            </label>
+                                        </th>
+                                        <td>
+                                            <input type="checkbox" id="iwz_banner_<?php echo esc_attr($location_key); ?>_enabled" 
+                                                   name="iwz_banner_<?php echo esc_attr($location_key); ?>_enabled" 
+                                                   value="1" <?php checked(1, $enabled); ?> />
+                                        </td>
+                                    </tr>
+                                    <tr class="iwz-banner-container-code-field">
+                                        <th scope="row">
+                                            <label for="iwz_banner_<?php echo esc_attr($location_key); ?>_code">
+                                                <?php printf(__('%s Banner Code', 'banner-container-plugin'), esc_html($location_label)); ?>
+                                            </label>
+                                        </th>
+                                        <td>
+                                            <textarea id="iwz_banner_<?php echo esc_attr($location_key); ?>_code" 
+                                                      name="iwz_banner_<?php echo esc_attr($location_key); ?>_code" 
+                                                      rows="6" class="large-text code"><?php echo esc_textarea($code); ?></textarea>
+                                            <p class="description">
+                                                <?php _e('Enter the iframe or banner code to insert at this location.', 'banner-container-plugin'); ?>
+                                            </p>
+                                        </td>
+                                    </tr>
+                                </table>
+                            <?php endif; ?>
                         <?php endif; ?>
                     </div>
                     <hr>
@@ -546,7 +736,7 @@ class IWZ_Banner_Container_Settings {
                 
                 // Generate post types checkboxes
                 <?php foreach ($this->get_post_types() as $post_type => $post_type_label) : ?>
-                postTypesHtml += '<label><input type="checkbox" name="iwz_banner_content_banners[' + newIndex + '][post_types][]" value="<?php echo esc_attr($post_type); ?>" checked /> <?php echo esc_html($post_type_label); ?></label><br>';
+                postTypesHtml += '<label><input type="checkbox" name="iwz_banner_the_content_banners[' + newIndex + '][post_types][]" value="<?php echo esc_attr($post_type); ?>" checked /> <?php echo esc_html($post_type_label); ?></label><br>';
                 <?php endforeach; ?>
                 
                 var newBannerHtml = '<div class="iwz-content-banner-item" data-index="' + newIndex + '">' +
@@ -557,15 +747,15 @@ class IWZ_Banner_Container_Settings {
                     '<table class="form-table iwz-content-banner-settings">' +
                         '<tr>' +
                             '<th scope="row"><label for="iwz_content_banner_enabled_' + newIndex + '"><?php _e("Enable Banner", "banner-container-plugin"); ?></label></th>' +
-                            '<td><input type="checkbox" id="iwz_content_banner_enabled_' + newIndex + '" name="iwz_banner_content_banners[' + newIndex + '][enabled]" value="1" /></td>' +
+                            '<td><input type="checkbox" id="iwz_content_banner_enabled_' + newIndex + '" name="iwz_banner_the_content_banners[' + newIndex + '][enabled]" value="1" /></td>' +
                         '</tr>' +
                         '<tr>' +
                             '<th scope="row"><label for="iwz_content_banner_code_' + newIndex + '"><?php _e("Banner Code", "banner-container-plugin"); ?></label></th>' +
-                            '<td><textarea id="iwz_content_banner_code_' + newIndex + '" name="iwz_banner_content_banners[' + newIndex + '][code]" rows="6" class="large-text code"></textarea><p class="description"><?php _e("Enter the iframe or banner code to insert.", "banner-container-plugin"); ?></p></td>' +
+                            '<td><textarea id="iwz_content_banner_code_' + newIndex + '" name="iwz_banner_the_content_banners[' + newIndex + '][code]" rows="6" class="large-text code"></textarea><p class="description"><?php _e("Enter the iframe or banner code to insert.", "banner-container-plugin"); ?></p></td>' +
                         '</tr>' +
                         '<tr>' +
                             '<th scope="row"><label for="iwz_content_banner_position_' + newIndex + '"><?php _e("Position", "banner-container-plugin"); ?></label></th>' +
-                            '<td><select id="iwz_content_banner_position_' + newIndex + '" name="iwz_banner_content_banners[' + newIndex + '][position]" class="iwz-banner-position-select">' +
+                            '<td><select id="iwz_content_banner_position_' + newIndex + '" name="iwz_banner_the_content_banners[' + newIndex + '][position]" class="iwz-banner-position-select">' +
                                 '<option value="top"><?php _e("Top of content", "banner-container-plugin"); ?></option>' +
                                 '<option value="bottom"><?php _e("Bottom of content", "banner-container-plugin"); ?></option>' +
                                 '<option value="after_paragraph"><?php _e("After specific paragraph", "banner-container-plugin"); ?></option>' +
@@ -573,7 +763,15 @@ class IWZ_Banner_Container_Settings {
                         '</tr>' +
                         '<tr class="iwz-paragraph-field" style="display:none;">' +
                             '<th scope="row"><label for="iwz_content_banner_paragraph_' + newIndex + '"><?php _e("Paragraph Number", "banner-container-plugin"); ?></label></th>' +
-                            '<td><input type="number" id="iwz_content_banner_paragraph_' + newIndex + '" name="iwz_banner_content_banners[' + newIndex + '][paragraph]" min="1" value="3" /><p class="description"><?php _e("Display after which paragraph? (Enter 1 for after first paragraph, 2 for second, etc.)", "banner-container-plugin"); ?></p></td>' +
+                            '<td><input type="number" id="iwz_content_banner_paragraph_' + newIndex + '" name="iwz_banner_the_content_banners[' + newIndex + '][paragraph]" min="1" value="3" /><p class="description"><?php _e("Display after which paragraph? (Enter 1 for after first paragraph, 2 for second, etc.)", "banner-container-plugin"); ?></p></td>' +
+                        '</tr>' +
+                        '<tr>' +
+                            '<th scope="row"><label for="iwz_content_banner_device_' + newIndex + '"><?php _e("Device Targeting", "banner-container-plugin"); ?></label></th>' +
+                            '<td><select id="iwz_content_banner_device_' + newIndex + '" name="iwz_banner_the_content_banners[' + newIndex + '][device_targeting]">' +
+                                '<option value="all"><?php _e("All Devices", "banner-container-plugin"); ?></option>' +
+                                '<option value="desktop"><?php _e("Desktop Only", "banner-container-plugin"); ?></option>' +
+                                '<option value="mobile"><?php _e("Mobile Only", "banner-container-plugin"); ?></option>' +
+                            '</select><p class="description"><?php _e("Choose which devices should display this banner.", "banner-container-plugin"); ?></p></td>' +
                         '</tr>' +
                         '<tr>' +
                             '<th scope="row"><label><?php _e("Apply to Post Types", "banner-container-plugin"); ?></label></th>' +
@@ -593,9 +791,79 @@ class IWZ_Banner_Container_Settings {
                 updateRemoveButtons();
             });
             
+            // Add location banner (head/footer)
+            $(document).on('click', '.iwz-add-location-banner', function() {
+                var location = $(this).data('location');
+                var $container = $('#iwz-' + location + '-banners-container');
+                var newIndex = $container.find('.iwz-location-banner-item').length;
+                
+                var newBannerHtml = '<div class="iwz-location-banner-item" data-index="' + newIndex + '" data-location="' + location + '">' +
+                    '<div class="iwz-location-banner-header">' +
+                        '<h4><?php _e("Banner", "banner-container-plugin"); ?> ' + (newIndex + 1) + '</h4>' +
+                        '<button type="button" class="button iwz-remove-location-banner"><?php _e("Remove", "banner-container-plugin"); ?></button>' +
+                    '</div>' +
+                    '<table class="form-table iwz-location-banner-settings">' +
+                        '<tr>' +
+                            '<th scope="row"><label for="iwz_' + location + '_banner_enabled_' + newIndex + '"><?php _e("Enable Banner", "banner-container-plugin"); ?></label></th>' +
+                            '<td><input type="checkbox" id="iwz_' + location + '_banner_enabled_' + newIndex + '" name="iwz_banner_' + location + '_banners[' + newIndex + '][enabled]" value="1" /></td>' +
+                        '</tr>' +
+                        '<tr>' +
+                            '<th scope="row"><label for="iwz_' + location + '_banner_code_' + newIndex + '"><?php _e("Banner Code", "banner-container-plugin"); ?></label></th>' +
+                            '<td><textarea id="iwz_' + location + '_banner_code_' + newIndex + '" name="iwz_banner_' + location + '_banners[' + newIndex + '][code]" rows="6" class="large-text code"></textarea><p class="description"><?php _e("Enter the iframe or banner code to insert.", "banner-container-plugin"); ?></p></td>' +
+                        '</tr>' +
+                        '<tr>' +
+                            '<th scope="row"><label for="iwz_' + location + '_banner_device_' + newIndex + '"><?php _e("Device Targeting", "banner-container-plugin"); ?></label></th>' +
+                            '<td><select id="iwz_' + location + '_banner_device_' + newIndex + '" name="iwz_banner_' + location + '_banners[' + newIndex + '][device_targeting]">' +
+                                '<option value="all"><?php _e("All Devices", "banner-container-plugin"); ?></option>' +
+                                '<option value="desktop"><?php _e("Desktop Only", "banner-container-plugin"); ?></option>' +
+                                '<option value="mobile"><?php _e("Mobile Only", "banner-container-plugin"); ?></option>' +
+                            '</select><p class="description"><?php _e("Choose which devices should display this banner.", "banner-container-plugin"); ?></p></td>' +
+                        '</tr>' +
+                    '</table>' +
+                '</div>';
+                
+                $container.append(newBannerHtml);
+                updateLocationRemoveButtons(location);
+            });
+            
+            // Remove location banner
+            $(document).on('click', '.iwz-remove-location-banner', function() {
+                var location = $(this).closest('.iwz-location-banner-item').data('location');
+                $(this).closest('.iwz-location-banner-item').remove();
+                updateLocationBannerIndices(location);
+                updateLocationRemoveButtons(location);
+            });
+            
             // Update banner indices after removal
             function updateBannerIndices() {
                 $('#iwz-content-banners-container .iwz-content-banner-item').each(function(index) {
+                    var $item = $(this);
+                    $item.attr('data-index', index);
+                    $item.find('h4').text('<?php _e("Banner", "banner-container-plugin"); ?> ' + (index + 1));
+                    
+                    // Update all form field names and IDs
+                    $item.find('input, textarea, select').each(function() {
+                        var $field = $(this);
+                        var name = $field.attr('name');
+                        var id = $field.attr('id');
+                        
+                        if (name) {
+                            name = name.replace(/\[\d+\]/, '[' + index + ']');
+                            $field.attr('name', name);
+                        }
+                        
+                        if (id) {
+                            id = id.replace(/_\d+$/, '_' + index);
+                            $field.attr('id', id);
+                            $item.find('label[for="' + $field.attr('id').replace(/_\d+$/, '_' + (index + 1)) + '"]').attr('for', id);
+                        }
+                    });
+                });
+            }
+            
+            // Update location banner indices after removal
+            function updateLocationBannerIndices(location) {
+                $('#iwz-' + location + '-banners-container .iwz-location-banner-item').each(function(index) {
                     var $item = $(this);
                     $item.attr('data-index', index);
                     $item.find('h4').text('<?php _e("Banner", "banner-container-plugin"); ?> ' + (index + 1));
@@ -630,6 +898,16 @@ class IWZ_Banner_Container_Settings {
                 }
             }
             
+            // Show/hide location remove buttons
+            function updateLocationRemoveButtons(location) {
+                var $items = $('#iwz-' + location + '-banners-container .iwz-location-banner-item');
+                if ($items.length <= 1) {
+                    $items.find('.iwz-remove-location-banner').hide();
+                } else {
+                    $items.find('.iwz-remove-location-banner').show();
+                }
+            }
+            
             // Initialize visibility on page load
             $('input[id$="_enabled"]').each(function() {
                 var sectionContainer = $(this).closest('.iwz-banner-container-location-section');
@@ -641,8 +919,12 @@ class IWZ_Banner_Container_Settings {
                 }
             });
             
-            // Initialize remove buttons
+            // Initialize remove buttons for content banners
             updateRemoveButtons();
+            
+            // Initialize remove buttons for location banners
+            updateLocationRemoveButtons('wp_head');
+            updateLocationRemoveButtons('wp_footer');
         });
         </script>
         <?php

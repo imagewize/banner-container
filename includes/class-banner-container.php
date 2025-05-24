@@ -21,6 +21,33 @@ class IWZ_Banner_Container {
     private $banner_locations = array();
 
     /**
+     * Check if current request is from mobile device
+     *
+     * @return bool
+     */
+    private function is_mobile() {
+        return wp_is_mobile();
+    }
+
+    /**
+     * Check if banner should be displayed based on device targeting
+     *
+     * @param string $device_targeting The device targeting setting
+     * @return bool
+     */
+    private function should_display_for_device($device_targeting) {
+        switch ($device_targeting) {
+            case 'mobile':
+                return $this->is_mobile();
+            case 'desktop':
+                return !$this->is_mobile();
+            case 'all':
+            default:
+                return true;
+        }
+    }
+
+    /**
      * Initialize the plugin.
      *
      * @since    1.0.0
@@ -86,8 +113,30 @@ class IWZ_Banner_Container {
      * Display banner in header
      */
     public function display_header_banner() {
-        if (get_option('iwz_banner_wp_head_enabled')) {
-            echo get_option('iwz_banner_wp_head_code', '');
+        if (!get_option('iwz_banner_wp_head_enabled')) {
+            return;
+        }
+
+        // Get multiple banners
+        $banners = get_option('iwz_banner_wp_head_banners', array());
+        
+        // Fallback to legacy single banner if no multiple banners exist
+        if (empty($banners)) {
+            $legacy_code = get_option('iwz_banner_wp_head_code', '');
+            if (!empty($legacy_code)) {
+                echo $legacy_code;
+            }
+            return;
+        }
+
+        // Display enabled banners that match device targeting
+        foreach ($banners as $banner) {
+            if (!empty($banner['enabled']) && !empty($banner['code'])) {
+                $device_targeting = $banner['device_targeting'] ?? 'all';
+                if ($this->should_display_for_device($device_targeting)) {
+                    echo $banner['code'];
+                }
+            }
         }
     }
 
@@ -95,8 +144,30 @@ class IWZ_Banner_Container {
      * Display banner in footer
      */
     public function display_footer_banner() {
-        if (get_option('iwz_banner_wp_footer_enabled')) {
-            echo get_option('iwz_banner_wp_footer_code', '');
+        if (!get_option('iwz_banner_wp_footer_enabled')) {
+            return;
+        }
+
+        // Get multiple banners
+        $banners = get_option('iwz_banner_wp_footer_banners', array());
+        
+        // Fallback to legacy single banner if no multiple banners exist
+        if (empty($banners)) {
+            $legacy_code = get_option('iwz_banner_wp_footer_code', '');
+            if (!empty($legacy_code)) {
+                echo $legacy_code;
+            }
+            return;
+        }
+
+        // Display enabled banners that match device targeting
+        foreach ($banners as $banner) {
+            if (!empty($banner['enabled']) && !empty($banner['code'])) {
+                $device_targeting = $banner['device_targeting'] ?? 'all';
+                if ($this->should_display_for_device($device_targeting)) {
+                    echo $banner['code'];
+                }
+            }
         }
     }
 
@@ -114,7 +185,7 @@ class IWZ_Banner_Container {
         }
 
         // Get content banners array
-        $content_banners = get_option('iwz_banner_content_banners', array());
+        $content_banners = get_option('iwz_banner_the_content_banners', array());
         
         // Legacy support - migrate old single banner if new array is empty
         if (empty($content_banners)) {
@@ -125,6 +196,7 @@ class IWZ_Banner_Container {
                     'position' => get_option('iwz_banner_content_position', 'top'),
                     'paragraph' => get_option('iwz_banner_content_paragraph', 3),
                     'post_types' => get_option('iwz_banner_content_post_types', array('post')),
+                    'device_targeting' => 'all',
                     'enabled' => true
                 ));
             }
@@ -155,6 +227,12 @@ class IWZ_Banner_Container {
             // Check post type restrictions
             $banner_post_types = $banner['post_types'] ?? array('post');
             if (!empty($banner_post_types) && !in_array($current_post_type, (array) $banner_post_types)) {
+                continue;
+            }
+            
+            // Check device targeting
+            $device_targeting = $banner['device_targeting'] ?? 'all';
+            if (!$this->should_display_for_device($device_targeting)) {
                 continue;
             }
             

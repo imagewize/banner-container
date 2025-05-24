@@ -82,3 +82,67 @@ textarea[id^="iwz_content_banner_code_"] {
 #iwz-add-content-banner {
     margin-top: 10px;
 }
+
+/* Location banner styles for head/footer */
+.iwz-location-banner-item {
+    border: 1px solid #c3c4c7;
+    margin-bottom: 20px;
+    padding: 15px;
+    background: #fff;
+    border-radius: 4px;
+}
+
+.iwz-location-banner-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #dcdcde;
+}
+
+.iwz-location-banner-header h4 {
+    margin: 0;
+    color: #1d2327;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.iwz-remove-location-banner {
+    background: #dc3232;
+    border-color: #dc3232;
+    color: #fff;
+    text-decoration: none;
+    text-shadow: none;
+    font-size: 13px;
+    line-height: 2.15384615;
+    min-height: 30px;
+    padding: 0 8px 1px;
+    cursor: pointer;
+}
+
+.iwz-remove-location-banner:hover {
+    background: #b32d2e;
+    border-color: #b32d2e;
+    color: #fff;
+}
+
+.iwz-location-banner-settings {
+    margin-top: 0;
+}
+
+.iwz-location-banner-settings th {
+    width: 200px;
+    padding-left: 0;
+}
+
+.iwz-add-location-banner {
+    margin-top: 10px;
+}
+
+/* Enhanced textarea styling for banner codes */
+textarea[id^="iwz_wp_head_banner_code_"],
+textarea[id^="iwz_wp_footer_banner_code_"] {
+    font-family: monospace;
+    min-height: 150px;
+}
