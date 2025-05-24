@@ -46,6 +46,9 @@ The plugin is lightweight and only loads the necessary code on the frontend. It 
 
 ## Changelog
 
+### 1.3.0
+* Multiple Banners in Content
+
 ### 1.2.3
 * Header Placement Clarification on Options Page
 ### 1.2.2
