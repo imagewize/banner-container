@@ -59,7 +59,7 @@ class IWZ_Banner_Container_Welcome {
             <h1><?php _e('Welcome to Banner Container Plugin', 'banner-container-plugin'); ?></h1>
             
             <div class="about-text">
-                <?php _e('Thank you for installing Banner Container Plugin! This plugin allows you to easily add banner iframes to different locations in your WordPress theme.', 'banner-container-plugin'); ?>
+                <?php _e('Thank you for installing Banner Container Plugin! This plugin allows you to easily add banner containers to different locations in your WordPress theme.', 'banner-container-plugin'); ?>
             </div>
             
             <div class="iwz-banner-container-notice">
@@ -72,9 +72,9 @@ class IWZ_Banner_Container_Welcome {
             
             <div class="iwz-banner-container-section">
                 <h2><?php _e('Getting Started', 'banner-container-plugin'); ?></h2>
-                <p><?php _e('To configure your banner iframes:', 'banner-container-plugin'); ?></p>
+                <p><?php _e('To configure your banner container:', 'banner-container-plugin'); ?></p>
                 <ol>
-                    <li><?php _e('Go to the Banner Iframes settings page in your WordPress admin', 'banner-container-plugin'); ?></li>
+                    <li><?php _e('Go to the Banner Container settings page in your WordPress admin', 'banner-container-plugin'); ?></li>
                     <li><?php _e('Enable the locations where you want to display banners', 'banner-container-plugin'); ?></li>
                     <li><?php _e('Enter your iframe or banner HTML code for each location', 'banner-container-plugin'); ?></li>
                     <li><?php _e('For content banners, choose placement options (top, bottom, or after a specific paragraph)', 'banner-container-plugin'); ?></li>

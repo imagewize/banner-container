@@ -1,8 +1,8 @@
 <?php
 /**
- * Plugin Name: IWZ Banner Container Plugin
+ * Plugin Name: Banner Container Plugin
  * Plugin URI: https://imagewize.com/iwz-banner-container-plugin
- * Description: Add banner iframes to different locations in your WordPress theme.
+ * Description: Add banners to different locations in your WordPress theme.
  * Version: 1.2.1
  * Author: Jasper Frumau
  * Author URI: https://imagewize.com

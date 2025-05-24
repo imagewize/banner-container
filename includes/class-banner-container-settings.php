@@ -65,7 +65,7 @@ class IWZ_Banner_Container_Settings {
     public function add_admin_menu() {
         $this->page_hook = add_menu_page(
             __('Banner Container Settings', 'banner-container-plugin'),
-            __('Banner Iframes', 'banner-container-plugin'),
+            __('Banner Container', 'banner-container-plugin'),
             'manage_options',
             'iwz-banner-container-settings',
             array($this, 'display_admin_page'),
