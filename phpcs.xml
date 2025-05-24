@@ -1,0 +1,77 @@
+<?xml v    <!-- Exclude paths -->
+    <exclude-pattern>*/vendor/*</exclude-pattern>
+    <exclude-pattern>*/tests/*</exclude-pattern>
+    <exclude-pattern>*/node_modules/*</exclude-pattern>
+    <exclude-pattern>*/.git/*</exclude-pattern>
+    <exclude-pattern>composer.json</exclude-pattern>
+    <exclude-pattern>composer.lock</exclude-pattern>
+    <exclude-pattern>phpunit.xml</exclude-pattern>
+    <exclude-pattern>phpcs.xml</exclude-pattern>n="1.0"?>
+<ruleset name="Banner Container Plugin">
+    <description>Coding standards for Banner Container WordPress Plugin</description>
+
+    <!-- Files to check -->
+    <file>.</file>
+
+    <!-- Exclude paths -->
+    <exclude-pattern>*/vendor/*</exclude-pattern>
+    <exclude-pattern>*/tests/*</exclude-pattern>
+    <exclude-pattern>*/node_modules/*</exclude-pattern>
+    <exclude-pattern>*/.git/*</exclude-pattern>
+
+    <!-- Arguments -->
+    <arg value="sp"/> <!-- Show sniff and progress -->
+    <arg name="basepath" value="."/> <!-- Strip the file paths down to the relevant bit -->
+    <arg name="colors"/>
+    <arg name="extensions" value="php"/>
+    <arg name="parallel" value="8"/> <!-- Enables parallel processing when available for faster results -->
+
+    <!-- Rules: Check PHP version compatibility -->
+    <config name="testVersion" value="7.4-"/>
+
+    <!-- Rules: WordPress Coding Standards -->
+    <rule ref="WordPress">
+        <!-- Allow short array syntax -->
+        <exclude name="Generic.Arrays.DisallowShortArraySyntax"/>
+        
+        <!-- Allow multiple assignments in one line -->
+        <exclude name="Squiz.PHP.DisallowMultipleAssignments"/>
+        
+        <!-- Allow Yoda conditions to be optional -->
+        <exclude name="WordPress.PHP.YodaConditions.NotYoda"/>
+    </rule>
+
+    <!-- WordPress specific rules -->
+    <rule ref="WordPress.WP.I18n">
+        <properties>
+            <property name="text_domain" type="array" value="banner-container-plugin"/>
+        </properties>
+    </rule>
+
+    <!-- Check for PHP cross-version compatibility -->
+    <rule ref="PHPCompatibilityWP"/>
+
+    <!-- Set minimum WordPress version -->
+    <config name="minimum_supported_wp_version" value="5.0"/>
+
+    <!-- Verify that everything in the global namespace is prefixed -->
+    <rule ref="WordPress.NamingConventions.PrefixAllGlobals">
+        <properties>
+            <property name="prefixes" type="array" value="iwz,IWZ,Banner_Container"/>
+        </properties>
+    </rule>
+
+    <!-- Allow for theme specific exceptions if needed -->
+    <rule ref="WordPress.Files.FileName">
+        <properties>
+            <property name="strict_class_file_names" value="false"/>
+        </properties>
+    </rule>
+
+    <!-- Minimum supported WordPress version -->
+    <rule ref="WordPress.WP.DeprecatedFunctions">
+        <properties>
+            <property name="minimum_supported_version" value="5.0"/>
+        </properties>
+    </rule>
+</ruleset>

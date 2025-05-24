@@ -95,3 +95,53 @@ The plugin is lightweight and only loads the necessary code on the frontend. It 
 
 ### 1.0.0
 * Initial release
+
+## Development
+
+### Prerequisites
+
+- PHP 7.4 or higher
+- Composer
+- WordPress 5.0 or higher
+
+### Setup
+
+1. Clone the repository
+2. Install dependencies:
+   ```bash
+   composer install
+   ```
+
+### Code Quality
+
+This project uses WordPress Coding Standards (WPCS) for code quality checks.
+
+#### Available Commands
+
+- **Check code quality**: `composer phpcs-check`
+- **Check and show detailed issues**: `composer phpcs`
+- **Automatically fix code style issues**: `composer fix`
+- **Run all linting checks**: `composer lint`
+- **Run tests**: `composer test`
+
+#### Manual Commands
+
+You can also run the tools directly:
+
+```bash
+# Check coding standards
+./vendor/bin/phpcs -d memory_limit=512M --standard=WordPress --ignore=vendor,tests .
+
+# Fix coding standards automatically
+./vendor/bin/phpcbf -d memory_limit=512M --standard=WordPress --ignore=vendor,tests .
+
+# Run tests
+./vendor/bin/phpunit
+```
+
+### Contributing
+
+1. Follow WordPress Coding Standards
+2. Run `composer lint` before submitting
+3. Ensure all tests pass with `composer test`
+4. Write tests for new functionality
