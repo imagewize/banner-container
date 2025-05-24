@@ -1,10 +1,10 @@
-# Banner Iframe Plugin
+# Banner Container Plugin
 
-A WordPress plugin to add banner iframes to different locations in your WordPress theme.
+A WordPress plugin to add banners to different locations in your WordPress theme.
 
 ## Description
 
-The Banner Iframe Plugin allows you to easily add iframe codes to various locations in your WordPress site, such as:
+The Banner Container Plugin allows you to easily add iframe codes to various locations in your WordPress site, such as:
 
 - Header (before `</head>`)
 - Footer (before `</body>`)
@@ -18,7 +18,7 @@ The Banner Iframe Plugin allows you to easily add iframe codes to various locati
 
 ## Installation
 
-1. Upload the `banner-iframe-plugin` folder to the `/wp-content/plugins/` directory
+1. Upload the `banner-container-plugin` folder to the `/wp-content/plugins/` directory
 2. Activate the plugin through the 'Plugins' menu in WordPress
 3. Go to the 'Banner Iframes' menu item in the admin dashboard to configure your settings
 
