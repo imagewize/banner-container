@@ -11,14 +11,14 @@
  */
 
 // If this file is called directly, abort.
-if (!defined('WPINC')) {
-    die;
+if ( ! defined( 'WPINC' ) ) {
+	die;
 }
 
 // Define plugin constants
-define('IWZ_BANNER_CONTAINER_VERSION', '1.4.1');
-define('IWZ_BANNER_CONTAINER_PATH', plugin_dir_path(__FILE__));
-define('IWZ_BANNER_CONTAINER_URL', plugin_dir_url(__FILE__));
+define( 'IWZ_BANNER_CONTAINER_VERSION', '1.4.1' );
+define( 'IWZ_BANNER_CONTAINER_PATH', plugin_dir_path( __FILE__ ) );
+define( 'IWZ_BANNER_CONTAINER_URL', plugin_dir_url( __FILE__ ) );
 
 // Include required files
 require_once IWZ_BANNER_CONTAINER_PATH . 'includes/class-banner-container-settings.php';
@@ -27,26 +27,26 @@ require_once IWZ_BANNER_CONTAINER_PATH . 'includes/class-banner-container-welcom
 
 // Enqueue admin styles
 function iwz_banner_container_admin_styles() {
-    wp_enqueue_style('iwz-banner-container-admin', IWZ_BANNER_CONTAINER_URL . 'admin/css/iwz-banner-container-admin.css', array(), IWZ_BANNER_CONTAINER_VERSION);
+	wp_enqueue_style( 'iwz-banner-container-admin', IWZ_BANNER_CONTAINER_URL . 'admin/css/iwz-banner-container-admin.css', array(), IWZ_BANNER_CONTAINER_VERSION );
 }
-add_action('admin_enqueue_scripts', 'iwz_banner_container_admin_styles');
+add_action( 'admin_enqueue_scripts', 'iwz_banner_container_admin_styles' );
 
 // Initialize the plugin
 function iwz_banner_container_init() {
-    // Initialize main plugin class
-    $banner_container = new IWZ_Banner_Container();
-    $banner_container->init();
-    
-    // Initialize welcome page (only needed for admin)
-    if (is_admin()) {
-        new IWZ_Banner_Container_Welcome();
-    }
+	// Initialize main plugin class
+	$banner_container = new IWZ_Banner_Container();
+	$banner_container->init();
+
+	// Initialize welcome page (only needed for admin)
+	if ( is_admin() ) {
+		new IWZ_Banner_Container_Welcome();
+	}
 }
-add_action('plugins_loaded', 'iwz_banner_container_init');
+add_action( 'plugins_loaded', 'iwz_banner_container_init' );
 
 // Plugin activation hook
 function iwz_banner_container_activate() {
-    // Set transient for welcome page redirect
-    set_transient('iwz_banner_container_activation_redirect', true, 30);
+	// Set transient for welcome page redirect
+	set_transient( 'iwz_banner_container_activation_redirect', true, 30 );
 }
-register_activation_hook(__FILE__, 'iwz_banner_container_activate');
+register_activation_hook( __FILE__, 'iwz_banner_container_activate' );
