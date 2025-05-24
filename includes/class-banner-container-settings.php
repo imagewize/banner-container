@@ -4,7 +4,7 @@
  *
  * @since      1.0.0
  */
-class BANNER_CONTAINER_Settings {
+class IWZ_Banner_Container_Settings {
 
     /**
      * Banner locations to display iframes
@@ -47,7 +47,7 @@ class BANNER_CONTAINER_Settings {
         );
 
         // Allow theme/plugins to modify available locations
-        $this->banner_locations = apply_filters('BANNER_CONTAINER_locations', $this->banner_locations);
+        $this->banner_locations = apply_filters('iwz_banner_container_locations', $this->banner_locations);
     }
     
     /**
@@ -67,7 +67,7 @@ class BANNER_CONTAINER_Settings {
             __('Banner Container Settings', 'banner-container-plugin'),
             __('Banner Iframes', 'banner-container-plugin'),
             'manage_options',
-            'banner-container-settings',
+            'iwz-banner-container-settings',
             array($this, 'display_admin_page'),
             'dashicons-embed-generic',
             25
@@ -81,7 +81,7 @@ class BANNER_CONTAINER_Settings {
      * Enqueue admin-specific styles.
      */
     public function enqueue_admin_styles() {
-        wp_enqueue_style('banner-container-admin', BANNER_CONTAINER_URL . 'admin/css/banner-container-admin.css', array(), BANNER_CONTAINER_VERSION);
+        wp_enqueue_style('iwz-banner-container-admin', IWZ_BANNER_CONTAINER_URL . 'admin/css/iwz-banner-container-admin.css', array(), IWZ_BANNER_CONTAINER_VERSION);
     }
 
     /**
@@ -92,8 +92,8 @@ class BANNER_CONTAINER_Settings {
         foreach ($this->banner_locations as $location_key => $location_label) {
             // Register setting for enabled status
             register_setting(
-                'BANNER_CONTAINER_settings',
-                'banner_' . $location_key . '_enabled',
+                'iwz_banner_container_settings',
+                'iwz_banner_' . $location_key . '_enabled',
                 array(
                     'type' => 'boolean',
                     'sanitize_callback' => 'rest_sanitize_boolean',
@@ -103,8 +103,8 @@ class BANNER_CONTAINER_Settings {
 
             // Register setting for iframe code
             register_setting(
-                'BANNER_CONTAINER_settings',
-                'banner_' . $location_key . '_code',
+                'iwz_banner_container_settings',
+                'iwz_banner_' . $location_key . '_code',
                 array(
                     'type' => 'string',
                     'sanitize_callback' => array($this, 'sanitize_iframe_code'),
@@ -116,8 +116,8 @@ class BANNER_CONTAINER_Settings {
             if ($location_key === 'the_content') {
                 // Position setting
                 register_setting(
-                    'BANNER_CONTAINER_settings',
-                    'banner_content_position',
+                    'iwz_banner_container_settings',
+                    'iwz_banner_content_position',
                     array(
                         'type' => 'string',
                         'sanitize_callback' => 'sanitize_text_field',
@@ -127,8 +127,8 @@ class BANNER_CONTAINER_Settings {
 
                 // Paragraph number setting
                 register_setting(
-                    'BANNER_CONTAINER_settings',
-                    'banner_content_paragraph',
+                    'iwz_banner_container_settings',
+                    'iwz_banner_content_paragraph',
                     array(
                         'type' => 'integer',
                         'sanitize_callback' => 'absint',
@@ -138,8 +138,8 @@ class BANNER_CONTAINER_Settings {
 
                 // Post types setting
                 register_setting(
-                    'BANNER_CONTAINER_settings',
-                    'banner_content_post_types',
+                    'iwz_banner_container_settings',
+                    'iwz_banner_content_post_types',
                     array(
                         'type' => 'array',
                         'sanitize_callback' => array($this, 'sanitize_post_types'),
@@ -250,42 +250,42 @@ class BANNER_CONTAINER_Settings {
             <h1><?php echo esc_html__('Banner Container Settings', 'banner-container-plugin'); ?></h1>
             
             <form method="post" action="options.php">
-                <?php settings_fields('BANNER_CONTAINER_settings'); ?>
+                <?php settings_fields('iwz_banner_container_settings'); ?>
                 
-                <div class="banner-container-notice">
+                <div class="iwz-banner-container-notice">
                     <p><?php _e('Configure your banner iframe settings below. Enable a location and enter the HTML code for the banner.', 'banner-container-plugin'); ?></p>
                 </div>
 
                 <?php
                 // Output sections for each location
                 foreach ($this->banner_locations as $location_key => $location_label) :
-                    $enabled = get_option('banner_' . $location_key . '_enabled', false);
-                    $code = get_option('banner_' . $location_key . '_code', '');
+                    $enabled = get_option('iwz_banner_' . $location_key . '_enabled', false);
+                    $code = get_option('iwz_banner_' . $location_key . '_code', '');
                 ?>
-                    <div class="banner-container-location-section">
+                    <div class="iwz-banner-container-location-section">
                         <h2><?php echo esc_html($location_label); ?></h2>
                         <table class="form-table">
                             <tr>
                                 <th scope="row">
-                                    <label for="banner_<?php echo esc_attr($location_key); ?>_enabled">
+                                    <label for="iwz_banner_<?php echo esc_attr($location_key); ?>_enabled">
                                         <?php printf(__('Enable %s Banner', 'banner-container-plugin'), esc_html($location_label)); ?>
                                     </label>
                                 </th>
                                 <td>
-                                    <input type="checkbox" id="banner_<?php echo esc_attr($location_key); ?>_enabled" 
-                                           name="banner_<?php echo esc_attr($location_key); ?>_enabled" 
+                                    <input type="checkbox" id="iwz_banner_<?php echo esc_attr($location_key); ?>_enabled" 
+                                           name="iwz_banner_<?php echo esc_attr($location_key); ?>_enabled" 
                                            value="1" <?php checked(1, $enabled); ?> />
                                 </td>
                             </tr>
-                            <tr class="banner-container-code-field <?php echo $enabled ? '' : 'hidden'; ?>">
+                            <tr class="iwz-banner-container-code-field <?php echo $enabled ? '' : 'hidden'; ?>">
                                 <th scope="row">
-                                    <label for="banner_<?php echo esc_attr($location_key); ?>_code">
+                                    <label for="iwz_banner_<?php echo esc_attr($location_key); ?>_code">
                                         <?php printf(__('%s Banner Code', 'banner-container-plugin'), esc_html($location_label)); ?>
                                     </label>
                                 </th>
                                 <td>
-                                    <textarea id="banner_<?php echo esc_attr($location_key); ?>_code" 
-                                              name="banner_<?php echo esc_attr($location_key); ?>_code" 
+                                    <textarea id="iwz_banner_<?php echo esc_attr($location_key); ?>_code" 
+                                              name="iwz_banner_<?php echo esc_attr($location_key); ?>_code" 
                                               rows="6" class="large-text code"><?php echo esc_textarea($code); ?></textarea>
                                     <p class="description">
                                         <?php _e('Enter the iframe or banner code to insert at this location.', 'banner-container-plugin'); ?>
@@ -295,18 +295,18 @@ class BANNER_CONTAINER_Settings {
 
                             <?php if ($location_key === 'the_content') : ?>
                                 <?php 
-                                    $position = get_option('banner_content_position', 'top');
-                                    $paragraph = get_option('banner_content_paragraph', 3);
-                                    $post_types = get_option('banner_content_post_types', array('post'));
+                                    $position = get_option('iwz_banner_content_position', 'top');
+                                    $paragraph = get_option('iwz_banner_content_paragraph', 3);
+                                    $post_types = get_option('iwz_banner_content_post_types', array('post'));
                                 ?>
-                                <tr class="banner-container-code-field <?php echo $enabled ? '' : 'hidden'; ?>">
+                                <tr class="iwz-banner-container-code-field <?php echo $enabled ? '' : 'hidden'; ?>">
                                     <th scope="row">
-                                        <label for="banner_content_position">
+                                        <label for="iwz_banner_content_position">
                                             <?php _e('Content Banner Position', 'banner-container-plugin'); ?>
                                         </label>
                                     </th>
                                     <td>
-                                        <select id="banner_content_position" name="banner_content_position">
+                                        <select id="iwz_banner_content_position" name="iwz_banner_content_position">
                                             <option value="top" <?php selected('top', $position); ?>>
                                                 <?php _e('Top of content', 'banner-container-plugin'); ?>
                                             </option>
@@ -319,24 +319,24 @@ class BANNER_CONTAINER_Settings {
                                         </select>
                                     </td>
                                 </tr>
-                                <tr class="banner-container-paragraph-field <?php echo ($enabled && $position == 'after_paragraph') ? '' : 'hidden'; ?>">
+                                <tr class="iwz-banner-container-paragraph-field <?php echo ($enabled && $position == 'after_paragraph') ? '' : 'hidden'; ?>">
                                     <th scope="row">
-                                        <label for="banner_content_paragraph">
+                                        <label for="iwz_banner_content_paragraph">
                                             <?php _e('Paragraph Number', 'banner-container-plugin'); ?>
                                         </label>
                                     </th>
                                     <td>
-                                        <input type="number" id="banner_content_paragraph" 
-                                               name="banner_content_paragraph" min="1" 
+                                        <input type="number" id="iwz_banner_content_paragraph" 
+                                               name="iwz_banner_content_paragraph" min="1" 
                                                value="<?php echo esc_attr($paragraph); ?>" />
                                         <p class="description">
                                             <?php _e('Display after which paragraph? (Enter 1 for after first paragraph, 2 for second, etc.)', 'banner-container-plugin'); ?>
                                         </p>
                                     </td>
                                 </tr>
-                                <tr class="banner-container-code-field <?php echo $enabled ? '' : 'hidden'; ?>">
+                                <tr class="iwz-banner-container-code-field <?php echo $enabled ? '' : 'hidden'; ?>">
                                     <th scope="row">
-                                        <label for="banner_content_post_types">
+                                        <label for="iwz_banner_content_post_types">
                                             <?php _e('Apply to Post Types', 'banner-container-plugin'); ?>
                                         </label>
                                     </th>
@@ -344,7 +344,7 @@ class BANNER_CONTAINER_Settings {
                                         <?php foreach ($this->get_post_types() as $post_type => $post_type_label) : ?>
                                             <label>
                                                 <input type="checkbox" 
-                                                       name="banner_content_post_types[]" 
+                                                       name="iwz_banner_content_post_types[]" 
                                                        value="<?php echo esc_attr($post_type); ?>" 
                                                        <?php checked(in_array($post_type, (array) $post_types)); ?> />
                                                 <?php echo esc_html($post_type_label); ?>
@@ -369,46 +369,46 @@ class BANNER_CONTAINER_Settings {
         jQuery(document).ready(function($) {
             // Show/hide code field based on checkbox
             $('input[id$="_enabled"]').change(function() {
-                var location = $(this).attr('id').replace('banner_', '').replace('_enabled', '');
+                var location = $(this).attr('id').replace('iwz_banner_', '').replace('_enabled', '');
                 if ($(this).is(':checked')) {
-                    $('.banner-container-code-field').not('.hidden').show();
+                    $('.iwz-banner-container-code-field').not('.hidden').show();
                     if (location === 'the_content') {
-                        var position = $('#banner_content_position').val();
+                        var position = $('#iwz_banner_content_position').val();
                         if (position === 'after_paragraph') {
-                            $('.banner-container-paragraph-field').show();
+                            $('.iwz-banner-container-paragraph-field').show();
                         }
                     }
                 } else {
-                    $('tr.banner-container-code-field').filter(function() {
+                    $('tr.iwz-banner-container-code-field').filter(function() {
                         return $(this).find('textarea[id$="' + location + '_code"]').length > 0;
                     }).hide();
                     if (location === 'the_content') {
-                        $('.banner-container-paragraph-field').hide();
+                        $('.iwz-banner-container-paragraph-field').hide();
                     }
                 }
             });
             
             // Show/hide paragraph field based on position selection
-            $('#banner_content_position').change(function() {
+            $('#iwz_banner_content_position').change(function() {
                 if ($(this).val() === 'after_paragraph') {
-                    $('.banner-container-paragraph-field').show();
+                    $('.iwz-banner-container-paragraph-field').show();
                 } else {
-                    $('.banner-container-paragraph-field').hide();
+                    $('.iwz-banner-container-paragraph-field').hide();
                 }
             });
             
             // Initialize visibility
             $('input[id$="_enabled"]').each(function() {
                 if (!$(this).is(':checked')) {
-                    $('tr.banner-container-code-field').filter(function() {
+                    $('tr.iwz-banner-container-code-field').filter(function() {
                         var location = $(this).find('textarea').attr('id');
-                        return location && location.includes($(this).attr('id').replace('banner_', '').replace('_enabled', ''));
+                        return location && location.includes($(this).attr('id').replace('iwz_banner_', '').replace('_enabled', ''));
                     }).hide();
                 }
             });
             
-            if ($('#banner_content_position').val() !== 'after_paragraph' || !$('#banner_the_content_enabled').is(':checked')) {
-                $('.banner-container-paragraph-field').hide();
+            if ($('#iwz_banner_content_position').val() !== 'after_paragraph' || !$('#iwz_banner_the_content_enabled').is(':checked')) {
+                $('.iwz-banner-container-paragraph-field').hide();
             }
         });
         </script>

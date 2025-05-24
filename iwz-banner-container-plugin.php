@@ -1,7 +1,7 @@
 <?php
 /**
- * Plugin Name: Banner Container Plugin
- * Plugin URI: https://yourwebsite.com/banner-container-plugin
+ * Plugin Name: IWZ Banner Container Plugin
+ * Plugin URI: https://yourwebsite.com/iwz-banner-container-plugin
  * Description: Add banner iframes to different locations in your WordPress theme.
  * Version: 1.2.0
  * Author: Jasper Frumau
@@ -50,4 +50,3 @@ function iwz_banner_container_activate() {
     set_transient('iwz_banner_container_activation_redirect', true, 30);
 }
 register_activation_hook(__FILE__, 'iwz_banner_container_activate');
-register_activation_hook(__FILE__, 'BANNER_CONTAINER_activate');

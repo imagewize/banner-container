@@ -4,12 +4,12 @@
  *
  * @since      1.0.0
  */
-class BANNER_CONTAINER {
+class IWZ_Banner_Container {
     
     /**
      * The settings page instance
      *
-     * @var BANNER_CONTAINER_Settings
+     * @var IWZ_Banner_Container_Settings
      */
     private $settings;
     
@@ -27,7 +27,7 @@ class BANNER_CONTAINER {
      */
     public function init() {
         // Initialize settings page
-        $this->settings = new BANNER_CONTAINER_Settings();
+        $this->settings = new IWZ_Banner_Container_Settings();
         $this->settings->init();
         
         // Get banner locations and hook displays
@@ -86,8 +86,8 @@ class BANNER_CONTAINER {
      * Display banner in header
      */
     public function display_header_banner() {
-        if (get_option('banner_wp_head_enabled')) {
-            echo get_option('banner_wp_head_code', '');
+        if (get_option('iwz_banner_wp_head_enabled')) {
+            echo get_option('iwz_banner_wp_head_code', '');
         }
     }
 
@@ -95,8 +95,8 @@ class BANNER_CONTAINER {
      * Display banner in footer
      */
     public function display_footer_banner() {
-        if (get_option('banner_wp_footer_enabled')) {
-            echo get_option('banner_wp_footer_code', '');
+        if (get_option('iwz_banner_wp_footer_enabled')) {
+            echo get_option('iwz_banner_wp_footer_code', '');
         }
     }
 
@@ -109,19 +109,19 @@ class BANNER_CONTAINER {
         }
 
         // Check if enabled
-        if (!get_option('banner_the_content_enabled')) {
+        if (!get_option('iwz_banner_the_content_enabled')) {
             return $content;
         }
 
-        $post_types = get_option('banner_content_post_types', array('post'));
+        $post_types = get_option('iwz_banner_content_post_types', array('post'));
         $current_post_type = get_post_type();
         
         if (!empty($post_types) && !in_array($current_post_type, (array) $post_types)) {
             return $content;
         }
         
-        $banner_code = get_option('banner_the_content_code', '');
-        $position = get_option('banner_content_position', 'top');
+        $banner_code = get_option('iwz_banner_the_content_code', '');
+        $position = get_option('iwz_banner_content_position', 'top');
         
         if (empty($banner_code)) {
             return $content;
@@ -135,7 +135,7 @@ class BANNER_CONTAINER {
                 return $content . $banner_code;
             
             case 'after_paragraph':
-                $paragraph_number = (int) get_option('banner_content_paragraph', 3);
+                $paragraph_number = (int) get_option('iwz_banner_content_paragraph', 3);
                 if ($paragraph_number < 1) {
                     $paragraph_number = 1;
                 }
@@ -166,8 +166,8 @@ class BANNER_CONTAINER {
      * Display banner before sidebar
      */
     public function display_sidebar_banner($name) {
-        if (get_option('banner_get_sidebar_enabled')) {
-            echo get_option('banner_get_sidebar_code', '');
+        if (get_option('iwz_banner_get_sidebar_enabled')) {
+            echo get_option('iwz_banner_get_sidebar_code', '');
         }
     }
 
@@ -175,11 +175,11 @@ class BANNER_CONTAINER {
      * Display banner in menu
      */
     public function display_menu_banner($items, $args) {
-        if (get_option('banner_wp_nav_menu_items_enabled')) {
-            $banner_code = get_option('banner_wp_nav_menu_items_code', '');
+        if (get_option('iwz_banner_wp_nav_menu_items_enabled')) {
+            $banner_code = get_option('iwz_banner_wp_nav_menu_items_code', '');
             if (!empty($banner_code)) {
                 // Wrap in li for proper menu structure
-                $banner_html = '<li class="menu-item banner-container-menu-item">' . $banner_code . '</li>';
+                $banner_html = '<li class="menu-item iwz-banner-container-menu-item">' . $banner_code . '</li>';
                 $items .= $banner_html;
             }
         }
@@ -191,8 +191,8 @@ class BANNER_CONTAINER {
      * Display banner at custom location
      */
     private function display_custom_banner($location) {
-        $enabled_field = 'banner_' . str_replace('-', '_', sanitize_title($location)) . '_enabled';
-        $code_field = 'banner_' . str_replace('-', '_', sanitize_title($location)) . '_code';
+        $enabled_field = 'iwz_banner_' . str_replace('-', '_', sanitize_title($location)) . '_enabled';
+        $code_field = 'iwz_banner_' . str_replace('-', '_', sanitize_title($location)) . '_code';
         
         if (get_option($enabled_field)) {
             echo get_option($code_field, '');
