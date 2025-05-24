@@ -3,9 +3,9 @@
  * Plugin Name: Banner Container Plugin
  * Plugin URI: https://yourwebsite.com/banner-container-plugin
  * Description: Add banner iframes to different locations in your WordPress theme.
- * Version: 1.0.1
- * Author: Your Name
- * Author URI: https://yourwebsite.com
+ * Version: 1.2.0
+ * Author: Jasper Frumau
+ * Author URI: https://imagewize.com
  * License: GPL-2.0+
  * Text Domain: banner-container-plugin
  */
