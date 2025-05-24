@@ -113,53 +113,103 @@ class IWZ_Banner_Container {
             return $content;
         }
 
-        $post_types = get_option('iwz_banner_content_post_types', array('post'));
+        // Get content banners array
+        $content_banners = get_option('iwz_banner_content_banners', array());
+        
+        // Legacy support - migrate old single banner if new array is empty
+        if (empty($content_banners)) {
+            $legacy_code = get_option('iwz_banner_the_content_code', '');
+            if (!empty($legacy_code)) {
+                $content_banners = array(array(
+                    'code' => $legacy_code,
+                    'position' => get_option('iwz_banner_content_position', 'top'),
+                    'paragraph' => get_option('iwz_banner_content_paragraph', 3),
+                    'post_types' => get_option('iwz_banner_content_post_types', array('post')),
+                    'enabled' => true
+                ));
+            }
+        }
+        
+        if (empty($content_banners)) {
+            return $content;
+        }
+        
         $current_post_type = get_post_type();
         
-        if (!empty($post_types) && !in_array($current_post_type, (array) $post_types)) {
-            return $content;
-        }
+        // Group banners by position for efficient processing
+        $top_banners = array();
+        $bottom_banners = array();
+        $paragraph_banners = array();
         
-        $banner_code = get_option('iwz_banner_the_content_code', '');
-        $position = get_option('iwz_banner_content_position', 'top');
-        
-        if (empty($banner_code)) {
-            return $content;
-        }
-        
-        switch ($position) {
-            case 'top':
-                return $banner_code . $content;
+        foreach ($content_banners as $banner) {
+            // Skip disabled banners
+            if (empty($banner['enabled'])) {
+                continue;
+            }
             
-            case 'bottom':
-                return $content . $banner_code;
+            // Skip if banner has no code
+            if (empty($banner['code'])) {
+                continue;
+            }
             
-            case 'after_paragraph':
-                $paragraph_number = (int) get_option('iwz_banner_content_paragraph', 3);
-                if ($paragraph_number < 1) {
-                    $paragraph_number = 1;
-                }
-                
-                $parts = explode('</p>', $content);
-                
-                if (count($parts) < $paragraph_number) {
-                    // Not enough paragraphs, add to the end
-                    return $content . $banner_code;
-                }
-                
-                $new_content = '';
-                for ($i = 0; $i < count($parts); $i++) {
-                    $new_content .= $parts[$i] . '</p>';
-                    if ($i + 1 == $paragraph_number) {
-                        $new_content .= $banner_code;
+            // Check post type restrictions
+            $banner_post_types = $banner['post_types'] ?? array('post');
+            if (!empty($banner_post_types) && !in_array($current_post_type, (array) $banner_post_types)) {
+                continue;
+            }
+            
+            // Group by position
+            switch ($banner['position'] ?? 'top') {
+                case 'top':
+                    $top_banners[] = $banner['code'];
+                    break;
+                case 'bottom':
+                    $bottom_banners[] = $banner['code'];
+                    break;
+                case 'after_paragraph':
+                    $paragraph_number = (int) ($banner['paragraph'] ?? 3);
+                    if ($paragraph_number < 1) {
+                        $paragraph_number = 1;
                     }
+                    if (!isset($paragraph_banners[$paragraph_number])) {
+                        $paragraph_banners[$paragraph_number] = array();
+                    }
+                    $paragraph_banners[$paragraph_number][] = $banner['code'];
+                    break;
+            }
+        }
+        
+        // Add top banners
+        if (!empty($top_banners)) {
+            $content = implode('', $top_banners) . $content;
+        }
+        
+        // Add paragraph banners
+        if (!empty($paragraph_banners)) {
+            $parts = explode('</p>', $content);
+            $new_content = '';
+            
+            for ($i = 0; $i < count($parts); $i++) {
+                $new_content .= $parts[$i];
+                if ($i < count($parts) - 1) { // Don't add </p> to the last part
+                    $new_content .= '</p>';
                 }
                 
-                return $new_content;
-                
-            default:
-                return $content . $banner_code;
+                $paragraph_number = $i + 1;
+                if (isset($paragraph_banners[$paragraph_number])) {
+                    $new_content .= implode('', $paragraph_banners[$paragraph_number]);
+                }
+            }
+            
+            $content = $new_content;
         }
+        
+        // Add bottom banners
+        if (!empty($bottom_banners)) {
+            $content .= implode('', $bottom_banners);
+        }
+        
+        return $content;
     }
 
     /**

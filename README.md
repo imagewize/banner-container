@@ -8,7 +8,7 @@ The Banner Container Plugin allows you to easily add iframe codes to various loc
 
 - Header (before `</head>`)
 - Footer (before `</body>`)
-- Within Content (with options for placement)
+- Within Content (with options for multiple banners and individual placement)
 - Before Sidebar
 - In Navigation Menu
 
@@ -27,7 +27,10 @@ The Banner Container Plugin allows you to easily add iframe codes to various loc
 1. Navigate to the Banner Container settings page in your WordPress admin
 2. Enable the locations where you want to display banners
 3. Enter your iframe or banner HTML code for each location
-4. For content banners, choose placement options (top, bottom, or after a specific paragraph)
+4. For content banners, you can add multiple banners with individual settings:
+   - Choose placement options (top, bottom, or after a specific paragraph)
+   - Select which post types to display each banner on
+   - Enable or disable individual banners
 5. Save your settings
 
 ## Frequently Asked Questions
@@ -45,6 +48,12 @@ You can add any HTML code, including iframes, JavaScript snippets, or plain HTML
 The plugin is lightweight and only loads the necessary code on the frontend. It should not cause any noticeable performance impact.
 
 ## Changelog
+
+### 1.3.0
+* Multiple Banners in Content: Add multiple banners to the "Within Content" location
+* Each content banner can have individual positioning, post type restrictions, and enable/disable settings
+* Backward compatibility with existing single banner configurations
+* Improved admin interface for managing multiple content banners
 
 ### 1.2.3
 * Header Placement Clarification on Options Page
