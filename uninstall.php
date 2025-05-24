@@ -13,27 +13,27 @@ if (!defined('WP_UNINSTALL_PLUGIN')) {
 // Define banner-related options to delete
 $banner_options = array(
     // Header location
-    'banner_wp_head_enabled',
-    'banner_wp_head_code',
+    'iwz_banner_wp_head_enabled',
+    'iwz_banner_wp_head_code',
     
     // Footer location
-    'banner_wp_footer_enabled',
-    'banner_wp_footer_code',
+    'iwz_banner_wp_footer_enabled',
+    'iwz_banner_wp_footer_code',
     
     // Content location
-    'banner_the_content_enabled',
-    'banner_the_content_code',
-    'banner_content_position',
-    'banner_content_paragraph',
-    'banner_content_post_types',
+    'iwz_banner_the_content_enabled',
+    'iwz_banner_the_content_code',
+    'iwz_banner_content_position',
+    'iwz_banner_content_paragraph',
+    'iwz_banner_content_post_types',
     
     // Sidebar location
-    'banner_get_sidebar_enabled',
-    'banner_get_sidebar_code',
+    'iwz_banner_get_sidebar_enabled',
+    'iwz_banner_get_sidebar_code',
     
     // Menu location
-    'banner_wp_nav_menu_items_enabled',
-    'banner_wp_nav_menu_items_code',
+    'iwz_banner_wp_nav_menu_items_enabled',
+    'iwz_banner_wp_nav_menu_items_code',
 );
 
 // Delete each option
@@ -45,8 +45,8 @@ foreach ($banner_options as $option) {
 global $wpdb;
 $custom_options = $wpdb->get_results(
     "SELECT option_name FROM {$wpdb->options} 
-     WHERE option_name LIKE 'banner_%_enabled' 
-     OR option_name LIKE 'banner_%_code'"
+     WHERE option_name LIKE 'iwz_banner_%_enabled' 
+     OR option_name LIKE 'iwz_banner_%_code'"
 );
 
 foreach ($custom_options as $option) {

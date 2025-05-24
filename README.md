@@ -20,11 +20,11 @@ The Banner Container Plugin allows you to easily add iframe codes to various loc
 
 1. Upload the `banner-container-plugin` folder to the `/wp-content/plugins/` directory
 2. Activate the plugin through the 'Plugins' menu in WordPress
-3. Go to the 'Banner Iframes' menu item in the admin dashboard to configure your settings
+3. Go to the 'Banner Container' menu item in the admin dashboard to configure your settings
 
 ## Usage
 
-1. Navigate to the Banner Iframes settings page in your WordPress admin
+1. Navigate to the Banner Container settings page in your WordPress admin
 2. Enable the locations where you want to display banners
 3. Enter your iframe or banner HTML code for each location
 4. For content banners, choose placement options (top, bottom, or after a specific paragraph)
@@ -45,6 +45,10 @@ You can add any HTML code, including iframes, JavaScript snippets, or plain HTML
 The plugin is lightweight and only loads the necessary code on the frontend. It should not cause any noticeable performance impact.
 
 ## Changelog
+
+### 1.2.1
+* prefix imwz
+* additional renaming
 
 ### 1.2.0
 * proper namespacing
