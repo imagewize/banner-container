@@ -9,8 +9,8 @@ The Banner Container Plugin allows you to easily add iframe codes to various loc
 - Header (before `</head>`) - with support for multiple banners and device targeting
 - Footer (before `</body>`) - with support for multiple banners and device targeting
 - Within Content (with options for multiple banners, individual placement, and device targeting)
-- Before Sidebar
-- In Navigation Menu
+- Before Sidebar - with support for multiple banners and device targeting
+- In Navigation Menu - with support for multiple banners and device targeting
 
 ## Requirements
 
@@ -27,7 +27,7 @@ The Banner Container Plugin allows you to easily add iframe codes to various loc
 1. Navigate to the Banner Container settings page in your WordPress admin
 2. Enable the locations where you want to display banners
 3. Enter your iframe or banner HTML code for each location
-4. For header, footer, and content banners, you can add multiple banners with individual settings:
+4. For all banner locations, you can add multiple banners with individual settings:
    - Choose device targeting (all devices, desktop only, or mobile only)
    - Enable or disable individual banners
 5. For content banners, additional options include:
@@ -52,10 +52,10 @@ The plugin is lightweight and only loads the necessary code on the frontend. It 
 ## Changelog
 
 ### 1.4.0
-* Device Targeting: Add mobile/desktop targeting options for all banner locations
-* Multiple Banners for Header and Footer: Support for multiple banners in header and footer locations with individual device targeting
-* Enhanced Content Banners: Added device targeting to content banners alongside existing positioning and post type options
-* Improved Admin Interface: Updated settings page to handle multiple banners across all locations
+* Device Targeting: Add mobile/desktop targeting options for all banner locations (header, footer, content, sidebar, navigation menu)
+* Multiple Banners for All Locations: Support for multiple banners in all locations with individual device targeting
+* Enhanced Banner Management: All banner locations now support adding, removing, and managing multiple banners
+* Improved Admin Interface: Updated settings page to handle multiple banners with device targeting across all locations
 * Backward Compatibility: Seamless migration from single banner configurations to new multiple banner system
 
 ### 1.3.0

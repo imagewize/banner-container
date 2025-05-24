@@ -294,8 +294,34 @@ class IWZ_Banner_Container {
      * Display banner before sidebar
      */
     public function display_sidebar_banner($name) {
-        if (get_option('iwz_banner_get_sidebar_enabled')) {
-            echo get_option('iwz_banner_get_sidebar_code', '');
+        if (!get_option('iwz_banner_get_sidebar_enabled')) {
+            return;
+        }
+
+        // Get multiple banners or fall back to legacy single banner
+        $banners = get_option('iwz_banner_get_sidebar_banners', array());
+        
+        if (empty($banners)) {
+            // Check for legacy single banner
+            $legacy_code = get_option('iwz_banner_get_sidebar_code', '');
+            if (!empty($legacy_code)) {
+                echo $legacy_code;
+            }
+            return;
+        }
+
+        // Display multiple banners with device targeting
+        foreach ($banners as $banner) {
+            if (empty($banner['enabled']) || empty($banner['code'])) {
+                continue;
+            }
+
+            // Check device targeting
+            if (!$this->should_display_for_device($banner['device_targeting'] ?? 'all')) {
+                continue;
+            }
+
+            echo $banner['code'];
         }
     }
 
@@ -303,15 +329,40 @@ class IWZ_Banner_Container {
      * Display banner in menu
      */
     public function display_menu_banner($items, $args) {
-        if (get_option('iwz_banner_wp_nav_menu_items_enabled')) {
-            $banner_code = get_option('iwz_banner_wp_nav_menu_items_code', '');
-            if (!empty($banner_code)) {
+        if (!get_option('iwz_banner_wp_nav_menu_items_enabled')) {
+            return $items;
+        }
+
+        // Get multiple banners or fall back to legacy single banner
+        $banners = get_option('iwz_banner_wp_nav_menu_items_banners', array());
+        
+        if (empty($banners)) {
+            // Check for legacy single banner
+            $legacy_code = get_option('iwz_banner_wp_nav_menu_items_code', '');
+            if (!empty($legacy_code)) {
                 // Wrap in li for proper menu structure
-                $banner_html = '<li class="menu-item iwz-banner-container-menu-item">' . $banner_code . '</li>';
+                $banner_html = '<li class="menu-item iwz-banner-container-menu-item">' . $legacy_code . '</li>';
                 $items .= $banner_html;
             }
+            return $items;
         }
-        
+
+        // Display multiple banners with device targeting
+        foreach ($banners as $banner) {
+            if (empty($banner['enabled']) || empty($banner['code'])) {
+                continue;
+            }
+
+            // Check device targeting
+            if (!$this->should_display_for_device($banner['device_targeting'] ?? 'all')) {
+                continue;
+            }
+
+            // Wrap in li for proper menu structure
+            $banner_html = '<li class="menu-item iwz-banner-container-menu-item">' . $banner['code'] . '</li>';
+            $items .= $banner_html;
+        }
+
         return $items;
     }
 

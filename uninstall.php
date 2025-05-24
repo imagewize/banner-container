@@ -34,10 +34,12 @@ $banner_options = array(
     // Sidebar location
     'iwz_banner_get_sidebar_enabled',
     'iwz_banner_get_sidebar_code',
+    'iwz_banner_get_sidebar_banners',
     
     // Menu location
     'iwz_banner_wp_nav_menu_items_enabled',
     'iwz_banner_wp_nav_menu_items_code',
+    'iwz_banner_wp_nav_menu_items_banners',
 );
 
 // Delete each option

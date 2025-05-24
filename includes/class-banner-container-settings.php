@@ -90,8 +90,8 @@ class IWZ_Banner_Container_Settings {
     public function register_settings() {
         // Register a setting group for each location
         foreach ($this->banner_locations as $location_key => $location_label) {
-            // For head, footer, and content banners, use the new multiple banner system
-            if (in_array($location_key, array('wp_head', 'wp_footer', 'the_content'))) {
+            // For head, footer, content, sidebar, and navigation menu banners, use the new multiple banner system
+            if (in_array($location_key, array('wp_head', 'wp_footer', 'the_content', 'get_sidebar', 'wp_nav_menu_items'))) {
                 // Register setting for enabled status
                 register_setting(
                     'iwz_banner_container_settings',
@@ -535,8 +535,8 @@ class IWZ_Banner_Container_Settings {
                             </table>
                         
                         <?php else : ?>
-                            <!-- Multiple banner locations (head, footer) -->
-                            <?php if (in_array($location_key, array('wp_head', 'wp_footer'))) : ?>
+                            <!-- Multiple banner locations (head, footer, sidebar, navigation menu) -->
+                            <?php if (in_array($location_key, array('wp_head', 'wp_footer', 'get_sidebar', 'wp_nav_menu_items'))) : ?>
                                 <?php 
                                     $location_banners = get_option('iwz_banner_' . $location_key . '_banners', array());
                                     

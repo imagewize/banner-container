@@ -3,7 +3,11 @@ textarea#iwz_banner_wp_footer_code,
 textarea#iwz_banner_the_content_code,
 textarea#iwz_banner_get_sidebar_code,
 textarea#iwz_banner_wp_nav_menu_items_code,
-textarea[id^="iwz_content_banner_code_"] {
+textarea[id^="iwz_content_banner_code_"],
+textarea[id^="iwz_wp_head_banner_code_"],
+textarea[id^="iwz_wp_footer_banner_code_"],
+textarea[id^="iwz_get_sidebar_banner_code_"],
+textarea[id^="iwz_wp_nav_menu_items_banner_code_"] {
     font-family: monospace;
     min-height: 150px;
 }
