@@ -51,6 +51,11 @@ The plugin is lightweight and only loads the necessary code on the frontend. It 
 
 ## Changelog
 
+### 1.5.0
+* PHPCS
+* Github Actions
+* Files WordPress CS Standards Update
+
 ### 1.4.2
 * README clarifications.
 
