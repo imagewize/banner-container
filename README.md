@@ -6,7 +6,7 @@ A WordPress plugin to add banners to different locations in your WordPress theme
 
 The Banner Container Plugin allows you to easily add iframe codes to various locations in your WordPress site, such as:
 
-- Header (before `</head>`) - with support for multiple banners and device targeting
+- Header (after initial `<body>`) - with support for multiple banners and device targeting
 - Footer (before `</body>`) - with support for multiple banners and device targeting
 - Within Content (with options for multiple banners, individual placement, and device targeting)
 - Before Sidebar - with support for multiple banners and device targeting
