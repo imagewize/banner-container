@@ -50,6 +50,23 @@ textarea[id^="iwz_wp_nav_menu_items_banner_code_"] {
     background-color: #fafafa;
 }
 
+/* Success notification styling */
+.iwz-banner-container-success {
+    border-left-color: #00a32a !important;
+    animation: iwz-fade-in 0.5s ease-in-out;
+}
+
+@keyframes iwz-fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 .iwz-content-banner-header {
     display: flex;
     justify-content: space-between;

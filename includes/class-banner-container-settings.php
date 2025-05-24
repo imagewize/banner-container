@@ -32,6 +32,9 @@ class IWZ_Banner_Container_Settings {
 
         // Register banner locations
         $this->register_banner_locations();
+        
+        // Add admin notices
+        add_action('admin_notices', array($this, 'admin_notices'));
     }
 
     /**
@@ -82,6 +85,7 @@ class IWZ_Banner_Container_Settings {
      */
     public function enqueue_admin_styles() {
         wp_enqueue_style('iwz-banner-container-admin', IWZ_BANNER_CONTAINER_URL . 'admin/css/iwz-banner-container-admin.css', array(), IWZ_BANNER_CONTAINER_VERSION);
+        wp_enqueue_script('jquery');
     }
 
     /**
@@ -325,6 +329,8 @@ class IWZ_Banner_Container_Settings {
         ?>
         <div class="wrap">
             <h1><?php echo esc_html__('Banner Container Settings', 'banner-container-plugin'); ?></h1>
+            
+            <?php settings_errors(); ?>
             
             <form method="post" action="options.php">
                 <?php settings_fields('iwz_banner_container_settings'); ?>
@@ -928,5 +934,38 @@ class IWZ_Banner_Container_Settings {
         });
         </script>
         <?php
+    }
+
+    /**
+     * Display admin notices
+     */
+    public function admin_notices() {
+        // Only show on our settings page
+        $screen = get_current_screen();
+        if (!$screen || $screen->id !== $this->page_hook) {
+            return;
+        }
+
+        // Check if settings were just updated
+        if (isset($_GET['settings-updated']) && $_GET['settings-updated'] == 'true') {
+            ?>
+            <div class="notice notice-success is-dismissible iwz-banner-container-success">
+                <p><strong><?php _e('Banner Container settings saved successfully!', 'banner-container-plugin'); ?></strong></p>
+            </div>
+            <script>
+            jQuery(document).ready(function($) {
+                // Smooth scroll to top to show the notification
+                $('html, body').animate({
+                    scrollTop: 0
+                }, 500);
+                
+                // Auto-dismiss the notice after 5 seconds
+                setTimeout(function() {
+                    $('.iwz-banner-container-success').fadeOut();
+                }, 5000);
+            });
+            </script>
+            <?php
+        }
     }
 }

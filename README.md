@@ -51,6 +51,12 @@ The plugin is lightweight and only loads the necessary code on the frontend. It 
 
 ## Changelog
 
+### 1.4.1
+* Settings Notification: Added success notification banner when settings are saved
+* Improved User Experience: Smooth scroll to top after saving to show confirmation message
+* Auto-dismiss notification after 5 seconds with fade-out animation
+* Enhanced admin interface with better visual feedback for settings updates
+
 ### 1.4.0
 * Device Targeting: Add mobile/desktop targeting options for all banner locations (header, footer, content, sidebar, navigation menu)
 * Multiple Banners for All Locations: Support for multiple banners in all locations with individual device targeting
