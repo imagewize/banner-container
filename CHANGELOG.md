@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.5.3]
+* Bug Fix: Fixed translation loading issue where textdomain was being loaded too early
+* Internationalization: Added proper textdomain loading on the 'init' action to comply with WordPress 6.7+ requirements
+* Code Quality: Resolved PHP notice about incorrect translation loading timing
+
 ## [1.5.2]
 * Documentation: Enhanced README with proper links to development documentation
 * Development Guide: Added comprehensive custom banner locations documentation
