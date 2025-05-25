@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.5.2]
+* Documentation: Enhanced README with proper links to development documentation
+* Development Guide: Added comprehensive custom banner locations documentation
+* Developer Experience: Added technical details for filters, hooks, and helper functions for custom banner implementations
+
 ## [1.5.1]
 * Changelog in its own file
 

@@ -39,7 +39,7 @@ The Banner Container Plugin allows you to easily add iframe codes to various loc
 
 ### Can I add banners to custom locations?
 
-Yes! The plugin provides filters that allow developers to add custom banner locations.
+Yes! The plugin provides filters that allow developers to add custom banner locations. See the [Development Documentation](DEVELOPMENT.md#custom-banner-locations) for technical details on available hooks and filters.
 
 ### What type of code can I add?
 
