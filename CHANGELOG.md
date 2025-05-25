@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.5.4]
+* Bug Fix: Fixed translation loading timing issue by moving plugin initialization from `plugins_loaded` to `init` action
+* Internationalization: Ensures textdomain is loaded at priority 10 before plugin initializes at priority 20
+* Code Quality: Properly resolved WordPress 6.7+ translation loading notices by ensuring correct action hook order
+
 ## [1.5.3]
 * Bug Fix: Fixed translation loading issue where textdomain was being loaded too early
 * Internationalization: Added proper textdomain loading on the 'init' action to comply with WordPress 6.7+ requirements
