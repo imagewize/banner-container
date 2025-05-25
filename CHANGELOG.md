@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.5.5]
+* Bug Fix: Fixed HTML escaping issue that prevented iframe banners from rendering correctly
+* Bug Fix: Resolved double banner display issue where banners appeared twice on themes supporting wp_body_open
+* Improvement: Enhanced banner HTML sanitization with custom method allowing iframes and banner-related HTML tags
+* Improvement: Implemented flag-based prevention system to ensure banners display only once
+* Code Quality: Replaced esc_js() with wp_json_encode() for proper HTML content handling in JavaScript
+* Theme Compatibility: Better fallback system for themes with and without wp_body_open support
+
 ## [1.5.4]
 * Bug Fix: Fixed translation loading timing issue by moving plugin initialization from `plugins_loaded` to `init` action
 * Internationalization: Ensures textdomain is loaded at priority 10 before plugin initializes at priority 20

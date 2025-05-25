@@ -59,6 +59,13 @@ class IWZ_Banner_Container {
 	private $banner_locations = array();
 
 	/**
+	 * Flag to track if header banner has been displayed
+	 *
+	 * @var bool
+	 */
+	private $header_banner_displayed = false;
+
+	/**
 	 * Check if current request is from mobile device
 	 *
 	 * @return bool
@@ -108,7 +115,9 @@ class IWZ_Banner_Container {
 		foreach ( $this->banner_locations as $location => $label ) {
 			switch ( $location ) {
 				case 'wp_head':
-					add_action( 'wp_head', array( $this, 'display_header_banner' ), 99 );
+					add_action( 'wp_body_open', array( $this, 'display_header_banner' ), 10 );
+					// Fallback for themes that don't support wp_body_open.
+					add_action( 'wp_head', array( $this, 'display_header_banner_fallback' ), 99 );
 					break;
 				case 'wp_footer':
 					add_action( 'wp_footer', array( $this, 'display_footer_banner' ), 10 );
@@ -155,6 +164,11 @@ class IWZ_Banner_Container {
 	 * Display banner in header.
 	 */
 	public function display_header_banner() {
+		// Prevent double display
+		if ( $this->header_banner_displayed ) {
+			return;
+		}
+
 		if ( ! get_option( 'iwz_banner_wp_head_enabled' ) ) {
 			return;
 		}
@@ -166,20 +180,88 @@ class IWZ_Banner_Container {
 		if ( empty( $banners ) ) {
 			$legacy_code = get_option( 'iwz_banner_wp_head_code', '' );
 			if ( ! empty( $legacy_code ) ) {
-				echo wp_kses_post( $legacy_code );
+				echo $this->sanitize_banner_html( $legacy_code );
+				$this->header_banner_displayed = true;
 			}
 			return;
 		}
 
 		// Display enabled banners that match device targeting.
+		$banner_output = '';
 		foreach ( $banners as $banner ) {
 			if ( ! empty( $banner['enabled'] ) && ! empty( $banner['code'] ) ) {
 				$device_targeting = $banner['device_targeting'] ?? 'all';
 				if ( $this->should_display_for_device( $device_targeting ) ) {
-					echo wp_kses_post( $banner['code'] );
+					$banner_output .= $this->sanitize_banner_html( $banner['code'] );
 				}
 			}
 		}
+
+		if ( ! empty( $banner_output ) ) {
+			echo $banner_output;
+			$this->header_banner_displayed = true;
+		}
+	}
+
+	/**
+	 * Display banner in header (fallback for themes without wp_body_open support).
+	 * This outputs a script that runs after the DOM is loaded to insert the banner.
+	 */
+	public function display_header_banner_fallback() {
+		// Only use fallback if banner hasn't been displayed yet
+		if ( $this->header_banner_displayed ) {
+			return;
+		}
+
+		if ( ! get_option( 'iwz_banner_wp_head_enabled' ) ) {
+			return;
+		}
+
+		// Get multiple banners.
+		$banners = get_option( 'iwz_banner_wp_head_banners', array() );
+
+		// Fallback to legacy single banner if no multiple banners exist.
+		if ( empty( $banners ) ) {
+			$legacy_code = get_option( 'iwz_banner_wp_head_code', '' );
+			if ( ! empty( $legacy_code ) ) {
+				$this->output_body_banner_script( $legacy_code );
+				$this->header_banner_displayed = true;
+			}
+			return;
+		}
+
+		// Display enabled banners that match device targeting.
+		$banner_html = '';
+		foreach ( $banners as $banner ) {
+			if ( ! empty( $banner['enabled'] ) && ! empty( $banner['code'] ) ) {
+				$device_targeting = $banner['device_targeting'] ?? 'all';
+				if ( $this->should_display_for_device( $device_targeting ) ) {
+					$banner_html .= $this->sanitize_banner_html( $banner['code'] );
+				}
+			}
+		}
+
+		if ( ! empty( $banner_html ) ) {
+			$this->output_body_banner_script( $banner_html );
+			$this->header_banner_displayed = true;
+		}
+	}
+
+	/**
+	 * Output JavaScript to insert banner after body tag.
+	 *
+	 * @param string $banner_html The banner HTML to insert.
+	 */
+	private function output_body_banner_script( $banner_html ) {
+		// Use JSON encoding to properly handle HTML content in JavaScript
+		$json_html = wp_json_encode( $banner_html );
+		echo '<script type="text/javascript">';
+		echo 'document.addEventListener("DOMContentLoaded", function() {';
+		echo 'var bannerDiv = document.createElement("div");';
+		echo 'bannerDiv.innerHTML = ' . $json_html . ';';
+		echo 'document.body.insertBefore(bannerDiv.firstChild, document.body.firstChild);';
+		echo '});';
+		echo '</script>';
 	}
 
 	/**
@@ -197,7 +279,7 @@ class IWZ_Banner_Container {
 		if ( empty( $banners ) ) {
 			$legacy_code = get_option( 'iwz_banner_wp_footer_code', '' );
 			if ( ! empty( $legacy_code ) ) {
-				echo wp_kses_post( $legacy_code );
+				echo $this->sanitize_banner_html( $legacy_code );
 			}
 			return;
 		}
@@ -207,7 +289,7 @@ class IWZ_Banner_Container {
 			if ( ! empty( $banner['enabled'] ) && ! empty( $banner['code'] ) ) {
 				$device_targeting = $banner['device_targeting'] ?? 'all';
 				if ( $this->should_display_for_device( $device_targeting ) ) {
-					echo wp_kses_post( $banner['code'] );
+					echo $this->sanitize_banner_html( $banner['code'] );
 				}
 			}
 		}
@@ -355,7 +437,7 @@ class IWZ_Banner_Container {
 			// Check for legacy single banner.
 			$legacy_code = get_option( 'iwz_banner_get_sidebar_code', '' );
 			if ( ! empty( $legacy_code ) ) {
-				echo wp_kses_post( $legacy_code );
+				echo $this->sanitize_banner_html( $legacy_code );
 			}
 			return;
 		}
@@ -371,7 +453,7 @@ class IWZ_Banner_Container {
 				continue;
 			}
 
-			echo wp_kses_post( $banner['code'] );
+			echo $this->sanitize_banner_html( $banner['code'] );
 		}
 	}
 
@@ -398,7 +480,7 @@ class IWZ_Banner_Container {
 			$legacy_code = get_option( 'iwz_banner_wp_nav_menu_items_code', '' );
 			if ( ! empty( $legacy_code ) ) {
 				// Wrap in li for proper menu structure.
-				$banner_html = '<li class="menu-item iwz-banner-container-menu-item">' . wp_kses_post( $legacy_code ) . '</li>';
+				$banner_html = '<li class="menu-item iwz-banner-container-menu-item">' . $this->sanitize_banner_html( $legacy_code ) . '</li>';
 				$items      .= $banner_html;
 			}
 			return $items;
@@ -416,7 +498,7 @@ class IWZ_Banner_Container {
 			}
 
 			// Wrap in li for proper menu structure.
-			$banner_html = '<li class="menu-item iwz-banner-container-menu-item">' . wp_kses_post( $banner['code'] ) . '</li>';
+			$banner_html = '<li class="menu-item iwz-banner-container-menu-item">' . $this->sanitize_banner_html( $banner['code'] ) . '</li>';
 			$items      .= $banner_html;
 		}
 
@@ -433,7 +515,72 @@ class IWZ_Banner_Container {
 		$code_field    = 'iwz_banner_' . str_replace( '-', '_', sanitize_title( $location ) ) . '_code';
 
 		if ( get_option( $enabled_field ) ) {
-			echo wp_kses_post( get_option( $code_field, '' ) );
+			echo $this->sanitize_banner_html( get_option( $code_field, '' ) );
 		}
+	}
+
+	/**
+	 * Sanitize banner HTML allowing iframes and other banner-related tags.
+	 *
+	 * @param string $html The HTML to sanitize.
+	 * @return string Sanitized HTML.
+	 */
+	private function sanitize_banner_html( $html ) {
+		$allowed_html = array(
+			'iframe' => array(
+				'src'             => array(),
+				'width'           => array(),
+				'height'          => array(),
+				'frameborder'     => array(),
+				'scrolling'       => array(),
+				'allow'           => array(),
+				'title'           => array(),
+				'style'           => array(),
+				'class'           => array(),
+				'id'              => array(),
+				'data-*'          => array(),
+			),
+			'script' => array(
+				'src'             => array(),
+				'type'            => array(),
+				'class'           => array(),
+				'id'              => array(),
+				'async'           => array(),
+				'defer'           => array(),
+			),
+			'div'    => array(
+				'style'           => array(),
+				'class'           => array(),
+				'id'              => array(),
+			),
+			'a'      => array(
+				'href'            => array(),
+				'target'          => array(),
+				'rel'             => array(),
+				'class'           => array(),
+				'id'              => array(),
+			),
+			'img'    => array(
+				'src'             => array(),
+				'alt'             => array(),
+				'width'           => array(),
+				'height'          => array(),
+				'class'           => array(),
+				'id'              => array(),
+				'style'           => array(),
+			),
+			'span'   => array(
+				'style'           => array(),
+				'class'           => array(),
+				'id'              => array(),
+			),
+			'p'      => array(
+				'class'           => array(),
+				'id'              => array(),
+				'style'           => array(),
+			),
+		);
+
+		return wp_kses( $html, $allowed_html );
 	}
 }
