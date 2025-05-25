@@ -164,7 +164,7 @@ class IWZ_Banner_Container {
 	 * Display banner in header.
 	 */
 	public function display_header_banner() {
-		// Prevent double display
+		// Prevent double display.
 		if ( $this->header_banner_displayed ) {
 			return;
 		}
@@ -208,7 +208,7 @@ class IWZ_Banner_Container {
 	 * This outputs a script that runs after the DOM is loaded to insert the banner.
 	 */
 	public function display_header_banner_fallback() {
-		// Only use fallback if banner hasn't been displayed yet
+		// Only use fallback if banner hasn't been displayed yet.
 		if ( $this->header_banner_displayed ) {
 			return;
 		}
@@ -253,7 +253,7 @@ class IWZ_Banner_Container {
 	 * @param string $banner_html The banner HTML to insert.
 	 */
 	private function output_body_banner_script( $banner_html ) {
-		// Use JSON encoding to properly handle HTML content in JavaScript
+		// Use JSON encoding to properly handle HTML content in JavaScript.
 		$json_html = wp_json_encode( $banner_html );
 		echo '<script type="text/javascript">';
 		echo 'document.addEventListener("DOMContentLoaded", function() {';
@@ -528,56 +528,56 @@ class IWZ_Banner_Container {
 	private function sanitize_banner_html( $html ) {
 		$allowed_html = array(
 			'iframe' => array(
-				'src'             => array(),
-				'width'           => array(),
-				'height'          => array(),
-				'frameborder'     => array(),
-				'scrolling'       => array(),
-				'allow'           => array(),
-				'title'           => array(),
-				'style'           => array(),
-				'class'           => array(),
-				'id'              => array(),
-				'data-*'          => array(),
+				'src'         => array(),
+				'width'       => array(),
+				'height'      => array(),
+				'frameborder' => array(),
+				'scrolling'   => array(),
+				'allow'       => array(),
+				'title'       => array(),
+				'style'       => array(),
+				'class'       => array(),
+				'id'          => array(),
+				'data-*'      => array(),
 			),
 			'script' => array(
-				'src'             => array(),
-				'type'            => array(),
-				'class'           => array(),
-				'id'              => array(),
-				'async'           => array(),
-				'defer'           => array(),
+				'src'   => array(),
+				'type'  => array(),
+				'class' => array(),
+				'id'    => array(),
+				'async' => array(),
+				'defer' => array(),
 			),
 			'div'    => array(
-				'style'           => array(),
-				'class'           => array(),
-				'id'              => array(),
+				'style' => array(),
+				'class' => array(),
+				'id'    => array(),
 			),
 			'a'      => array(
-				'href'            => array(),
-				'target'          => array(),
-				'rel'             => array(),
-				'class'           => array(),
-				'id'              => array(),
+				'href'   => array(),
+				'target' => array(),
+				'rel'    => array(),
+				'class'  => array(),
+				'id'     => array(),
 			),
 			'img'    => array(
-				'src'             => array(),
-				'alt'             => array(),
-				'width'           => array(),
-				'height'          => array(),
-				'class'           => array(),
-				'id'              => array(),
-				'style'           => array(),
+				'src'    => array(),
+				'alt'    => array(),
+				'width'  => array(),
+				'height' => array(),
+				'class'  => array(),
+				'id'     => array(),
+				'style'  => array(),
 			),
 			'span'   => array(
-				'style'           => array(),
-				'class'           => array(),
-				'id'              => array(),
+				'style' => array(),
+				'class' => array(),
+				'id'    => array(),
 			),
 			'p'      => array(
-				'class'           => array(),
-				'id'              => array(),
-				'style'           => array(),
+				'class' => array(),
+				'id'    => array(),
+				'style' => array(),
 			),
 		);
 
