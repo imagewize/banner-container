@@ -83,6 +83,7 @@ class IWZ_Banner_Container_Settings {
 			'the_content'       => __( 'Within Content', 'banner-container-plugin' ),
 			'get_sidebar'       => __( 'Before Sidebar', 'banner-container-plugin' ),
 			'wp_nav_menu_items' => __( 'In Navigation Menu', 'banner-container-plugin' ),
+			'content_wrap_inside' => __( 'Inside Content Wrap (Top of Content Area)', 'banner-container-plugin' ),
 		);
 
 		// Allow theme/plugins to modify available locations.
@@ -130,8 +131,8 @@ class IWZ_Banner_Container_Settings {
 	public function register_settings() {
 		// Register a setting group for each location.
 		foreach ( $this->banner_locations as $location_key => $location_label ) {
-			// For head, footer, content, sidebar, and navigation menu banners, use the new multiple banner system.
-			if ( in_array( $location_key, array( 'wp_head', 'wp_footer', 'the_content', 'get_sidebar', 'wp_nav_menu_items' ), true ) ) {
+			// For head, footer, content, sidebar, navigation menu, and content_wrap_inside banners, use the new multiple banner system.
+			if ( in_array( $location_key, array( 'wp_head', 'wp_footer', 'the_content', 'get_sidebar', 'wp_nav_menu_items', 'content_wrap_inside' ), true ) ) {
 				// Register setting for enabled status.
 				register_setting(
 					'iwz_banner_container_settings',
@@ -601,8 +602,8 @@ class IWZ_Banner_Container_Settings {
 							</table>
 						
 						<?php else : ?>
-							<!-- Multiple banner locations (head, footer, sidebar, navigation menu) -->
-							<?php if ( in_array( $location_key, array( 'wp_head', 'wp_footer', 'get_sidebar', 'wp_nav_menu_items' ), true ) ) : ?>
+							<!-- Multiple banner locations (head, footer, sidebar, navigation menu, content_wrap_inside) -->
+							<?php if ( in_array( $location_key, array( 'wp_head', 'wp_footer', 'get_sidebar', 'wp_nav_menu_items', 'content_wrap_inside' ), true ) ) : ?>
 								<?php
 									$location_banners = get_option( 'iwz_banner_' . $location_key . '_banners', array() );
 
@@ -1017,6 +1018,7 @@ class IWZ_Banner_Container_Settings {
 			// Initialize remove buttons for location banners.
 			updateLocationRemoveButtons('wp_head');
 			updateLocationRemoveButtons('wp_footer');
+			updateLocationRemoveButtons('content_wrap_inside');
 		});
 		</script>
 		<?php

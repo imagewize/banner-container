@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Banner Container Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .content_wrap { 
+            border: 2px solid #333; 
+            padding: 20px; 
+            margin: 20px 0; 
+            background: #f9f9f9;
+        }
+        .content { 
+            background: #e8e8e8; 
+            padding: 15px; 
+            margin: 10px 0;
+        }
+        .sidebar { 
+            background: #d8d8d8; 
+            padding: 15px; 
+            margin: 10px 0;
+        }
+        .test-banner {
+            background: #2ecc71;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Banner Container - content_wrap_inside Test</h1>
+    
+    <p>This test simulates the theme structure where our banner should be inserted.</p>
+    
+    <div class="content_wrap">
+        <h3>Content Wrap Container</h3>
+        <p>The banner should appear here, right after this opening div.content_wrap tag.</p>
+        
+        <div class="content">
+            <h4>Main Content Area</h4>
+            <p>This is the main content area that would normally contain posts, pages, etc.</p>
+        </div>
+        
+        <div class="sidebar">
+            <h4>Sidebar Area</h4>
+            <p>This is the sidebar area that would contain widgets.</p>
+        </div>
+    </div>
+    
+    <script type="text/javascript">
+        // Simulate the banner injection script
+        document.addEventListener("DOMContentLoaded", function() {
+            var contentWrap = document.querySelector(".content_wrap");
+            if (contentWrap) {
+                var bannerDiv = document.createElement("div");
+                bannerDiv.className = "iwz-banner-content-wrap-inside test-banner";
+                bannerDiv.innerHTML = "✅ TEST SUCCESS: Content Wrap Inside Banner - This banner appears at the top of the content wrap area!";
+                contentWrap.insertBefore(bannerDiv, contentWrap.firstChild);
+                
+                console.log("Banner injection test completed successfully!");
+            } else {
+                console.error("No .content_wrap element found!");
+            }
+        });
+    </script>
+</body>
+</html>

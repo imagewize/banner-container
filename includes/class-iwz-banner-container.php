@@ -111,8 +111,17 @@ class IWZ_Banner_Container {
 	 * Hook the banner displays to WordPress actions.
 	 */
 	private function hook_banner_displays() {
+		// Debug logging
+		if ( get_option( 'iwz_banner_debug_content_wrap_inside' ) ) {
+			error_log( 'IWZ Banner: hook_banner_displays() called' );
+		}
+		
 		// Loop through each location and add the appropriate action/filter.
 		foreach ( $this->banner_locations as $location => $label ) {
+			if ( get_option( 'iwz_banner_debug_content_wrap_inside' ) && $location === 'content_wrap_inside' ) {
+				error_log( 'IWZ Banner: Setting up hook for content_wrap_inside location' );
+			}
+			
 			switch ( $location ) {
 				case 'wp_head':
 					add_action( 'wp_body_open', array( $this, 'display_header_banner' ), 10 );
@@ -130,6 +139,16 @@ class IWZ_Banner_Container {
 					break;
 				case 'wp_nav_menu_items':
 					add_filter( 'wp_nav_menu_items', array( $this, 'display_menu_banner' ), 10, 2 );
+					break;
+				case 'content_wrap_inside':
+					if ( get_option( 'iwz_banner_debug_content_wrap_inside' ) ) {
+						error_log( 'IWZ Banner: Adding wp_footer hook for content_wrap_inside' );
+					}
+					add_action( 'wp_footer', array( $this, 'display_content_wrap_inside_banner' ), 5 );
+					// Test action to see if wp_footer runs at all
+					add_action( 'wp_footer', function() {
+						error_log( 'IWZ Banner: wp_footer action is running! Time: ' . time() );
+					}, 1 );
 					break;
 				default:
 					// For custom hooks.
@@ -510,6 +529,101 @@ class IWZ_Banner_Container {
 		}
 
 		return $items;
+	}
+
+	/**
+	 * Display banner inside content wrap (just after opening div.content_wrap).
+	 */
+	public function display_content_wrap_inside_banner() {
+		// Debug logging - always log this time
+		error_log( 'IWZ Banner: display_content_wrap_inside_banner() method called - timestamp: ' . time() );
+		
+		if ( get_option( 'iwz_banner_debug_content_wrap_inside' ) ) {
+			error_log( 'IWZ Banner: display_content_wrap_inside_banner() called' );
+		}
+		
+		if ( ! get_option( 'iwz_banner_content_wrap_inside_enabled' ) ) {
+			if ( get_option( 'iwz_banner_debug_content_wrap_inside' ) ) {
+				error_log( 'IWZ Banner: content_wrap_inside not enabled' );
+			}
+			return;
+		}
+
+		// Get multiple banners or fall back to legacy single banner.
+		$banners = get_option( 'iwz_banner_content_wrap_inside_banners', array() );
+
+		if ( get_option( 'iwz_banner_debug_content_wrap_inside' ) ) {
+			error_log( 'IWZ Banner: Found ' . count( $banners ) . ' banners' );
+		}
+
+		if ( empty( $banners ) ) {
+			// Check for legacy single banner.
+			$legacy_code = get_option( 'iwz_banner_content_wrap_inside_code', '' );
+			if ( ! empty( $legacy_code ) ) {
+				if ( get_option( 'iwz_banner_debug_content_wrap_inside' ) ) {
+					error_log( 'IWZ Banner: Using legacy banner code' );
+				}
+				$this->output_content_wrap_inside_script( $legacy_code );
+			}
+			return;
+		}
+
+		// Display multiple banners with device targeting.
+		$banner_html = '';
+		foreach ( $banners as $banner ) {
+			if ( empty( $banner['enabled'] ) || empty( $banner['code'] ) ) {
+				continue;
+			}
+
+			// Check device targeting.
+			if ( ! $this->should_display_for_device( $banner['device_targeting'] ?? 'all' ) ) {
+				continue;
+			}
+
+			$banner_html .= $this->sanitize_banner_html( $banner['code'] );
+		}
+
+		if ( ! empty( $banner_html ) ) {
+			if ( get_option( 'iwz_banner_debug_content_wrap_inside' ) ) {
+				error_log( 'IWZ Banner: Outputting banner HTML: ' . substr( $banner_html, 0, 100 ) . '...' );
+			}
+			$this->output_content_wrap_inside_script( $banner_html );
+		} else {
+			if ( get_option( 'iwz_banner_debug_content_wrap_inside' ) ) {
+				error_log( 'IWZ Banner: No banner HTML to output' );
+			}
+		}
+	}
+
+	/**
+	 * Output JavaScript to insert banner inside content_wrap div.
+	 *
+	 * @param string $banner_html The banner HTML to insert.
+	 */
+	private function output_content_wrap_inside_script( $banner_html ) {
+		if ( get_option( 'iwz_banner_debug_content_wrap_inside' ) ) {
+			error_log( 'IWZ Banner: output_content_wrap_inside_script() called with HTML: ' . substr( $banner_html, 0, 50 ) . '...' );
+		}
+		
+		// Use JSON encoding to properly handle HTML content in JavaScript.
+		$json_html = wp_json_encode( $banner_html );
+		echo '<script type="text/javascript">';
+		echo 'document.addEventListener("DOMContentLoaded", function() {';
+		echo 'console.log("IWZ Banner: content_wrap_inside script executing");';
+		echo 'var contentWrap = document.querySelector(".content_wrap");';
+		echo 'if (contentWrap) {';
+		echo 'console.log("IWZ Banner: Found .content_wrap element");';
+		echo 'var bannerDiv = document.createElement("div");';
+		echo 'bannerDiv.className = "iwz-banner-content-wrap-inside";';
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Content is JSON encoded and sanitized
+		echo 'bannerDiv.innerHTML = ' . $json_html . ';';
+		echo 'contentWrap.insertBefore(bannerDiv, contentWrap.firstChild);';
+		echo 'console.log("IWZ Banner: Banner inserted successfully");';
+		echo '} else {';
+		echo 'console.error("IWZ Banner: .content_wrap element not found");';
+		echo '}';
+		echo '});';
+		echo '</script>';
 	}
 
 	/**
