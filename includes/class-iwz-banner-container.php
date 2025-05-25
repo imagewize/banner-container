@@ -115,13 +115,13 @@ class IWZ_Banner_Container {
 		if ( get_option( 'iwz_banner_debug_content_wrap_inside' ) ) {
 			error_log( 'IWZ Banner: hook_banner_displays() called' );
 		}
-		
+
 		// Loop through each location and add the appropriate action/filter.
 		foreach ( $this->banner_locations as $location => $label ) {
 			if ( get_option( 'iwz_banner_debug_content_wrap_inside' ) && $location === 'content_wrap_inside' ) {
 				error_log( 'IWZ Banner: Setting up hook for content_wrap_inside location' );
 			}
-			
+
 			switch ( $location ) {
 				case 'wp_head':
 					add_action( 'wp_body_open', array( $this, 'display_header_banner' ), 10 );
@@ -146,9 +146,13 @@ class IWZ_Banner_Container {
 					}
 					add_action( 'wp_footer', array( $this, 'display_content_wrap_inside_banner' ), 5 );
 					// Test action to see if wp_footer runs at all
-					add_action( 'wp_footer', function() {
-						error_log( 'IWZ Banner: wp_footer action is running! Time: ' . time() );
-					}, 1 );
+					add_action(
+						'wp_footer',
+						function () {
+							error_log( 'IWZ Banner: wp_footer action is running! Time: ' . time() );
+						},
+						1
+					);
 					break;
 				default:
 					// For custom hooks.
@@ -537,11 +541,11 @@ class IWZ_Banner_Container {
 	public function display_content_wrap_inside_banner() {
 		// Debug logging - always log this time
 		error_log( 'IWZ Banner: display_content_wrap_inside_banner() method called - timestamp: ' . time() );
-		
+
 		if ( get_option( 'iwz_banner_debug_content_wrap_inside' ) ) {
 			error_log( 'IWZ Banner: display_content_wrap_inside_banner() called' );
 		}
-		
+
 		if ( ! get_option( 'iwz_banner_content_wrap_inside_enabled' ) ) {
 			if ( get_option( 'iwz_banner_debug_content_wrap_inside' ) ) {
 				error_log( 'IWZ Banner: content_wrap_inside not enabled' );
@@ -588,10 +592,8 @@ class IWZ_Banner_Container {
 				error_log( 'IWZ Banner: Outputting banner HTML: ' . substr( $banner_html, 0, 100 ) . '...' );
 			}
 			$this->output_content_wrap_inside_script( $banner_html );
-		} else {
-			if ( get_option( 'iwz_banner_debug_content_wrap_inside' ) ) {
+		} elseif ( get_option( 'iwz_banner_debug_content_wrap_inside' ) ) {
 				error_log( 'IWZ Banner: No banner HTML to output' );
-			}
 		}
 	}
 
@@ -604,7 +606,7 @@ class IWZ_Banner_Container {
 		if ( get_option( 'iwz_banner_debug_content_wrap_inside' ) ) {
 			error_log( 'IWZ Banner: output_content_wrap_inside_script() called with HTML: ' . substr( $banner_html, 0, 50 ) . '...' );
 		}
-		
+
 		// Use JSON encoding to properly handle HTML content in JavaScript.
 		$json_html = wp_json_encode( $banner_html );
 		echo '<script type="text/javascript">';

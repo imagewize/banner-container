@@ -78,11 +78,11 @@ class IWZ_Banner_Container_Settings {
 	 */
 	public function register_banner_locations() {
 		$this->banner_locations = array(
-			'wp_head'           => __( 'Top of Page (After <body>)', 'banner-container-plugin' ),
-			'wp_footer'         => __( 'Footer (Before </body>)', 'banner-container-plugin' ),
-			'the_content'       => __( 'Within Content', 'banner-container-plugin' ),
-			'get_sidebar'       => __( 'Before Sidebar', 'banner-container-plugin' ),
-			'wp_nav_menu_items' => __( 'In Navigation Menu', 'banner-container-plugin' ),
+			'wp_head'             => __( 'Top of Page (After <body>)', 'banner-container-plugin' ),
+			'wp_footer'           => __( 'Footer (Before </body>)', 'banner-container-plugin' ),
+			'the_content'         => __( 'Within Content', 'banner-container-plugin' ),
+			'get_sidebar'         => __( 'Before Sidebar', 'banner-container-plugin' ),
+			'wp_nav_menu_items'   => __( 'In Navigation Menu', 'banner-container-plugin' ),
 			'content_wrap_inside' => __( 'Inside Content Wrap (Top of Content Area)', 'banner-container-plugin' ),
 		);
 
