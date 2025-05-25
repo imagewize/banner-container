@@ -180,6 +180,7 @@ class IWZ_Banner_Container {
 		if ( empty( $banners ) ) {
 			$legacy_code = get_option( 'iwz_banner_wp_head_code', '' );
 			if ( ! empty( $legacy_code ) ) {
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Content is sanitized via sanitize_banner_html method
 				echo $this->sanitize_banner_html( $legacy_code );
 				$this->header_banner_displayed = true;
 			}
@@ -198,6 +199,7 @@ class IWZ_Banner_Container {
 		}
 
 		if ( ! empty( $banner_output ) ) {
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Content is sanitized via sanitize_banner_html method
 			echo $banner_output;
 			$this->header_banner_displayed = true;
 		}
@@ -258,6 +260,7 @@ class IWZ_Banner_Container {
 		echo '<script type="text/javascript">';
 		echo 'document.addEventListener("DOMContentLoaded", function() {';
 		echo 'var bannerDiv = document.createElement("div");';
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Content is JSON encoded and sanitized
 		echo 'bannerDiv.innerHTML = ' . $json_html . ';';
 		echo 'document.body.insertBefore(bannerDiv.firstChild, document.body.firstChild);';
 		echo '});';
@@ -279,6 +282,7 @@ class IWZ_Banner_Container {
 		if ( empty( $banners ) ) {
 			$legacy_code = get_option( 'iwz_banner_wp_footer_code', '' );
 			if ( ! empty( $legacy_code ) ) {
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Content is sanitized via sanitize_banner_html method
 				echo $this->sanitize_banner_html( $legacy_code );
 			}
 			return;
@@ -289,6 +293,7 @@ class IWZ_Banner_Container {
 			if ( ! empty( $banner['enabled'] ) && ! empty( $banner['code'] ) ) {
 				$device_targeting = $banner['device_targeting'] ?? 'all';
 				if ( $this->should_display_for_device( $device_targeting ) ) {
+					// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Content is sanitized via sanitize_banner_html method
 					echo $this->sanitize_banner_html( $banner['code'] );
 				}
 			}
@@ -437,6 +442,7 @@ class IWZ_Banner_Container {
 			// Check for legacy single banner.
 			$legacy_code = get_option( 'iwz_banner_get_sidebar_code', '' );
 			if ( ! empty( $legacy_code ) ) {
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Content is sanitized via sanitize_banner_html method
 				echo $this->sanitize_banner_html( $legacy_code );
 			}
 			return;
@@ -453,6 +459,7 @@ class IWZ_Banner_Container {
 				continue;
 			}
 
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Content is sanitized via sanitize_banner_html method
 			echo $this->sanitize_banner_html( $banner['code'] );
 		}
 	}
@@ -515,6 +522,7 @@ class IWZ_Banner_Container {
 		$code_field    = 'iwz_banner_' . str_replace( '-', '_', sanitize_title( $location ) ) . '_code';
 
 		if ( get_option( $enabled_field ) ) {
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Content is sanitized via sanitize_banner_html method
 			echo $this->sanitize_banner_html( get_option( $code_field, '' ) );
 		}
 	}
