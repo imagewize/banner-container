@@ -12,6 +12,7 @@ The Banner Container Plugin allows you to easily add iframe codes to various loc
 - Before Sidebar Content - **NEW in v1.7.0**: Uses `dynamic_sidebar_before` hook to display banners before any sidebar widgets load, ensuring proper positioning above all sidebar content. Supports multiple banners and device targeting.
 - In Navigation Menu - with support for multiple banners and device targeting
 - Content Wrap (inside content wrapper elements) - **Blabber theme exclusive feature** that targets elements with the `content_wrapper` CSS class. This location uses JavaScript insertion and is specifically designed for the Blabber theme structure.
+- Blabber Footer Start (Top of Footer Area) - **Blabber theme exclusive feature** that displays banners just above the footer element with class `footer_wrap`. This location uses JavaScript insertion and is specifically designed for the Blabber theme footer structure.
 
 ## Requirements
 
@@ -49,25 +50,36 @@ The Banner Container Plugin allows you to easily add iframe codes to various loc
 
 **Theme compatibility**: This change should work with any theme that properly implements WordPress sidebars using `dynamic_sidebar()`. Most modern themes support this.
 
-### What is the Content Wrap banner location and when should I use it?
+### What are the Blabber theme exclusive banner locations and when should I use them?
 
-The Content Wrap banner location is a specialized banner placement designed exclusively for the **Blabber theme**. This feature targets elements with the `content_wrapper` CSS class that is specific to the Blabber theme structure.
+The Banner Container Plugin includes two specialized banner placements designed exclusively for the **Blabber theme**:
 
-**Important Notes:**
-- **Blabber theme only**: This feature only works with the Blabber theme as it specifically targets the `content_wrapper` class
-- Uses JavaScript-based insertion with DOM-ready event handling for proper placement
-- Includes specialized CSS styling with iframe constraints (100px height, 640px width)
-- Responsive design with max-width 100% for mobile compatibility
-- High-specificity CSS rules to override Blabber theme's iframe styling (`blabber_resize`, `trx_addons_resize` classes)
+#### Content Wrap Banner Location
+This feature targets elements with the `content_wrapper` CSS class that is specific to the Blabber theme structure.
 
 **When to use:**
 - You are using the Blabber theme
 - You want banners to appear inside the main content wrapper area
 - You need precise control over banner sizing within the Blabber theme's content structure
 
+#### Blabber Footer Start Banner Location
+This feature targets the footer element with class `footer_wrap` and displays banners just above the footer element.
+
+**When to use:**
+- You are using the Blabber theme
+- You want banners to appear just above the footer section
+- You need banner placement specifically positioned before the Blabber theme's footer structure
+
+**Important Notes for both locations:**
+- **Blabber theme only**: These features only work with the Blabber theme as they specifically target Blabber theme CSS classes
+- Use JavaScript-based insertion with DOM-ready event handling for proper placement
+- Include specialized CSS styling with iframe constraints (100px height, 640px width)
+- Responsive design with max-width 100% for mobile compatibility
+- High-specificity CSS rules to override Blabber theme's iframe styling (`blabber_resize`, `trx_addons_resize` classes)
+
 **When NOT to use:**
 - You are using any theme other than Blabber
-- Your theme doesn't have elements with the `content_wrapper` class
+- Your theme doesn't have elements with the required CSS classes (`content_wrapper` or `footer_wrap`)
 - In these cases, use other banner locations like Header, Footer, or Content instead
 
 ### Can I add banners to custom locations?
