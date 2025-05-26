@@ -109,6 +109,7 @@ class IWZ_Banner_Container_Welcome {
 				<p><?php esc_html_e( 'To configure your banner container:', 'banner-container-plugin' ); ?></p>
 				<ol>
 					<li><?php esc_html_e( 'Go to the Banner Container settings page in your WordPress admin', 'banner-container-plugin' ); ?></li>
+					<li><?php esc_html_e( 'Click on any location title to expand its settings', 'banner-container-plugin' ); ?></li>
 					<li><?php esc_html_e( 'Enable the locations where you want to display banners', 'banner-container-plugin' ); ?></li>
 					<li><?php esc_html_e( 'Enter your iframe or banner HTML code for each location', 'banner-container-plugin' ); ?></li>
 					<li><?php esc_html_e( 'For content banners, choose placement options (top, bottom, or after a specific paragraph)', 'banner-container-plugin' ); ?></li>
