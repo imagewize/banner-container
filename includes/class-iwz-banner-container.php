@@ -125,8 +125,8 @@ class IWZ_Banner_Container {
 				case 'the_content':
 					add_filter( 'the_content', array( $this, 'display_content_banner' ), 20 );
 					break;
-				case 'get_sidebar':
-					add_action( 'get_sidebar', array( $this, 'display_sidebar_banner' ), 10 );
+				case 'dynamic_sidebar_before':
+					add_action( 'dynamic_sidebar_before', array( $this, 'display_sidebar_banner' ), 10 );
 					break;
 				case 'wp_nav_menu_items':
 					add_filter( 'wp_nav_menu_items', array( $this, 'display_menu_banner' ), 10, 2 );
@@ -429,21 +429,21 @@ class IWZ_Banner_Container {
 	}
 
 	/**
-	 * Display banner before sidebar.
+	 * Display banner before sidebar content.
 	 *
-	 * @param string $name The sidebar name.
+	 * @param string $index The sidebar index.
 	 */
-	public function display_sidebar_banner( $name ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
-		if ( ! get_option( 'iwz_banner_get_sidebar_enabled' ) ) {
+	public function display_sidebar_banner( $index ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
+		if ( ! get_option( 'iwz_banner_dynamic_sidebar_before_enabled' ) ) {
 			return;
 		}
 
 		// Get multiple banners or fall back to legacy single banner.
-		$banners = get_option( 'iwz_banner_get_sidebar_banners', array() );
+		$banners = get_option( 'iwz_banner_dynamic_sidebar_before_banners', array() );
 
 		if ( empty( $banners ) ) {
 			// Check for legacy single banner.
-			$legacy_code = get_option( 'iwz_banner_get_sidebar_code', '' );
+			$legacy_code = get_option( 'iwz_banner_dynamic_sidebar_before_code', '' );
 			if ( ! empty( $legacy_code ) ) {
 				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Content is sanitized via sanitize_banner_html method
 				echo $this->sanitize_banner_html( $legacy_code );

@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.7.0]
+* Breaking Change: Updated sidebar banner location to use `dynamic_sidebar_before` hook instead of `get_sidebar`
+* Improvement: Sidebar banners now display before any sidebar content (widgets) loads for better positioning
+* UI Enhancement: Added explanatory note on settings page for sidebar banner behavior
+* Code Quality: Maintained WordPress Coding Standards compliance
+* Backward Compatibility: Legacy sidebar banner settings are automatically migrated to new hook system
+* Documentation: Updated README to reflect new sidebar banner behavior
+
 ## [1.6.2]
 * New Feature: Implemented accordion-style interface for banner location settings
 * UI Improvement: All banner location sections now start in a collapsed state for better organization
