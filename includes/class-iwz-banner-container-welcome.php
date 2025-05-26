@@ -130,6 +130,7 @@ class IWZ_Banner_Container_Welcome {
 					<li><?php esc_html_e( 'Within Content (with options for placement)', 'banner-container-plugin' ); ?></li>
 					<li><?php esc_html_e( 'Before Sidebar', 'banner-container-plugin' ); ?></li>
 					<li><?php esc_html_e( 'In Navigation Menu', 'banner-container-plugin' ); ?></li>
+					<li><?php esc_html_e( 'Top Blabber Content Wrap', 'banner-container-plugin' ); ?></li>
 				</ul>
 			</div>
 		</div>
