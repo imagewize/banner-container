@@ -1,0 +1,10 @@
+/* Override problematic iframe height settings for content_wrap banner with higher specificity */
+.iwz-banner-container[data-location="content_wrap"] iframe.blabber_resize.trx_addons_resize,
+.iwz-banner-container[data-location="content_wrap"] .blabber_resize.trx_addons_resize,
+iframe.blabber_resize.trx_addons_resize {
+    height: 100px !important;
+    max-height: 100px !important;
+    width: 640px !important;
+    max-width: 100% !important;
+    margin-bottom: 1rem;
+}
