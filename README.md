@@ -9,7 +9,7 @@ The Banner Container Plugin allows you to easily add iframe codes to various loc
 - Header (after initial `<body>`tag) - with support for multiple banners and device targeting
 - Footer (before `</body>` tag) - with support for multiple banners and device targeting
 - Content (beginning content, end content or after x paragraphs) (with options for multiple banners, individual placement, and device targeting)
-- Before Sidebar - with support for multiple banners and device targeting
+- Before Sidebar Content - **NEW in v1.7.0**: Uses `dynamic_sidebar_before` hook to display banners before any sidebar widgets load, ensuring proper positioning above all sidebar content. Supports multiple banners and device targeting.
 - In Navigation Menu - with support for multiple banners and device targeting
 - Content Wrap (inside content wrapper elements) - **Blabber theme exclusive feature** that targets elements with the `content_wrapper` CSS class. This location uses JavaScript insertion and is specifically designed for the Blabber theme structure.
 
@@ -37,6 +37,17 @@ The Banner Container Plugin allows you to easily add iframe codes to various loc
 6. Save your settings
 
 ## Frequently Asked Questions
+
+### What changed with the sidebar banner location in v1.7.0?
+
+**Breaking Change**: In version 1.7.0, we updated the sidebar banner location to use WordPress's `dynamic_sidebar_before` hook instead of the previous `get_sidebar` hook.
+
+**What this means:**
+- **Better positioning**: Banners now display before any sidebar widgets load, ensuring they appear above all sidebar content
+- **More reliable**: Uses WordPress's native sidebar hook system for better theme compatibility
+- **Automatic migration**: Existing sidebar banner settings are automatically migrated to the new system
+
+**Theme compatibility**: This change should work with any theme that properly implements WordPress sidebars using `dynamic_sidebar()`. Most modern themes support this.
 
 ### What is the Content Wrap banner location and when should I use it?
 

@@ -78,12 +78,12 @@ class IWZ_Banner_Container_Settings {
 	 */
 	public function register_banner_locations() {
 		$this->banner_locations = array(
-			'wp_head'             => __( 'Top of Page (After <body>)', 'banner-container-plugin' ),
-			'wp_footer'           => __( 'Footer (Before </body>)', 'banner-container-plugin' ),
-			'the_content'         => __( 'Within Content', 'banner-container-plugin' ),
-			'get_sidebar'         => __( 'Before Sidebar', 'banner-container-plugin' ),
-			'wp_nav_menu_items'   => __( 'In Navigation Menu', 'banner-container-plugin' ),
-			'content_wrap_inside' => __( 'Inside Blabber Theme Content Wrap (Top of Content Area)', 'banner-container-plugin' ),
+			'wp_head'                => __( 'Top of Page (After <body>)', 'banner-container-plugin' ),
+			'wp_footer'              => __( 'Footer (Before </body>)', 'banner-container-plugin' ),
+			'the_content'            => __( 'Within Content', 'banner-container-plugin' ),
+			'dynamic_sidebar_before' => __( 'Before Sidebar Content', 'banner-container-plugin' ),
+			'wp_nav_menu_items'      => __( 'In Navigation Menu', 'banner-container-plugin' ),
+			'content_wrap_inside'    => __( 'Inside Blabber Theme Content Wrap (Top of Content Area)', 'banner-container-plugin' ),
 		);
 
 		// Allow theme/plugins to modify available locations.
@@ -132,7 +132,7 @@ class IWZ_Banner_Container_Settings {
 		// Register a setting group for each location.
 		foreach ( $this->banner_locations as $location_key => $location_label ) {
 			// For head, footer, content, sidebar, navigation menu, and content_wrap_inside banners, use the new multiple banner system.
-			if ( in_array( $location_key, array( 'wp_head', 'wp_footer', 'the_content', 'get_sidebar', 'wp_nav_menu_items', 'content_wrap_inside' ), true ) ) {
+			if ( in_array( $location_key, array( 'wp_head', 'wp_footer', 'the_content', 'dynamic_sidebar_before', 'wp_nav_menu_items', 'content_wrap_inside' ), true ) ) {
 				// Register setting for enabled status.
 				register_setting(
 					'iwz_banner_container_settings',
@@ -395,7 +395,7 @@ class IWZ_Banner_Container_Settings {
 
 					// Get banner count for display in title.
 					$banner_count = 0;
-					if ( in_array( $location_key, array( 'wp_head', 'wp_footer', 'the_content', 'get_sidebar', 'wp_nav_menu_items', 'content_wrap_inside' ), true ) ) {
+					if ( in_array( $location_key, array( 'wp_head', 'wp_footer', 'the_content', 'dynamic_sidebar_before', 'wp_nav_menu_items', 'content_wrap_inside' ), true ) ) {
 						$banners      = get_option( 'iwz_banner_' . $location_key . '_banners', array() );
 						$banner_count = count(
 							array_filter(
@@ -631,7 +631,7 @@ class IWZ_Banner_Container_Settings {
 							
 							<?php else : ?>
 								<!-- Multiple banner locations (head, footer, sidebar, navigation menu, content_wrap_inside) -->
-								<?php if ( in_array( $location_key, array( 'wp_head', 'wp_footer', 'get_sidebar', 'wp_nav_menu_items', 'content_wrap_inside' ), true ) ) : ?>
+								<?php if ( in_array( $location_key, array( 'wp_head', 'wp_footer', 'dynamic_sidebar_before', 'wp_nav_menu_items', 'content_wrap_inside' ), true ) ) : ?>
 									<?php
 										$location_banners = get_option( 'iwz_banner_' . $location_key . '_banners', array() );
 
@@ -663,6 +663,11 @@ class IWZ_Banner_Container_Settings {
 									<table class="form-table">
 										<tr>
 											<td colspan="2">
+												<?php if ( 'dynamic_sidebar_before' === $location_key ) : ?>
+													<div class="iwz-banner-container-notice">
+														<p><strong><?php esc_html_e( 'Note:', 'banner-container-plugin' ); ?></strong> <?php esc_html_e( 'These banners will appear before any sidebar content (widgets) loads. This ensures banners display above all other sidebar elements.', 'banner-container-plugin' ); ?></p>
+													</div>
+												<?php endif; ?>
 												<h3>
 													<?php
 													/* translators: %s: Location label */
@@ -1082,7 +1087,7 @@ class IWZ_Banner_Container_Settings {
 			// Initialize remove buttons for location banners.
 			updateLocationRemoveButtons('wp_head');
 			updateLocationRemoveButtons('wp_footer');
-			updateLocationRemoveButtons('get_sidebar');
+			updateLocationRemoveButtons('dynamic_sidebar_before');
 			updateLocationRemoveButtons('wp_nav_menu_items');
 			updateLocationRemoveButtons('content_wrap_inside');
 		});
