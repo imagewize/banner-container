@@ -392,14 +392,19 @@ class IWZ_Banner_Container_Settings {
 				foreach ( $this->banner_locations as $location_key => $location_label ) :
 					$enabled = get_option( 'iwz_banner_' . $location_key . '_enabled', false );
 					$code    = get_option( 'iwz_banner_' . $location_key . '_code', '' );
-					
-					// Get banner count for display in title
+
+					// Get banner count for display in title.
 					$banner_count = 0;
 					if ( in_array( $location_key, array( 'wp_head', 'wp_footer', 'the_content', 'get_sidebar', 'wp_nav_menu_items', 'content_wrap_inside' ), true ) ) {
-						$banners = get_option( 'iwz_banner_' . $location_key . '_banners', array() );
-						$banner_count = count( array_filter( $banners, function( $banner ) {
-							return ! empty( $banner['enabled'] ) && ! empty( $banner['code'] );
-						}));
+						$banners      = get_option( 'iwz_banner_' . $location_key . '_banners', array() );
+						$banner_count = count(
+							array_filter(
+								$banners,
+								function ( $banner ) {
+									return ! empty( $banner['enabled'] ) && ! empty( $banner['code'] );
+								}
+							)
+						);
 					} else {
 						$banner_count = ( $enabled && ! empty( $code ) ) ? 1 : 0;
 					}
@@ -418,10 +423,12 @@ class IWZ_Banner_Container_Settings {
 								</label>
 								<?php if ( $banner_count > 0 ) : ?>
 									<span class="iwz-banner-count">
-										(<?php 
+										(
+										<?php
 										/* translators: %d: Number of active banners */
-										printf( _n( '%d banner active', '%d banners active', $banner_count, 'banner-container-plugin' ), $banner_count ); 
-										?>)
+										echo esc_html( sprintf( _n( '%d banner active', '%d banners active', $banner_count, 'banner-container-plugin' ), $banner_count ) );
+										?>
+										)
 									</span>
 								<?php endif; ?>
 								<span class="iwz-banner-status-indicator <?php echo $enabled ? 'enabled' : 'disabled'; ?>">
@@ -442,12 +449,12 @@ class IWZ_Banner_Container_Settings {
 									if ( ! empty( $legacy_code ) ) {
 										$content_banners = array(
 											array(
-												'code'       => $legacy_code,
-												'position'   => get_option( 'iwz_banner_content_position', 'top' ),
-												'paragraph'  => get_option( 'iwz_banner_content_paragraph', 3 ),
+												'code'     => $legacy_code,
+												'position' => get_option( 'iwz_banner_content_position', 'top' ),
+												'paragraph' => get_option( 'iwz_banner_content_paragraph', 3 ),
 												'post_types' => get_option( 'iwz_banner_content_post_types', array( 'post' ) ),
 												'device_targeting' => 'all',
-												'enabled'    => true,
+												'enabled'  => true,
 											),
 										);
 									}
@@ -457,12 +464,12 @@ class IWZ_Banner_Container_Settings {
 								if ( empty( $content_banners ) ) {
 									$content_banners = array(
 										array(
-											'code'             => '',
-											'position'         => 'top',
-											'paragraph'        => 3,
-											'post_types'       => array( 'post' ),
+											'code'       => '',
+											'position'   => 'top',
+											'paragraph'  => 3,
+											'post_types' => array( 'post' ),
 											'device_targeting' => 'all',
-											'enabled'          => false,
+											'enabled'    => false,
 										),
 									);
 								}
@@ -634,7 +641,7 @@ class IWZ_Banner_Container_Settings {
 										if ( ! empty( $legacy_code ) ) {
 											$location_banners = array(
 												array(
-													'code'    => $legacy_code,
+													'code' => $legacy_code,
 													'device_targeting' => 'all',
 													'enabled' => true,
 												),
