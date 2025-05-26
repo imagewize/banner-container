@@ -11,6 +11,7 @@ The Banner Container Plugin allows you to easily add iframe codes to various loc
 - Content (beginning content, end content or after x paragraphs) (with options for multiple banners, individual placement, and device targeting)
 - Before Sidebar - with support for multiple banners and device targeting
 - In Navigation Menu - with support for multiple banners and device targeting
+- Content Wrap (inside content wrapper elements) - **Blabber theme exclusive feature** that targets elements with the `content_wrapper` CSS class. This location uses JavaScript insertion and is specifically designed for the Blabber theme structure.
 
 ## Requirements
 
@@ -36,6 +37,27 @@ The Banner Container Plugin allows you to easily add iframe codes to various loc
 6. Save your settings
 
 ## Frequently Asked Questions
+
+### What is the Content Wrap banner location and when should I use it?
+
+The Content Wrap banner location is a specialized banner placement designed exclusively for the **Blabber theme**. This feature targets elements with the `content_wrapper` CSS class that is specific to the Blabber theme structure.
+
+**Important Notes:**
+- **Blabber theme only**: This feature only works with the Blabber theme as it specifically targets the `content_wrapper` class
+- Uses JavaScript-based insertion with DOM-ready event handling for proper placement
+- Includes specialized CSS styling with iframe constraints (100px height, 640px width)
+- Responsive design with max-width 100% for mobile compatibility
+- High-specificity CSS rules to override Blabber theme's iframe styling (`blabber_resize`, `trx_addons_resize` classes)
+
+**When to use:**
+- You are using the Blabber theme
+- You want banners to appear inside the main content wrapper area
+- You need precise control over banner sizing within the Blabber theme's content structure
+
+**When NOT to use:**
+- You are using any theme other than Blabber
+- Your theme doesn't have elements with the `content_wrapper` class
+- In these cases, use other banner locations like Header, Footer, or Content instead
 
 ### Can I add banners to custom locations?
 

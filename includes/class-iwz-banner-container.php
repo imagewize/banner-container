@@ -131,6 +131,9 @@ class IWZ_Banner_Container {
 				case 'wp_nav_menu_items':
 					add_filter( 'wp_nav_menu_items', array( $this, 'display_menu_banner' ), 10, 2 );
 					break;
+				case 'content_wrap_inside':
+					add_action( 'wp_footer', array( $this, 'display_content_wrap_inside_banner' ), 5 );
+					break;
 				default:
 					// For custom hooks.
 					if ( has_action( $location ) ) {
@@ -510,6 +513,67 @@ class IWZ_Banner_Container {
 		}
 
 		return $items;
+	}
+
+	/**
+	 * Display banner inside content wrap (just after opening div.content_wrap).
+	 */
+	public function display_content_wrap_inside_banner() {
+		if ( ! get_option( 'iwz_banner_content_wrap_inside_enabled' ) ) {
+			return;
+		}
+
+		// Get multiple banners or fall back to legacy single banner.
+		$banners = get_option( 'iwz_banner_content_wrap_inside_banners', array() );
+
+		if ( empty( $banners ) ) {
+			// Check for legacy single banner.
+			$legacy_code = get_option( 'iwz_banner_content_wrap_inside_code', '' );
+			if ( ! empty( $legacy_code ) ) {
+				$this->output_content_wrap_inside_script( $legacy_code );
+			}
+			return;
+		}
+
+		// Display multiple banners with device targeting.
+		$banner_html = '';
+		foreach ( $banners as $banner ) {
+			if ( empty( $banner['enabled'] ) || empty( $banner['code'] ) ) {
+				continue;
+			}
+
+			// Check device targeting.
+			if ( ! $this->should_display_for_device( $banner['device_targeting'] ?? 'all' ) ) {
+				continue;
+			}
+
+			$banner_html .= $this->sanitize_banner_html( $banner['code'] );
+		}
+
+		if ( ! empty( $banner_html ) ) {
+			$this->output_content_wrap_inside_script( $banner_html );
+		}
+	}
+
+	/**
+	 * Output JavaScript to insert banner inside content_wrap div.
+	 *
+	 * @param string $banner_html The banner HTML to insert.
+	 */
+	private function output_content_wrap_inside_script( $banner_html ) {
+		// Use JSON encoding to properly handle HTML content in JavaScript.
+		$json_html = wp_json_encode( $banner_html );
+		echo '<script type="text/javascript">';
+		echo 'document.addEventListener("DOMContentLoaded", function() {';
+		echo 'var contentWrap = document.querySelector(".content_wrap");';
+		echo 'if (contentWrap) {';
+		echo 'var bannerDiv = document.createElement("div");';
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Content is JSON encoded and sanitized
+		echo 'bannerDiv.innerHTML = ' . $json_html . ';';
+		echo 'contentWrap.insertBefore(bannerDiv, contentWrap.firstChild);';
+		echo '}';
+		echo '});';
+		echo '</script>';
 	}
 
 	/**

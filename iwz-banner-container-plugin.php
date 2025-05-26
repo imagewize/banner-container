@@ -3,7 +3,7 @@
  * Plugin Name: Banner Container Plugin
  * Plugin URI: https://imagewize.com/iwz-banner-container-plugin
  * Description: Add banners to different locations in your WordPress theme.
- * Version: 1.5.5
+ * Version: 1.6.0
  * Author: Jasper Frumau
  * Author URI: https://imagewize.com
  * License: GPL-2.0+
@@ -34,6 +34,14 @@ function iwz_banner_container_admin_styles() {
 	wp_enqueue_style( 'iwz-banner-container-admin', IWZ_BANNER_CONTAINER_URL . 'admin/css/iwz-banner-container-admin.css', array(), IWZ_BANNER_CONTAINER_VERSION );
 }
 add_action( 'admin_enqueue_scripts', 'iwz_banner_container_admin_styles' );
+
+/**
+ * Enqueue frontend styles.
+ */
+function iwz_banner_container_frontend_styles() {
+	wp_enqueue_style( 'iwz-banner-container-public', IWZ_BANNER_CONTAINER_URL . 'public/css/iwz-banner-container-public.css', array(), IWZ_BANNER_CONTAINER_VERSION );
+}
+add_action( 'wp_enqueue_scripts', 'iwz_banner_container_frontend_styles' );
 
 /**
  * Load plugin textdomain for translations.
