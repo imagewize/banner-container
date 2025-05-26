@@ -84,6 +84,7 @@ class IWZ_Banner_Container_Settings {
 			'dynamic_sidebar_before' => __( 'Before Sidebar Content', 'banner-container-plugin' ),
 			'wp_nav_menu_items'      => __( 'In Navigation Menu', 'banner-container-plugin' ),
 			'content_wrap_inside'    => __( 'Inside Blabber Theme Content Wrap (Top of Content Area)', 'banner-container-plugin' ),
+			'blabber_footer_start'   => __( 'Blabber Footer Start (Just Above Footer Area)', 'banner-container-plugin' ),
 		);
 
 		// Allow theme/plugins to modify available locations.
@@ -131,8 +132,8 @@ class IWZ_Banner_Container_Settings {
 	public function register_settings() {
 		// Register a setting group for each location.
 		foreach ( $this->banner_locations as $location_key => $location_label ) {
-			// For head, footer, content, sidebar, navigation menu, and content_wrap_inside banners, use the new multiple banner system.
-			if ( in_array( $location_key, array( 'wp_head', 'wp_footer', 'the_content', 'dynamic_sidebar_before', 'wp_nav_menu_items', 'content_wrap_inside' ), true ) ) {
+			// For head, footer, content, sidebar, navigation menu, content_wrap_inside, and blabber_footer_start banners, use the new multiple banner system.
+			if ( in_array( $location_key, array( 'wp_head', 'wp_footer', 'the_content', 'dynamic_sidebar_before', 'wp_nav_menu_items', 'content_wrap_inside', 'blabber_footer_start' ), true ) ) {
 				// Register setting for enabled status.
 				register_setting(
 					'iwz_banner_container_settings',
@@ -395,7 +396,7 @@ class IWZ_Banner_Container_Settings {
 
 					// Get banner count for display in title.
 					$banner_count = 0;
-					if ( in_array( $location_key, array( 'wp_head', 'wp_footer', 'the_content', 'dynamic_sidebar_before', 'wp_nav_menu_items', 'content_wrap_inside' ), true ) ) {
+					if ( in_array( $location_key, array( 'wp_head', 'wp_footer', 'the_content', 'dynamic_sidebar_before', 'wp_nav_menu_items', 'content_wrap_inside', 'blabber_footer_start' ), true ) ) {
 						$banners      = get_option( 'iwz_banner_' . $location_key . '_banners', array() );
 						$banner_count = count(
 							array_filter(
@@ -1090,6 +1091,7 @@ class IWZ_Banner_Container_Settings {
 			updateLocationRemoveButtons('dynamic_sidebar_before');
 			updateLocationRemoveButtons('wp_nav_menu_items');
 			updateLocationRemoveButtons('content_wrap_inside');
+			updateLocationRemoveButtons('blabber_footer_start');
 		});
 		</script>
 		<?php

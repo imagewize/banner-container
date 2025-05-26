@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.8.0]
+* New Feature: Added Blabber Footer Start banner location for displaying banners just above the footer element
+* New Feature: Blabber Footer Start targets `footer.footer_wrap` element and uses JavaScript-based insertion
+* Styling: Added specialized CSS for Blabber Footer Start banners with iframe height and width constraints
+* Styling: Implemented responsive design with max-width 100% for mobile compatibility
+* CSS Enhancement: Added high-specificity CSS rules to override Blabber theme's iframe styling conflicts
+* Multiple Banner Support: Full support for multiple banners with individual device targeting (desktop/mobile/all)
+* Admin Interface: Integrated into existing settings page with collapsible accordion interface
+* Documentation: Updated README and welcome page with new banner location information
+* Code Quality: Follows same patterns as existing Content Wrap banner location for consistency
+
 ## [1.7.0]
 * Breaking Change: Updated sidebar banner location to use `dynamic_sidebar_before` hook instead of `get_sidebar`
 * Improvement: Sidebar banners now display before any sidebar content (widgets) loads for better positioning

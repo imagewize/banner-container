@@ -8,3 +8,19 @@ iframe.blabber_resize.trx_addons_resize {
 	max-width: 100% !important;
 	margin-bottom: 1rem;
 }
+
+/* Styling for Blabber footer start banner location */
+.iwz-banner-container[data-location="blabber_footer"] {
+	margin-bottom: 1rem;
+	text-align: center;
+}
+
+.iwz-banner-container[data-location="blabber_footer"] iframe.blabber_resize.trx_addons_resize,
+.iwz-banner-container[data-location="blabber_footer"] .blabber_resize.trx_addons_resize,
+.iwz-banner-container[data-location="blabber_footer"] iframe {
+	height: 100px !important;
+	max-height: 100px !important;
+	width: 640px !important;
+	max-width: 100% !important;
+	margin-bottom: 1rem;
+}

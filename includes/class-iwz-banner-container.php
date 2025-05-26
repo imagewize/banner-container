@@ -134,6 +134,9 @@ class IWZ_Banner_Container {
 				case 'content_wrap_inside':
 					add_action( 'wp_footer', array( $this, 'display_content_wrap_inside_banner' ), 5 );
 					break;
+				case 'blabber_footer_start':
+					add_action( 'wp_footer', array( $this, 'display_blabber_footer_start_banner' ), 5 );
+					break;
 				default:
 					// For custom hooks.
 					if ( has_action( $location ) ) {
@@ -571,6 +574,69 @@ class IWZ_Banner_Container {
 		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Content is JSON encoded and sanitized
 		echo 'bannerDiv.innerHTML = ' . $json_html . ';';
 		echo 'contentWrap.insertBefore(bannerDiv, contentWrap.firstChild);';
+		echo '}';
+		echo '});';
+		echo '</script>';
+	}
+
+	/**
+	 * Display banner at the start of Blabber footer.
+	 */
+	public function display_blabber_footer_start_banner() {
+		if ( ! get_option( 'iwz_banner_blabber_footer_start_enabled' ) ) {
+			return;
+		}
+
+		// Get multiple banners or fall back to legacy single banner.
+		$banners = get_option( 'iwz_banner_blabber_footer_start_banners', array() );
+
+		if ( empty( $banners ) ) {
+			// Check for legacy single banner.
+			$legacy_code = get_option( 'iwz_banner_blabber_footer_start_code', '' );
+			if ( ! empty( $legacy_code ) ) {
+				$this->output_blabber_footer_start_script( $legacy_code );
+			}
+			return;
+		}
+
+		// Display multiple banners with device targeting.
+		$banner_html = '';
+		foreach ( $banners as $banner ) {
+			if ( empty( $banner['enabled'] ) || empty( $banner['code'] ) ) {
+				continue;
+			}
+
+			// Check device targeting.
+			if ( ! $this->should_display_for_device( $banner['device_targeting'] ?? 'all' ) ) {
+				continue;
+			}
+
+			$banner_html .= $this->sanitize_banner_html( $banner['code'] );
+		}
+
+		if ( ! empty( $banner_html ) ) {
+			$this->output_blabber_footer_start_script( $banner_html );
+		}
+	}
+
+	/**
+	 * Output JavaScript to insert banner at the start of Blabber footer.
+	 *
+	 * @param string $banner_html The banner HTML to insert.
+	 */
+	private function output_blabber_footer_start_script( $banner_html ) {
+		// Use JSON encoding to properly handle HTML content in JavaScript.
+		$json_html = wp_json_encode( $banner_html );
+		echo '<script type="text/javascript">';
+		echo 'document.addEventListener("DOMContentLoaded", function() {';
+		echo 'var footerWrap = document.querySelector("footer.footer_wrap");';
+		echo 'if (footerWrap) {';
+		echo 'var bannerDiv = document.createElement("div");';
+		echo 'bannerDiv.className = "iwz-banner-container";';
+		echo 'bannerDiv.setAttribute("data-location", "blabber_footer");';
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Content is JSON encoded and sanitized
+		echo 'bannerDiv.innerHTML = ' . $json_html . ';';
+		echo 'footerWrap.parentNode.insertBefore(bannerDiv, footerWrap);';
 		echo '}';
 		echo '});';
 		echo '</script>';

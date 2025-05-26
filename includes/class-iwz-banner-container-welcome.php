@@ -132,6 +132,7 @@ class IWZ_Banner_Container_Welcome {
 					<li><?php esc_html_e( 'Before Sidebar Content (above all sidebar widgets)', 'banner-container-plugin' ); ?></li>
 					<li><?php esc_html_e( 'In Navigation Menu', 'banner-container-plugin' ); ?></li>
 					<li><?php esc_html_e( 'Top Blabber Content Wrap', 'banner-container-plugin' ); ?></li>
+					<li><?php esc_html_e( 'Blabber Footer Start (Just Above Footer Area)', 'banner-container-plugin' ); ?></li>
 				</ul>
 			</div>
 		</div>
