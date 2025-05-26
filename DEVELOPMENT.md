@@ -123,3 +123,44 @@ add_action('init', function() {
 - `banner_container_is_enabled($location)` - Check if a location is enabled
 
 For more advanced customization, see the plugin's source code in the `includes/` directory.
+
+# Banner Container Plugin - Development Guide
+
+## Testing
+
+### Content Wrap Inside Banner Testing
+
+The `content_wrap_inside` location is designed specifically for the Blabber theme to inject banners at the top of the content wrap area.
+
+**Test File**: [content_wrap_inside test simulation](https://gist.github.com/jasperf/2ff52bd6beb5a4acfbdfecdd75e70e02)
+
+This test file simulates the theme structure and demonstrates how the banner injection works:
+
+- Creates a `.content_wrap` container similar to the Blabber theme
+- Uses JavaScript to inject a test banner at the beginning of the content wrap
+- Provides visual confirmation that the banner placement is working correctly
+
+### Banner Locations
+
+1. **wp_head** - Top of page (after `<body>` tag)
+2. **wp_footer** - Footer (before `</body>` tag)  
+3. **the_content** - Within post/page content with configurable positioning
+4. **get_sidebar** - Before sidebar widgets
+5. **wp_nav_menu_items** - Within navigation menus
+6. **content_wrap_inside** - Inside Blabber theme content wrap (top of content area)
+
+### Testing Recommendations
+
+1. Test each banner location independently
+2. Verify device targeting (desktop/mobile/all) works correctly
+3. Test multiple banners per location
+4. Verify post type targeting for content banners
+5. Check banner positioning options (top, bottom, after paragraph)
+6. Test with different themes to ensure compatibility
+
+### Development Notes
+
+- All banner locations support multiple banners with device targeting
+- Content banners have additional positioning and post type options
+- Legacy single banner settings are maintained for backward compatibility
+- Settings are automatically migrated from old format to new multi-banner format
