@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.6.0]
+* New Feature: Added Content Wrap banner location for displaying banners inside content wrapper elements
+* New Feature: Content Wrap banner supports JavaScript-based insertion with DOM-ready event handling
+* Styling: Added specialized CSS for Content Wrap banners with iframe height and width constraints
+* Styling: Implemented responsive design with max-width 100% for mobile compatibility
+* CSS Override: Added high-specificity CSS rules to handle problematic theme iframe styling conflicts
+* Enhanced Targeting: Content Wrap banners include proper CSS class targeting for blabber_resize and trx_addons_resize elements
+* Code Quality: Added sanitization and proper HTML handling for Content Wrap banner insertion
+
 ## [1.5.5]
 * Bug Fix: Fixed HTML escaping issue that prevented iframe banners from rendering correctly
 * Bug Fix: Resolved double banner display issue where banners appeared twice on themes supporting wp_body_open
