@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.6.1]
+* Bug Fix: Fixed welcome page redirect issue by removing unnecessary page parameter check that was preventing activation redirect
+* Improvement: Streamlined activation redirect logic to ensure users are properly directed to welcome page after plugin activation
+* Code Quality: Simplified redirect conditions while maintaining bulk activation protection
+
 ## [1.6.0]
 * New Feature: Added Content Wrap banner location for displaying banners inside content wrapper elements
 * New Feature: Content Wrap banner supports JavaScript-based insertion with DOM-ready event handling

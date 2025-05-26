@@ -74,7 +74,10 @@ class IWZ_Banner_Container_Welcome {
 	public function redirect_to_welcome_page() {
 		if ( get_transient( 'iwz_banner_container_activation_redirect' ) ) {
 			delete_transient( 'iwz_banner_container_activation_redirect' );
-			if ( ! isset( $_GET['activate-multi'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ?? '' ) ), 'activate-plugin' ) ) {
+
+			// Don't redirect on bulk activation or if we're already on the welcome page.
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Only reading URL parameters to check for bulk activation, no form processing.
+			if ( ! isset( $_GET['activate-multi'] ) && ! isset( $_GET['page'] ) ) {
 				wp_safe_redirect( admin_url( 'admin.php?page=iwz-banner-container-welcome' ) );
 				exit;
 			}
@@ -127,6 +130,7 @@ class IWZ_Banner_Container_Welcome {
 					<li><?php esc_html_e( 'Within Content (with options for placement)', 'banner-container-plugin' ); ?></li>
 					<li><?php esc_html_e( 'Before Sidebar', 'banner-container-plugin' ); ?></li>
 					<li><?php esc_html_e( 'In Navigation Menu', 'banner-container-plugin' ); ?></li>
+					<li><?php esc_html_e( 'Top Blabber Content Wrap', 'banner-container-plugin' ); ?></li>
 				</ul>
 			</div>
 		</div>
