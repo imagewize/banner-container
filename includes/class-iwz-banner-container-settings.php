@@ -83,7 +83,7 @@ class IWZ_Banner_Container_Settings {
 			'the_content'         => __( 'Within Content', 'banner-container-plugin' ),
 			'get_sidebar'         => __( 'Before Sidebar', 'banner-container-plugin' ),
 			'wp_nav_menu_items'   => __( 'In Navigation Menu', 'banner-container-plugin' ),
-			'content_wrap_inside' => __( 'Inside Content Wrap (Top of Content Area)', 'banner-container-plugin' ),
+			'content_wrap_inside' => __( 'Inside Blabber Theme Content Wrap (Top of Content Area)', 'banner-container-plugin' ),
 		);
 
 		// Allow theme/plugins to modify available locations.
