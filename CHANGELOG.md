@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.6.2]
+* New Feature: Implemented accordion-style interface for banner location settings
+* UI Improvement: All banner location sections now start in a collapsed state for better organization
+* UI Improvement: Click on any banner location title bar to expand/collapse settings
+* UI Improvement: Added visual status indicators showing enabled/disabled state and active banner count
+* UI Improvement: Enhanced admin interface with smooth expand/collapse animations
+* Bug Fix: Fixed accordion click handling to prevent conflicts with checkbox interactions
+* Styling: Added comprehensive CSS for accordion interface with proper visual hierarchy
+
 ## [1.6.1]
 * Bug Fix: Fixed welcome page redirect issue by removing unnecessary page parameter check that was preventing activation redirect
 * Improvement: Streamlined activation redirect logic to ensure users are properly directed to welcome page after plugin activation

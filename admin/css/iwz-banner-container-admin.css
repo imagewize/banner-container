@@ -17,37 +17,64 @@ textarea[id^="iwz_wp_nav_menu_items_banner_code_"] {
 	padding-bottom: 10px;
 }
 
-.hidden {
-	display: none;
-}
-
-.iwz-banner-container-notice {
-	padding: 15px;
-	background-color: #e7f7ff;
-	border-left: 4px solid #2271b1;
-	margin-bottom: 20px;
-}
-
-.iwz-banner-container-notice h4 {
-	margin-top: 0;
-	margin-bottom: 10px;
-}
-
-.iwz-banner-container-notice p:last-child {
-	margin-bottom: 0;
-}
-
-.iwz-banner-container-settings .acf-field-select[data-name="iwz_banner_content_position"] {
-	clear: both;
-}
-
-/* Multiple content banners styling */
-.iwz-content-banner-item {
+/* Accordion styles for banner location sections */
+.iwz-banner-container-location-section {
 	border: 1px solid #ddd;
 	border-radius: 4px;
-	padding: 15px;
-	margin-bottom: 15px;
-	background-color: #fafafa;
+	margin-bottom: 20px;
+	background: #fff;
+}
+
+.iwz-banner-container-accordion-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 15px 20px;
+	background: #f9f9f9;
+	border-bottom: 1px solid #ddd;
+	cursor: pointer;
+	user-select: none;
+	transition: background-color 0.2s ease;
+}
+
+.iwz-banner-container-accordion-header:hover {
+	background: #f0f0f0;
+}
+
+.iwz-banner-container-accordion-header.active {
+	background: #e7f3ff;
+	border-bottom-color: #0073aa;
+}
+
+.iwz-banner-container-accordion-title {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	margin: 0;
+	font-size: 16px;
+	font-weight: 600;
+	color: #23282d;
+}
+
+.iwz-banner-container-accordion-toggle {
+	transition: transform 0.2s ease;
+	color: #666;
+	font-size: 18px;
+}
+
+.iwz-banner-container-accordion-header.active .iwz-banner-container-accordion-toggle {
+	transform: rotate(180deg);
+}
+
+.iwz-banner-container-accordion-content {
+	padding: 0;
+	display: none;
+	overflow: hidden;
+}
+
+.iwz-banner-container-accordion-content.active {
+	display: block;
+	padding: 20px;
 }
 
 /* Success notification styling */
@@ -166,4 +193,79 @@ textarea[id^="iwz_wp_head_banner_code_"],
 textarea[id^="iwz_wp_footer_banner_code_"] {
 	font-family: monospace;
 	min-height: 150px;
+}
+
+/* Status indicator styles */
+.iwz-banner-status-indicator {
+	display: inline-flex;
+	align-items: center;
+	gap: 5px;
+	font-size: 12px;
+	font-weight: normal;
+	padding: 2px 8px;
+	border-radius: 12px;
+	background: #f0f0f0;
+	color: #666;
+}
+
+.iwz-banner-status-indicator.enabled {
+	background: #d4edda;
+	color: #155724;
+}
+
+.iwz-banner-status-indicator.disabled {
+	background: #f8d7da;
+	color: #721c24;
+}
+
+/* Remove the old section styling */
+.iwz-banner-container-location-section h2 {
+	display: none;
+}
+
+/* Adjust form table spacing within accordion */
+.iwz-banner-container-accordion-content .form-table {
+	margin-top: 0;
+}
+
+/* Style for banner count in title */
+.iwz-banner-count {
+	font-weight: normal;
+	color: #666;
+	font-size: 14px;
+}
+
+/* Banner item styling */
+.iwz-content-banner-item,
+.iwz-location-banner-item {
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	margin-bottom: 15px;
+	background: #fafafa;
+}
+
+.iwz-content-banner-header,
+.iwz-location-banner-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 10px 15px;
+	background: #f0f0f0;
+	border-bottom: 1px solid #ddd;
+}
+
+.iwz-content-banner-settings,
+.iwz-location-banner-settings {
+	margin: 0;
+}
+
+.iwz-content-banner-settings td,
+.iwz-location-banner-settings td {
+	padding: 15px;
+}
+
+.iwz-content-banner-settings th,
+.iwz-location-banner-settings th {
+	padding: 15px;
+	width: 200px;
 }
