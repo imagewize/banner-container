@@ -631,8 +631,8 @@ class IWZ_Banner_Container_Settings {
 								</table>
 							
 							<?php else : ?>
-								<!-- Multiple banner locations (head, footer, sidebar, navigation menu, content_wrap_inside) -->
-								<?php if ( in_array( $location_key, array( 'wp_head', 'wp_footer', 'dynamic_sidebar_before', 'wp_nav_menu_items', 'content_wrap_inside' ), true ) ) : ?>
+								<!-- Multiple banner locations (head, footer, sidebar, navigation menu, content_wrap_inside, blabber_footer_start) -->
+								<?php if ( in_array( $location_key, array( 'wp_head', 'wp_footer', 'dynamic_sidebar_before', 'wp_nav_menu_items', 'content_wrap_inside', 'blabber_footer_start' ), true ) ) : ?>
 									<?php
 										$location_banners = get_option( 'iwz_banner_' . $location_key . '_banners', array() );
 

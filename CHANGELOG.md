@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.8.1]
+* Enhancement: Added device targeting support for Blabber Footer Start banner location
+* Enhancement: Added multiple banner support for Blabber Footer Start location
+* Admin Interface: Blabber Footer Start now includes "Add Another Banner" functionality
+* Device Targeting: Individual banners can now target desktop, mobile, or all devices
+* UI Improvement: Updated admin interface to match other multiple banner locations
+* Code Quality: Ensured Blabber Footer Start follows same patterns as other multiple banner locations
+
 ## [1.8.0]
 * New Feature: Added Blabber Footer Start banner location for displaying banners just above the footer element
 * New Feature: Blabber Footer Start targets `footer.footer_wrap` element and uses JavaScript-based insertion
