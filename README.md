@@ -9,7 +9,7 @@ The Banner Container Plugin allows you to easily add iframe codes to various loc
 - Header (after initial `<body>`tag) - with support for multiple banners and device targeting
 - Footer (before `</body>` tag) - with support for multiple banners and device targeting
 - Content (beginning content, end content or after x paragraphs) (with options for multiple banners, individual placement, and device targeting)
-- Before Sidebar Content - **NEW in v1.7.0**: Uses `dynamic_sidebar_before` hook to display banners before any sidebar widgets load, ensuring proper positioning above all sidebar content. Supports multiple banners and device targeting.
+- Before Sidebar Content - Uses `dynamic_sidebar_before` hook to display banners before any sidebar widgets load, ensuring proper positioning above all sidebar content. Supports multiple banners and device targeting.
 - In Navigation Menu - with support for multiple banners and device targeting
 - Content Wrap (inside content wrapper elements) - **Blabber theme exclusive feature** that targets elements with the `content_wrapper` CSS class. This location uses JavaScript insertion and is specifically designed for the Blabber theme structure.
 - Blabber Footer Start (Top of Footer Area) - **Blabber theme exclusive feature** that displays banners just above the footer element with class `footer_wrap`. This location uses JavaScript insertion and is specifically designed for the Blabber theme footer structure.
@@ -41,67 +41,109 @@ The Banner Container Plugin allows you to easily add iframe codes to various loc
 
 ### Overview
 
-The Banner Container Plugin supports wrapper CSS classes for all banner types, allowing you to apply custom styling and better control banner appearance.
+The Banner Container Plugin supports wrapper CSS classes for all banner types, allowing you to apply custom styling and better control banner appearance. The plugin now includes a comprehensive default wrapper class system with unique styling for each banner location.
 
 ### How Wrapper Classes Work
 
 When you specify a wrapper class for a banner:
 - The banner HTML/iframe code gets wrapped in a `<div>` element
-- The specified CSS class(es) are applied to this wrapper div
+- Default CSS classes are automatically applied based on the banner location
+- Additional custom CSS class(es) can be added alongside the defaults (additive system)
 - This allows for enhanced styling control and better integration with your theme
 
 ### Setting Wrapper Classes
 
 1. **For Content Banners**: In the banner settings, look for the "Wrapper CSS Class" field
 2. **For Location Banners**: Each banner location includes a "Wrapper CSS Class" option
-3. **Multiple Classes**: You can specify multiple CSS classes separated by spaces (e.g., `banner-wrapper highlight-banner`)
+3. **Multiple Classes**: You can specify multiple CSS classes separated by spaces (e.g., `custom-banner highlight-banner`)
+4. **Additive System**: Your custom classes are added to the default classes, not replacing them
 
 ### Default Wrapper Classes
 
-- **Content Wrap Inside**: New banners automatically receive the `iwz-header-banner` wrapper class
-- **Other Locations**: No default wrapper class (leave empty for no wrapper)
+Each banner location now has its own unique default wrapper class with predefined styling:
+
+- **Top of Page (wp_head)**: `iwz-head-banner`
+- **Footer (wp_footer)**: `iwz-footer-banner`
+- **Within Content (the_content)**: `iwz-content-banner`
+- **Before Sidebar Content**: `iwz-sidebar-banner`
+- **In Navigation Menu**: `iwz-menu-banner`
+- **Blabber Content Wrap**: `iwz-blabber-header-banner`
+- **Blabber Footer Start**: `iwz-blabber-footer-banner`
+
+### Additive Class System
+
+The wrapper class system is additive, meaning:
+- Default classes are always applied based on location
+- Your custom classes are added alongside the defaults
+- Example: If you add `custom-banner` to a header banner, the final classes will be `iwz-blabber-header-banner custom-banner`
 
 ### Example Usage
 
 ```html
-<!-- Without wrapper class -->
-<iframe src="..."></iframe>
+<!-- Default wrapper (automatic) -->
+<div class="iwz-head-banner">
+    <iframe src="..."></iframe>
+</div>
 
-<!-- With wrapper class "banner-container" -->
-<div class="banner-container">
+<!-- With additional custom class -->
+<div class="iwz-head-banner custom-banner">
     <iframe src="..."></iframe>
 </div>
 ```
 
 ### Styling Wrapper Classes
 
-You can add custom CSS to your theme to style the wrapper classes:
+The plugin includes comprehensive default styling for all wrapper classes. You can also add custom CSS to your theme to enhance or override the default styles:
 
 ```css
-.iwz-header-banner {
+/* Customize default header banner styling */
+.iwz-blabber-header-banner {
     margin: 20px 0;
     text-align: center;
     border: 1px solid #ddd;
 }
 
-.banner-container {
-    padding: 10px;
+/* Add custom styling for footer banners */
+.iwz-footer-banner {
+    padding: 15px;
     background: #f9f9f9;
+    border-radius: 5px;
+}
+
+/* Style content banners */
+.iwz-content-banner {
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin: 30px 0;
+}
+
+/* Custom class for specific banners */
+.custom-banner {
+    border: 2px solid #007cba;
+    padding: 10px;
 }
 ```
 
 ## Frequently Asked Questions
 
-### What changed with the sidebar banner location in v1.7.0?
+### How do wrapper classes work in the Banner Container Plugin?
 
-**Breaking Change**: In version 1.7.0, we updated the sidebar banner location to use WordPress's `dynamic_sidebar_before` hook instead of the previous `get_sidebar` hook.
+The Banner Container Plugin includes a comprehensive wrapper class system that automatically applies default CSS classes to all banners based on their location. This system is additive, meaning you can add your own custom classes alongside the defaults.
 
-**What this means:**
-- **Better positioning**: Banners now display before any sidebar widgets load, ensuring they appear above all sidebar content
-- **More reliable**: Uses WordPress's native sidebar hook system for better theme compatibility
-- **Automatic migration**: Existing sidebar banner settings are automatically migrated to the new system
+**Default Classes by Location:**
+- Top of Page banners: `iwz-head-banner`
+- Footer banners: `iwz-footer-banner`
+- Content banners: `iwz-content-banner`
+- Sidebar banners: `iwz-sidebar-banner`
+- Menu banners: `iwz-menu-banner`
+- Blabber Content Wrap banners: `iwz-blabber-header-banner`
+- Blabber Footer banners: `iwz-blabber-footer-banner`
 
-**Theme compatibility**: This change should work with any theme that properly implements WordPress sidebars using `dynamic_sidebar()`. Most modern themes support this.
+**How it works:**
+- Default classes are always applied automatically
+- Any custom classes you specify are added alongside the defaults
+- Example: Adding `custom-style` to a header banner results in `iwz-blabber-header-banner custom-style`
+
+This ensures consistent styling while allowing customization for specific needs.
 
 ### What are the Blabber theme exclusive banner locations and when should I use them?
 

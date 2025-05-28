@@ -199,7 +199,7 @@ class IWZ_Banner_Container {
 			if ( ! empty( $banner['enabled'] ) && ! empty( $banner['code'] ) ) {
 				$device_targeting = $banner['device_targeting'] ?? 'all';
 				if ( $this->should_display_for_device( $device_targeting ) ) {
-					$wrapped_banner = $this->wrap_banner_html( $this->sanitize_banner_html( $banner['code'] ), $banner['wrapper_class'] ?? '' );
+					$wrapped_banner = $this->wrap_banner_html( $this->sanitize_banner_html( $banner['code'] ), $banner['wrapper_class'] ?? '', 'wp_head' );
 					$banner_output .= $wrapped_banner;
 				}
 			}
@@ -245,7 +245,7 @@ class IWZ_Banner_Container {
 			if ( ! empty( $banner['enabled'] ) && ! empty( $banner['code'] ) ) {
 				$device_targeting = $banner['device_targeting'] ?? 'all';
 				if ( $this->should_display_for_device( $device_targeting ) ) {
-					$wrapped_banner = $this->wrap_banner_html( $this->sanitize_banner_html( $banner['code'] ), $banner['wrapper_class'] ?? '' );
+					$wrapped_banner = $this->wrap_banner_html( $this->sanitize_banner_html( $banner['code'] ), $banner['wrapper_class'] ?? '', 'wp_head' );
 					$banner_html   .= $wrapped_banner;
 				}
 			}
@@ -301,7 +301,7 @@ class IWZ_Banner_Container {
 			if ( ! empty( $banner['enabled'] ) && ! empty( $banner['code'] ) ) {
 				$device_targeting = $banner['device_targeting'] ?? 'all';
 				if ( $this->should_display_for_device( $device_targeting ) ) {
-					$wrapped_banner = $this->wrap_banner_html( $this->sanitize_banner_html( $banner['code'] ), $banner['wrapper_class'] ?? '' );
+					$wrapped_banner = $this->wrap_banner_html( $this->sanitize_banner_html( $banner['code'] ), $banner['wrapper_class'] ?? '', 'wp_footer' );
 					// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Content is sanitized via sanitize_banner_html method and wrapped
 					echo $wrapped_banner;
 				}
@@ -382,10 +382,10 @@ class IWZ_Banner_Container {
 			// Group by position.
 			switch ( $banner['position'] ?? 'top' ) {
 				case 'top':
-					$top_banners[] = $this->wrap_banner_html( $banner['code'], $banner['wrapper_class'] ?? '' );
+					$top_banners[] = $this->wrap_banner_html( $banner['code'], $banner['wrapper_class'] ?? '', 'the_content' );
 					break;
 				case 'bottom':
-					$bottom_banners[] = $this->wrap_banner_html( $banner['code'], $banner['wrapper_class'] ?? '' );
+					$bottom_banners[] = $this->wrap_banner_html( $banner['code'], $banner['wrapper_class'] ?? '', 'the_content' );
 					break;
 				case 'after_paragraph':
 					$paragraph_number = (int) ( $banner['paragraph'] ?? 3 );
@@ -395,7 +395,7 @@ class IWZ_Banner_Container {
 					if ( ! isset( $paragraph_banners[ $paragraph_number ] ) ) {
 						$paragraph_banners[ $paragraph_number ] = array();
 					}
-					$paragraph_banners[ $paragraph_number ][] = $this->wrap_banner_html( $banner['code'], $banner['wrapper_class'] ?? '' );
+					$paragraph_banners[ $paragraph_number ][] = $this->wrap_banner_html( $banner['code'], $banner['wrapper_class'] ?? '', 'the_content' );
 					break;
 			}
 		}
@@ -468,7 +468,7 @@ class IWZ_Banner_Container {
 				continue;
 			}
 
-			$wrapped_banner = $this->wrap_banner_html( $this->sanitize_banner_html( $banner['code'] ), $banner['wrapper_class'] ?? '' );
+			$wrapped_banner = $this->wrap_banner_html( $this->sanitize_banner_html( $banner['code'] ), $banner['wrapper_class'] ?? '', 'dynamic_sidebar_before' );
 			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Content is sanitized via sanitize_banner_html method and wrapped
 			echo $wrapped_banner;
 		}
@@ -515,7 +515,7 @@ class IWZ_Banner_Container {
 			}
 
 			// Wrap in li for proper menu structure.
-			$wrapped_banner = $this->wrap_banner_html( $this->sanitize_banner_html( $banner['code'] ), $banner['wrapper_class'] ?? '' );
+			$wrapped_banner = $this->wrap_banner_html( $this->sanitize_banner_html( $banner['code'] ), $banner['wrapper_class'] ?? '', 'wp_nav_menu_items' );
 			$banner_html    = '<li class="menu-item iwz-banner-container-menu-item">' . $wrapped_banner . '</li>';
 			$items         .= $banner_html;
 		}
@@ -555,7 +555,7 @@ class IWZ_Banner_Container {
 				continue;
 			}
 
-			$wrapped_banner = $this->wrap_banner_html( $this->sanitize_banner_html( $banner['code'] ), $banner['wrapper_class'] ?? '' );
+			$wrapped_banner = $this->wrap_banner_html( $this->sanitize_banner_html( $banner['code'] ), $banner['wrapper_class'] ?? '', 'content_wrap_inside' );
 			$banner_html   .= $wrapped_banner;
 		}
 
@@ -617,7 +617,7 @@ class IWZ_Banner_Container {
 				continue;
 			}
 
-			$wrapped_banner = $this->wrap_banner_html( $this->sanitize_banner_html( $banner['code'] ), $banner['wrapper_class'] ?? '' );
+			$wrapped_banner = $this->wrap_banner_html( $this->sanitize_banner_html( $banner['code'] ), $banner['wrapper_class'] ?? '', 'blabber_footer_start' );
 			$banner_html   .= $wrapped_banner;
 		}
 
@@ -731,22 +731,56 @@ class IWZ_Banner_Container {
 
 	/**
 	 * Wrap banner HTML in a div with custom CSS class if specified.
+	 * Uses additive wrapper class system with defaults for each location.
 	 *
 	 * @param string $banner_html The banner HTML content.
 	 * @param string $wrapper_class The CSS class for the wrapper div.
+	 * @param string $location The banner location for default class determination.
 	 * @return string Wrapped banner HTML or original HTML if no wrapper class.
 	 */
-	private function wrap_banner_html( $banner_html, $wrapper_class = '' ) {
-		if ( empty( $wrapper_class ) || empty( $banner_html ) ) {
+	private function wrap_banner_html( $banner_html, $wrapper_class = '', $location = '' ) {
+		if ( empty( $banner_html ) ) {
 			return $banner_html;
 		}
 
-		// Sanitize the wrapper class.
-		$wrapper_class = sanitize_html_class( $wrapper_class );
-		if ( empty( $wrapper_class ) ) {
+		// Define default wrapper classes for each location
+		$default_wrapper_classes = array(
+			'content_wrap_inside'    => 'iwz-blabber-header-banner',
+			'blabber_footer_start'   => 'iwz-blabber-footer-banner',
+			'wp_head'                => 'iwz-head-banner',
+			'wp_footer'              => 'iwz-footer-banner',
+			'dynamic_sidebar_before' => 'iwz-sidebar-banner',
+			'wp_nav_menu_items'      => 'iwz-menu-banner',
+			'the_content'            => 'iwz-content-banner',
+		);
+
+		// Determine classes to use (additive system)
+		$classes = array();
+		
+		// Add default class if location has one
+		if ( ! empty( $location ) && isset( $default_wrapper_classes[ $location ] ) ) {
+			$classes[] = $default_wrapper_classes[ $location ];
+		}
+		
+		// Add user-specified classes
+		if ( ! empty( $wrapper_class ) ) {
+			$user_classes = explode( ' ', $wrapper_class );
+			foreach ( $user_classes as $class ) {
+				$class = sanitize_html_class( trim( $class ) );
+				if ( ! empty( $class ) && ! in_array( $class, $classes, true ) ) {
+					$classes[] = $class;
+				}
+			}
+		}
+
+		// If no classes at all, return unwrapped
+		if ( empty( $classes ) ) {
 			return $banner_html;
 		}
 
-		return '<div class="' . esc_attr( $wrapper_class ) . '">' . $banner_html . '</div>';
+		// Create class string
+		$class_string = implode( ' ', array_filter( $classes ) );
+		
+		return '<div class="' . esc_attr( $class_string ) . '">' . $banner_html . '</div>';
 	}
 }
