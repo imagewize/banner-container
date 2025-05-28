@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.8.3]
+* Enhancement: Content Wrap Inside banner location now defaults to 'iwz-header-banner' wrapper class
+* Improvement: New content_wrap_inside banners automatically include predefined styling wrapper
+* User Experience: Simplified setup for content wrap banners with sensible default CSS class
+
 ## [1.8.2]
 * New Feature: Added div wrapper functionality for all banner types with customizable CSS classes
 * Enhancement: Each banner can now be wrapped in a div element with a custom CSS class
