@@ -37,6 +37,59 @@ The Banner Container Plugin allows you to easily add iframe codes to various loc
    - Select which post types to display each banner on
 6. Save your settings
 
+## Banner Wrapper Classes
+
+### Overview
+
+The Banner Container Plugin supports wrapper CSS classes for all banner types, allowing you to apply custom styling and better control banner appearance.
+
+### How Wrapper Classes Work
+
+When you specify a wrapper class for a banner:
+- The banner HTML/iframe code gets wrapped in a `<div>` element
+- The specified CSS class(es) are applied to this wrapper div
+- This allows for enhanced styling control and better integration with your theme
+
+### Setting Wrapper Classes
+
+1. **For Content Banners**: In the banner settings, look for the "Wrapper CSS Class" field
+2. **For Location Banners**: Each banner location includes a "Wrapper CSS Class" option
+3. **Multiple Classes**: You can specify multiple CSS classes separated by spaces (e.g., `banner-wrapper highlight-banner`)
+
+### Default Wrapper Classes
+
+- **Content Wrap Inside**: New banners automatically receive the `iwz-header-banner` wrapper class
+- **Other Locations**: No default wrapper class (leave empty for no wrapper)
+
+### Example Usage
+
+```html
+<!-- Without wrapper class -->
+<iframe src="..."></iframe>
+
+<!-- With wrapper class "banner-container" -->
+<div class="banner-container">
+    <iframe src="..."></iframe>
+</div>
+```
+
+### Styling Wrapper Classes
+
+You can add custom CSS to your theme to style the wrapper classes:
+
+```css
+.iwz-header-banner {
+    margin: 20px 0;
+    text-align: center;
+    border: 1px solid #ddd;
+}
+
+.banner-container {
+    padding: 10px;
+    background: #f9f9f9;
+}
+```
+
 ## Frequently Asked Questions
 
 ### What changed with the sidebar banner location in v1.7.0?
