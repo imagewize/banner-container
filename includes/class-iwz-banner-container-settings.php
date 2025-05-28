@@ -310,6 +310,7 @@ class IWZ_Banner_Container_Settings {
 				'code'             => $this->sanitize_iframe_code( $banner['code'] ?? '' ),
 				'device_targeting' => sanitize_text_field( $banner['device_targeting'] ?? 'all' ),
 				'enabled'          => ! empty( $banner['enabled'] ),
+				'wrapper_class'    => sanitize_text_field( $banner['wrapper_class'] ?? '' ),
 			);
 
 			// Add content-specific fields if they exist.
@@ -594,6 +595,23 @@ class IWZ_Banner_Container_Settings {
 														</tr>
 														<tr>
 															<th scope="row">
+																<label for="iwz_content_banner_wrapper_class_<?php echo esc_attr( $index ); ?>">
+																	<?php esc_html_e( 'Wrapper CSS Class', 'banner-container-plugin' ); ?>
+																</label>
+															</th>
+															<td>
+																<input type="text" 
+																		id="iwz_content_banner_wrapper_class_<?php echo esc_attr( $index ); ?>" 
+																		name="iwz_banner_the_content_banners[<?php echo esc_attr( $index ); ?>][wrapper_class]" 
+																		value="<?php echo esc_attr( $banner['wrapper_class'] ?? '' ); ?>" 
+																		class="regular-text" />
+																<p class="description">
+																	<?php esc_html_e( 'Optional CSS class(es) for the div wrapper around this banner. Leave empty for no wrapper.', 'banner-container-plugin' ); ?>
+																</p>
+															</td>
+														</tr>
+														<tr>
+															<th scope="row">
 																<label>
 																	<?php esc_html_e( 'Apply to Post Types', 'banner-container-plugin' ); ?>
 																</label>
@@ -749,6 +767,23 @@ class IWZ_Banner_Container_Settings {
 																		</select>
 																		<p class="description">
 																			<?php esc_html_e( 'Choose which devices should display this banner.', 'banner-container-plugin' ); ?>
+																		</p>
+																	</td>
+																</tr>
+																<tr>
+																	<th scope="row">
+																		<label for="iwz_<?php echo esc_attr( $location_key ); ?>_banner_wrapper_class_<?php echo esc_attr( $index ); ?>">
+																			<?php esc_html_e( 'Wrapper CSS Class', 'banner-container-plugin' ); ?>
+																		</label>
+																	</th>
+																	<td>
+																		<input type="text" 
+																				id="iwz_<?php echo esc_attr( $location_key ); ?>_banner_wrapper_class_<?php echo esc_attr( $index ); ?>" 
+																				name="iwz_banner_<?php echo esc_attr( $location_key ); ?>_banners[<?php echo esc_attr( $index ); ?>][wrapper_class]" 
+																				value="<?php echo esc_attr( $banner['wrapper_class'] ?? '' ); ?>" 
+																				class="regular-text" />
+																		<p class="description">
+																			<?php esc_html_e( 'Optional CSS class(es) for the div wrapper around this banner. Leave empty for no wrapper.', 'banner-container-plugin' ); ?>
 																		</p>
 																	</td>
 																</tr>
@@ -937,6 +972,10 @@ class IWZ_Banner_Container_Settings {
 							'</select><p class="description"><?php esc_html_e( 'Choose which devices should display this banner.', 'banner-container-plugin' ); ?></p></td>' +
 						'</tr>' +
 						'<tr>' +
+							'<th scope="row"><label for="iwz_content_banner_wrapper_class_' + newIndex + '"><?php esc_html_e( 'Wrapper CSS Class', 'banner-container-plugin' ); ?></label></th>' +
+							'<td><input type="text" id="iwz_content_banner_wrapper_class_' + newIndex + '" name="iwz_banner_the_content_banners[' + newIndex + '][wrapper_class]" value="" class="regular-text" /><p class="description"><?php esc_html_e( 'Optional CSS class(es) for the div wrapper around this banner. Leave empty for no wrapper.', 'banner-container-plugin' ); ?></p></td>' +
+						'</tr>' +
+						'<tr>' +
 							'<th scope="row"><label><?php esc_html_e( 'Apply to Post Types', 'banner-container-plugin' ); ?></label></th>' +
 							'<td>' + postTypesHtml + '<p class="description"><?php esc_html_e( 'Select which post types should display this banner.', 'banner-container-plugin' ); ?></p></td>' +
 						'</tr>' +
@@ -981,6 +1020,10 @@ class IWZ_Banner_Container_Settings {
 								'<option value="desktop"><?php esc_html_e( 'Desktop Only', 'banner-container-plugin' ); ?></option>' +
 								'<option value="mobile"><?php esc_html_e( 'Mobile Only', 'banner-container-plugin' ); ?></option>' +
 							'</select><p class="description"><?php esc_html_e( 'Choose which devices should display this banner.', 'banner-container-plugin' ); ?></p></td>' +
+						'</tr>' +
+						'<tr>' +
+							'<th scope="row"><label for="iwz_' + location + '_banner_wrapper_class_' + newIndex + '"><?php esc_html_e( 'Wrapper CSS Class', 'banner-container-plugin' ); ?></label></th>' +
+							'<td><input type="text" id="iwz_' + location + '_banner_wrapper_class_' + newIndex + '" name="iwz_banner_' + location + '_banners[' + newIndex + '][wrapper_class]" value="" class="regular-text" /><p class="description"><?php esc_html_e( 'Optional CSS class(es) for the div wrapper around this banner. Leave empty for no wrapper.', 'banner-container-plugin' ); ?></p></td>' +
 						'</tr>' +
 					'</table>' +
 				'</div>';
