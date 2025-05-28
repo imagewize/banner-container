@@ -679,12 +679,12 @@ class IWZ_Banner_Container_Settings {
 
 										// Add default wrapper class based on location.
 										$default_wrapper_classes = array(
-											'content_wrap_inside'    => 'iwz-blabber-header-banner',
-											'blabber_footer_start'   => 'iwz-blabber-footer-banner',
-											'wp_head'                => 'iwz-head-banner',
-											'wp_footer'              => 'iwz-footer-banner',
+											'content_wrap_inside' => 'iwz-blabber-header-banner',
+											'blabber_footer_start' => 'iwz-blabber-footer-banner',
+											'wp_head'   => 'iwz-head-banner',
+											'wp_footer' => 'iwz-footer-banner',
 											'dynamic_sidebar_before' => 'iwz-sidebar-banner',
-											'wp_nav_menu_items'      => 'iwz-menu-banner',
+											'wp_nav_menu_items' => 'iwz-menu-banner',
 										);
 
 										if ( isset( $default_wrapper_classes[ $location_key ] ) ) {
@@ -798,7 +798,7 @@ class IWZ_Banner_Container_Settings {
 																				value="<?php echo esc_attr( $banner['wrapper_class'] ?? '' ); ?>" 
 																				class="regular-text" />
 																		<p class="description">
-																			<?php 
+																			<?php
 																			$location_descriptions = array(
 																				'content_wrap_inside'    => __( 'CSS class(es) for the div wrapper around this banner. Defaults to "iwz-blabber-header-banner" with predefined styling if left empty.', 'banner-container-plugin' ),
 																				'blabber_footer_start'   => __( 'CSS class(es) for the div wrapper around this banner. Defaults to "iwz-blabber-footer-banner" with predefined styling if left empty.', 'banner-container-plugin' ),

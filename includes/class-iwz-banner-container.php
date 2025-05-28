@@ -743,7 +743,7 @@ class IWZ_Banner_Container {
 			return $banner_html;
 		}
 
-		// Define default wrapper classes for each location
+		// Define default wrapper classes for each location.
 		$default_wrapper_classes = array(
 			'content_wrap_inside'    => 'iwz-blabber-header-banner',
 			'blabber_footer_start'   => 'iwz-blabber-footer-banner',
@@ -754,15 +754,15 @@ class IWZ_Banner_Container {
 			'the_content'            => 'iwz-content-banner',
 		);
 
-		// Determine classes to use (additive system)
+		// Determine classes to use (additive system).
 		$classes = array();
-		
-		// Add default class if location has one
+
+		// Add default class if location has one.
 		if ( ! empty( $location ) && isset( $default_wrapper_classes[ $location ] ) ) {
 			$classes[] = $default_wrapper_classes[ $location ];
 		}
-		
-		// Add user-specified classes
+
+		// Add user-specified classes.
 		if ( ! empty( $wrapper_class ) ) {
 			$user_classes = explode( ' ', $wrapper_class );
 			foreach ( $user_classes as $class ) {
@@ -773,14 +773,14 @@ class IWZ_Banner_Container {
 			}
 		}
 
-		// If no classes at all, return unwrapped
+		// If no classes at all, return unwrapped.
 		if ( empty( $classes ) ) {
 			return $banner_html;
 		}
 
-		// Create class string
+		// Create class string.
 		$class_string = implode( ' ', array_filter( $classes ) );
-		
+
 		return '<div class="' . esc_attr( $class_string ) . '">' . $banner_html . '</div>';
 	}
 }
