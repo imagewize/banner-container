@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.8.2]
+* New Feature: Added div wrapper functionality for all banner types with customizable CSS classes
+* Enhancement: Each banner can now be wrapped in a div element with a custom CSS class
+* Admin Interface: Added "Wrapper CSS Class" input field to both content banners and location banners
+* Data Structure: Enhanced banner data to include wrapper_class field with proper sanitization
+* Code Quality: Added wrap_banner_html() utility method for consistent banner wrapping across all locations
+* Backward Compatibility: Maintained full compatibility with existing banners while adding wrapper functionality
+* JavaScript: Updated dynamic banner addition to support wrapper class input for new banners
+
 ## [1.8.1]
 * Enhancement: Added device targeting support for Blabber Footer Start banner location
 * Enhancement: Added multiple banner support for Blabber Footer Start location

@@ -199,7 +199,8 @@ class IWZ_Banner_Container {
 			if ( ! empty( $banner['enabled'] ) && ! empty( $banner['code'] ) ) {
 				$device_targeting = $banner['device_targeting'] ?? 'all';
 				if ( $this->should_display_for_device( $device_targeting ) ) {
-					$banner_output .= $this->sanitize_banner_html( $banner['code'] );
+					$wrapped_banner = $this->wrap_banner_html( $this->sanitize_banner_html( $banner['code'] ), $banner['wrapper_class'] ?? '' );
+					$banner_output .= $wrapped_banner;
 				}
 			}
 		}
@@ -244,7 +245,8 @@ class IWZ_Banner_Container {
 			if ( ! empty( $banner['enabled'] ) && ! empty( $banner['code'] ) ) {
 				$device_targeting = $banner['device_targeting'] ?? 'all';
 				if ( $this->should_display_for_device( $device_targeting ) ) {
-					$banner_html .= $this->sanitize_banner_html( $banner['code'] );
+					$wrapped_banner = $this->wrap_banner_html( $this->sanitize_banner_html( $banner['code'] ), $banner['wrapper_class'] ?? '' );
+					$banner_html   .= $wrapped_banner;
 				}
 			}
 		}
@@ -299,8 +301,9 @@ class IWZ_Banner_Container {
 			if ( ! empty( $banner['enabled'] ) && ! empty( $banner['code'] ) ) {
 				$device_targeting = $banner['device_targeting'] ?? 'all';
 				if ( $this->should_display_for_device( $device_targeting ) ) {
-					// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Content is sanitized via sanitize_banner_html method
-					echo $this->sanitize_banner_html( $banner['code'] );
+					$wrapped_banner = $this->wrap_banner_html( $this->sanitize_banner_html( $banner['code'] ), $banner['wrapper_class'] ?? '' );
+					// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Content is sanitized via sanitize_banner_html method and wrapped
+					echo $wrapped_banner;
 				}
 			}
 		}
@@ -379,10 +382,10 @@ class IWZ_Banner_Container {
 			// Group by position.
 			switch ( $banner['position'] ?? 'top' ) {
 				case 'top':
-					$top_banners[] = $banner['code'];
+					$top_banners[] = $this->wrap_banner_html( $banner['code'], $banner['wrapper_class'] ?? '' );
 					break;
 				case 'bottom':
-					$bottom_banners[] = $banner['code'];
+					$bottom_banners[] = $this->wrap_banner_html( $banner['code'], $banner['wrapper_class'] ?? '' );
 					break;
 				case 'after_paragraph':
 					$paragraph_number = (int) ( $banner['paragraph'] ?? 3 );
@@ -392,7 +395,7 @@ class IWZ_Banner_Container {
 					if ( ! isset( $paragraph_banners[ $paragraph_number ] ) ) {
 						$paragraph_banners[ $paragraph_number ] = array();
 					}
-					$paragraph_banners[ $paragraph_number ][] = $banner['code'];
+					$paragraph_banners[ $paragraph_number ][] = $this->wrap_banner_html( $banner['code'], $banner['wrapper_class'] ?? '' );
 					break;
 			}
 		}
@@ -465,8 +468,9 @@ class IWZ_Banner_Container {
 				continue;
 			}
 
-			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Content is sanitized via sanitize_banner_html method
-			echo $this->sanitize_banner_html( $banner['code'] );
+			$wrapped_banner = $this->wrap_banner_html( $this->sanitize_banner_html( $banner['code'] ), $banner['wrapper_class'] ?? '' );
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Content is sanitized via sanitize_banner_html method and wrapped
+			echo $wrapped_banner;
 		}
 	}
 
@@ -511,8 +515,9 @@ class IWZ_Banner_Container {
 			}
 
 			// Wrap in li for proper menu structure.
-			$banner_html = '<li class="menu-item iwz-banner-container-menu-item">' . $this->sanitize_banner_html( $banner['code'] ) . '</li>';
-			$items      .= $banner_html;
+			$wrapped_banner = $this->wrap_banner_html( $this->sanitize_banner_html( $banner['code'] ), $banner['wrapper_class'] ?? '' );
+			$banner_html    = '<li class="menu-item iwz-banner-container-menu-item">' . $wrapped_banner . '</li>';
+			$items         .= $banner_html;
 		}
 
 		return $items;
@@ -550,7 +555,8 @@ class IWZ_Banner_Container {
 				continue;
 			}
 
-			$banner_html .= $this->sanitize_banner_html( $banner['code'] );
+			$wrapped_banner = $this->wrap_banner_html( $this->sanitize_banner_html( $banner['code'] ), $banner['wrapper_class'] ?? '' );
+			$banner_html   .= $wrapped_banner;
 		}
 
 		if ( ! empty( $banner_html ) ) {
@@ -611,7 +617,8 @@ class IWZ_Banner_Container {
 				continue;
 			}
 
-			$banner_html .= $this->sanitize_banner_html( $banner['code'] );
+			$wrapped_banner = $this->wrap_banner_html( $this->sanitize_banner_html( $banner['code'] ), $banner['wrapper_class'] ?? '' );
+			$banner_html   .= $wrapped_banner;
 		}
 
 		if ( ! empty( $banner_html ) ) {
@@ -720,5 +727,26 @@ class IWZ_Banner_Container {
 		);
 
 		return wp_kses( $html, $allowed_html );
+	}
+
+	/**
+	 * Wrap banner HTML in a div with custom CSS class if specified.
+	 *
+	 * @param string $banner_html The banner HTML content.
+	 * @param string $wrapper_class The CSS class for the wrapper div.
+	 * @return string Wrapped banner HTML or original HTML if no wrapper class.
+	 */
+	private function wrap_banner_html( $banner_html, $wrapper_class = '' ) {
+		if ( empty( $wrapper_class ) || empty( $banner_html ) ) {
+			return $banner_html;
+		}
+
+		// Sanitize the wrapper class.
+		$wrapper_class = sanitize_html_class( $wrapper_class );
+		if ( empty( $wrapper_class ) ) {
+			return $banner_html;
+		}
+
+		return '<div class="' . esc_attr( $wrapper_class ) . '">' . $banner_html . '</div>';
 	}
 }
