@@ -1,18 +1,18 @@
-/* 
+/*
  * Banner Container Styles
  * This file contains specific styling overrides for banner containers in different locations
  */
 
-/* 
+/*
  * Blabber Footer Banner Location Styling
  * Container styling for banners placed in the footer area
  */
 .iwz-banner-container[data-location="blabber_footer"] {
-    margin-bottom: 1rem;               /* Bottom spacing for footer banners */
-    text-align: center;                /* Center-align footer banners */
+	margin-bottom: 1rem;               /* Bottom spacing for footer banners */
+	text-align: center;                /* Center-align footer banners */
 }
 
-/* 
+/*
  * Blabber Footer Banner Content Styling
  * Specific styling for iframe and resizable elements within footer banners
  * Ensures consistent sizing and spacing for footer banner content
@@ -20,14 +20,14 @@
 .iwz-banner-container[data-location="blabber_footer"] iframe.blabber_resize.trx_addons_resize,
 .iwz-banner-container[data-location="blabber_footer"] .blabber_resize.trx_addons_resize,
 .iwz-banner-container[data-location="blabber_footer"] iframe {
-    height: 100px !important;          /* Consistent height with content_wrap banners */
-    max-height: 100px !important;      /* Prevent footer banners from growing too large */
-    width: 640px !important;           /* Standard banner width */
-    max-width: 100% !important;        /* Responsive width for mobile devices */
-    margin-bottom: 1rem;               /* Bottom spacing for visual separation */
+	height: 100px !important;          /* Consistent height with content_wrap banners */
+	max-height: 100px !important;      /* Prevent footer banners from growing too large */
+	width: 640px !important;           /* Standard banner width */
+	max-width: 100% !important;        /* Responsive width for mobile devices */
+	margin-bottom: 1rem;               /* Bottom spacing for visual separation */
 }
 
-/* 
+/*
  * Blabber Header Banner Location Styling
  * Specific styles for banners placed in the header area
  */
@@ -38,5 +38,5 @@
 }
 .home .iwz-header-banner {
 	margin: 1rem 0 0 0;
-	
+
 }

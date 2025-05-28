@@ -675,12 +675,12 @@ class IWZ_Banner_Container_Settings {
 											'device_targeting' => 'all',
 											'enabled' => false,
 										);
-										
-										// Add default wrapper class for content_wrap_inside location
+
+										// Add default wrapper class for content_wrap_inside location.
 										if ( 'content_wrap_inside' === $location_key ) {
 											$default_banner['wrapper_class'] = 'iwz-header-banner';
 										}
-										
+
 										$location_banners = array( $default_banner );
 									}
 									?>
