@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.9.0]
+* Major Enhancement: Implemented comprehensive default wrapper class system for ALL banner locations
+* New Feature: Additive wrapper class system - users can add custom classes while keeping defaults
+* Default Classes: Each location now has unique default CSS classes:
+  - `content_wrap_inside` → `iwz-blabber-header-banner`
+  - `blabber_footer_start` → `iwz-blabber-footer-banner`
+  - `wp_head` → `iwz-head-banner`
+  - `wp_footer` → `iwz-footer-banner`
+  - `dynamic_sidebar_before` → `iwz-sidebar-banner`
+  - `wp_nav_menu_items` → `iwz-menu-banner`
+  - `the_content` → `iwz-content-banner`
+* CSS Enhancement: Added comprehensive default styling for all new wrapper classes
+* User Experience: Improved setup experience with automatic default styling for all banner locations
+* Backward Compatibility: Maintained support for existing `iwz-header-banner` class while adding new defaults
+* Admin Interface: Updated descriptions to reflect new default behavior for all locations
+* Code Quality: Enhanced `wrap_banner_html()` method to support additive class system with location-based defaults
+
 ## [1.8.3]
 * Enhancement: Content Wrap Inside banner location now defaults to 'iwz-header-banner' wrapper class
 * Improvement: New content_wrap_inside banners automatically include predefined styling wrapper

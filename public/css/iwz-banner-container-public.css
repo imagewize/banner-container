@@ -4,6 +4,75 @@
  */
 
 /*
+ * Default Banner Wrapper Classes
+ * These classes provide consistent styling for banners across different locations
+ */
+
+/* Head Banner Styling */
+.iwz-head-banner {
+	margin-bottom: 1rem;
+	text-align: center;
+}
+
+/* Footer Banner Styling */
+.iwz-footer-banner {
+	margin-top: 1rem;
+	margin-bottom: 1rem;
+	text-align: center;
+}
+
+/* Content Banner Styling */
+.iwz-content-banner {
+	margin: 1rem 0;
+	text-align: center;
+	clear: both;
+}
+
+/* Sidebar Banner Styling */
+.iwz-sidebar-banner {
+	margin-bottom: 1rem;
+	text-align: center;
+}
+
+/* Menu Banner Styling */
+.iwz-menu-banner {
+	/* Minimal styling for menu banners to avoid layout issues */
+	display: block;
+}
+
+/* Blabber Header Banner Styling */
+.iwz-blabber-header-banner {
+	margin-bottom: 1rem;
+	margin-top: -1rem;
+	max-height: 120px;
+}
+
+.home .iwz-blabber-header-banner {
+	margin: 1rem 0 0 0;
+}
+
+/* Blabber Footer Banner Styling */
+.iwz-blabber-footer-banner {
+	margin-bottom: 1rem;
+	text-align: center;
+}
+
+.iwz-blabber-footer-banner iframe.blabber_resize.trx_addons_resize,
+.iwz-blabber-footer-banner .blabber_resize.trx_addons_resize,
+.iwz-blabber-footer-banner iframe {
+	height: 100px !important;
+	max-height: 100px !important;
+	width: 640px !important;
+	max-width: 100% !important;
+	margin-bottom: 1rem;
+}
+
+/*
+ * Legacy Class Support
+ * Maintain backward compatibility with existing wrapper classes
+ */
+
+/*
  * Blabber Footer Banner Location Styling
  * Container styling for banners placed in the footer area
  */
@@ -28,7 +97,7 @@
 }
 
 /*
- * Blabber Header Banner Location Styling
+ * Legacy Blabber Header Banner Location Styling
  * Specific styles for banners placed in the header area
  */
 .iwz-header-banner {

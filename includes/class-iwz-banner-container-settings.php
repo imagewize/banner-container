@@ -472,6 +472,7 @@ class IWZ_Banner_Container_Settings {
 											'post_types' => array( 'post' ),
 											'device_targeting' => 'all',
 											'enabled'    => false,
+											'wrapper_class' => 'iwz-content-banner',
 										),
 									);
 								}
@@ -606,7 +607,7 @@ class IWZ_Banner_Container_Settings {
 																		value="<?php echo esc_attr( $banner['wrapper_class'] ?? '' ); ?>" 
 																		class="regular-text" />
 																<p class="description">
-																	<?php esc_html_e( 'Optional CSS class(es) for the div wrapper around this banner. Leave empty for no wrapper.', 'banner-container-plugin' ); ?>
+																	<?php esc_html_e( 'CSS class(es) for the div wrapper around this banner. Defaults to "iwz-content-banner" with predefined styling if left empty.', 'banner-container-plugin' ); ?>
 																</p>
 															</td>
 														</tr>
@@ -676,9 +677,18 @@ class IWZ_Banner_Container_Settings {
 											'enabled' => false,
 										);
 
-										// Add default wrapper class for content_wrap_inside location.
-										if ( 'content_wrap_inside' === $location_key ) {
-											$default_banner['wrapper_class'] = 'iwz-header-banner';
+										// Add default wrapper class based on location.
+										$default_wrapper_classes = array(
+											'content_wrap_inside' => 'iwz-blabber-header-banner',
+											'blabber_footer_start' => 'iwz-blabber-footer-banner',
+											'wp_head'   => 'iwz-head-banner',
+											'wp_footer' => 'iwz-footer-banner',
+											'dynamic_sidebar_before' => 'iwz-sidebar-banner',
+											'wp_nav_menu_items' => 'iwz-menu-banner',
+										);
+
+										if ( isset( $default_wrapper_classes[ $location_key ] ) ) {
+											$default_banner['wrapper_class'] = $default_wrapper_classes[ $location_key ];
 										}
 
 										$location_banners = array( $default_banner );
@@ -788,11 +798,22 @@ class IWZ_Banner_Container_Settings {
 																				value="<?php echo esc_attr( $banner['wrapper_class'] ?? '' ); ?>" 
 																				class="regular-text" />
 																		<p class="description">
-																			<?php if ( 'content_wrap_inside' === $location_key ) : ?>
-																				<?php esc_html_e( 'CSS class(es) for the div wrapper around this banner. Defaults to "iwz-header-banner" with predefined styling if left empty.', 'banner-container-plugin' ); ?>
-																			<?php else : ?>
-																				<?php esc_html_e( 'Optional CSS class(es) for the div wrapper around this banner. Leave empty for no wrapper.', 'banner-container-plugin' ); ?>
-																			<?php endif; ?>
+																			<?php
+																			$location_descriptions = array(
+																				'content_wrap_inside'    => __( 'CSS class(es) for the div wrapper around this banner. Defaults to "iwz-blabber-header-banner" with predefined styling if left empty.', 'banner-container-plugin' ),
+																				'blabber_footer_start'   => __( 'CSS class(es) for the div wrapper around this banner. Defaults to "iwz-blabber-footer-banner" with predefined styling if left empty.', 'banner-container-plugin' ),
+																				'wp_head'                => __( 'CSS class(es) for the div wrapper around this banner. Defaults to "iwz-head-banner" with predefined styling if left empty.', 'banner-container-plugin' ),
+																				'wp_footer'              => __( 'CSS class(es) for the div wrapper around this banner. Defaults to "iwz-footer-banner" with predefined styling if left empty.', 'banner-container-plugin' ),
+																				'dynamic_sidebar_before' => __( 'CSS class(es) for the div wrapper around this banner. Defaults to "iwz-sidebar-banner" with predefined styling if left empty.', 'banner-container-plugin' ),
+																				'wp_nav_menu_items'      => __( 'CSS class(es) for the div wrapper around this banner. Defaults to "iwz-menu-banner" with predefined styling if left empty.', 'banner-container-plugin' ),
+																			);
+
+																			if ( isset( $location_descriptions[ $location_key ] ) ) {
+																				echo esc_html( $location_descriptions[ $location_key ] );
+																			} else {
+																				esc_html_e( 'Optional CSS class(es) for the div wrapper around this banner. Leave empty for no wrapper.', 'banner-container-plugin' );
+																			}
+																			?>
 																		</p>
 																	</td>
 																</tr>
@@ -844,6 +865,32 @@ class IWZ_Banner_Container_Settings {
 		
 		<script>
 		jQuery(document).ready(function($) {
+			// Helper function to get default wrapper class for a location
+			function getDefaultWrapperClass(location) {
+				var defaults = {
+					'content_wrap_inside': 'iwz-blabber-header-banner',
+					'blabber_footer_start': 'iwz-blabber-footer-banner',
+					'wp_head': 'iwz-head-banner',
+					'wp_footer': 'iwz-footer-banner',
+					'dynamic_sidebar_before': 'iwz-sidebar-banner',
+					'wp_nav_menu_items': 'iwz-menu-banner'
+				};
+				return defaults[location] || '';
+			}
+			
+			// Helper function to get wrapper class description for a location
+			function getWrapperClassDescription(location) {
+				var descriptions = {
+					'content_wrap_inside': '<?php esc_html_e( 'CSS class(es) for the div wrapper around this banner. Defaults to "iwz-blabber-header-banner" with predefined styling if left empty.', 'banner-container-plugin' ); ?>',
+					'blabber_footer_start': '<?php esc_html_e( 'CSS class(es) for the div wrapper around this banner. Defaults to "iwz-blabber-footer-banner" with predefined styling if left empty.', 'banner-container-plugin' ); ?>',
+					'wp_head': '<?php esc_html_e( 'CSS class(es) for the div wrapper around this banner. Defaults to "iwz-head-banner" with predefined styling if left empty.', 'banner-container-plugin' ); ?>',
+					'wp_footer': '<?php esc_html_e( 'CSS class(es) for the div wrapper around this banner. Defaults to "iwz-footer-banner" with predefined styling if left empty.', 'banner-container-plugin' ); ?>',
+					'dynamic_sidebar_before': '<?php esc_html_e( 'CSS class(es) for the div wrapper around this banner. Defaults to "iwz-sidebar-banner" with predefined styling if left empty.', 'banner-container-plugin' ); ?>',
+					'wp_nav_menu_items': '<?php esc_html_e( 'CSS class(es) for the div wrapper around this banner. Defaults to "iwz-menu-banner" with predefined styling if left empty.', 'banner-container-plugin' ); ?>'
+				};
+				return descriptions[location] || '<?php esc_html_e( 'Optional CSS class(es) for the div wrapper around this banner. Leave empty for no wrapper.', 'banner-container-plugin' ); ?>';
+			}
+			
 			// Accordion functionality
 			$(document).on('click', '.iwz-banner-container-accordion-header', function(e) {
 				// Don't toggle if clicking on checkbox or label
@@ -982,7 +1029,7 @@ class IWZ_Banner_Container_Settings {
 						'</tr>' +
 						'<tr>' +
 							'<th scope="row"><label for="iwz_content_banner_wrapper_class_' + newIndex + '"><?php esc_html_e( 'Wrapper CSS Class', 'banner-container-plugin' ); ?></label></th>' +
-							'<td><input type="text" id="iwz_content_banner_wrapper_class_' + newIndex + '" name="iwz_banner_the_content_banners[' + newIndex + '][wrapper_class]" value="" class="regular-text" /><p class="description"><?php esc_html_e( 'Optional CSS class(es) for the div wrapper around this banner. Leave empty for no wrapper.', 'banner-container-plugin' ); ?></p></td>' +
+							'<td><input type="text" id="iwz_content_banner_wrapper_class_' + newIndex + '" name="iwz_banner_the_content_banners[' + newIndex + '][wrapper_class]" value="iwz-content-banner" class="regular-text" /><p class="description"><?php esc_html_e( 'CSS class(es) for the div wrapper around this banner. Defaults to "iwz-content-banner" with predefined styling if left empty.', 'banner-container-plugin' ); ?></p></td>' +
 						'</tr>' +
 						'<tr>' +
 							'<th scope="row"><label><?php esc_html_e( 'Apply to Post Types', 'banner-container-plugin' ); ?></label></th>' +
@@ -1032,12 +1079,8 @@ class IWZ_Banner_Container_Settings {
 						'</tr>' +
 						'<tr>' +
 							'<th scope="row"><label for="iwz_' + location + '_banner_wrapper_class_' + newIndex + '"><?php esc_html_e( 'Wrapper CSS Class', 'banner-container-plugin' ); ?></label></th>' +
-							'<td><input type="text" id="iwz_' + location + '_banner_wrapper_class_' + newIndex + '" name="iwz_banner_' + location + '_banners[' + newIndex + '][wrapper_class]" value="' + (location === 'content_wrap_inside' ? 'iwz-header-banner' : '') + '" class="regular-text" />' +
-							'<p class="description">' + 
-								(location === 'content_wrap_inside' ? 
-									'<?php esc_html_e( 'CSS class(es) for the div wrapper around this banner. Defaults to "iwz-header-banner" with predefined styling if left empty.', 'banner-container-plugin' ); ?>' : 
-									'<?php esc_html_e( 'Optional CSS class(es) for the div wrapper around this banner. Leave empty for no wrapper.', 'banner-container-plugin' ); ?>') +
-							'</p></td>' +
+							'<td><input type="text" id="iwz_' + location + '_banner_wrapper_class_' + newIndex + '" name="iwz_banner_' + location + '_banners[' + newIndex + '][wrapper_class]" value="' + getDefaultWrapperClass(location) + '" class="regular-text" />' +
+							'<p class="description">' + getWrapperClassDescription(location) + '</p></td>' +
 						'</tr>' +
 					'</table>' +
 				'</div>';
