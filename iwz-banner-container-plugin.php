@@ -18,7 +18,7 @@ if ( ! defined( 'WPINC' ) ) {
 }
 
 // Define plugin constants.
-define( 'IWZ_BANNER_CONTAINER_VERSION', '1.9.1' );
+define( 'IWZ_BANNER_CONTAINER_VERSION', '1.9.2' );
 define( 'IWZ_BANNER_CONTAINER_PATH', plugin_dir_path( __FILE__ ) );
 define( 'IWZ_BANNER_CONTAINER_URL', plugin_dir_url( __FILE__ ) );
 
