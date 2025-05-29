@@ -3,11 +3,13 @@
 All notable changes to this project will be documented in this file.
 
 ## [1.9.1]
-* Enhancement: Added age verification CSS support for improved compatibility with age verification modals
+* Enhancement: Added age verification CSS support for improved compatibility with JavaScript-based age verification modals
+* Important: Age verification functionality requires JavaScript modal implementation that adds/removes the `d-none` class
 * New CSS Classes: Added `.d-none` class with high specificity to ensure proper banner hiding
-* Compatibility: Improved integration with Ad Inserter and custom age verification systems
+* Compatibility: Improved integration with Ad Inserter and custom age verification systems using JavaScript
 * CSS Enhancement: Added specific targeting for `.code-block.d-none` and `.iwz-blabber-footer-banner.d-none` classes
-* User Experience: Banners now properly hide when age verification restrictions apply
+* User Experience: Banners now properly hide when age verification restrictions apply via JavaScript class manipulation
+* Technical Requirement: This feature only works with age verification systems that implement JavaScript modal functionality
 
 ## [1.9.0]
 * Major Enhancement: Implemented comprehensive default wrapper class system for ALL banner locations

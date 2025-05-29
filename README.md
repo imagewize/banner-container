@@ -127,54 +127,53 @@ The plugin includes comprehensive default styling for all wrapper classes. You c
 
 ### Overview
 
-The Banner Container Plugin includes built-in support for age verification systems, allowing banners to be automatically hidden when users indicate they are below a certain age threshold. This feature is particularly useful for sites displaying age-restricted content or advertisements.
+The Banner Container Plugin includes built-in support for age verification systems, allowing banners to be automatically hidden when users indicate they are below a certain age threshold. **Important: This feature requires a JavaScript-based age verification modal implementation.**
 
 ### How Age Verification Works
 
-The plugin includes CSS classes that enable age verification systems to hide banners:
+The plugin provides CSS classes that work with JavaScript modal systems:
 
-- **`.d-none`** - Primary utility class for hiding elements
+- **`.d-none`** - Primary utility class for hiding elements with `display: none !important`
 - **`.code-block.d-none`** - Specific targeting for Ad Inserter plugin integration
 - **`.iwz-blabber-footer-banner.d-none`** - Targeted hiding for Blabber footer banners
+
+### JavaScript Modal Requirement
+
+**This feature only works if you implement a JavaScript modal that adds/removes the `d-none` class.** The plugin provides the CSS; you must provide the JavaScript modal functionality.
+
+### Implementation Details
+
+For complete implementation examples including JavaScript functions, modal HTML structure, and event handlers, see the [Age Verification Development Guide](DEVELOPMENT.md#age-verification-implementation) in the development documentation.
+
+### Complete Implementation Example
+
+For a complete implementation example, see:
+- [Age Verification JavaScript](https://github.com/imagewize/wordpress-tools/blob/main/age-verification/age-verification.js)
+- [Footer with Modal](https://github.com/imagewize/wordpress-tools/blob/main/age-verification/footer.php)
 
 ### Compatibility
 
 The plugin is compatible with:
 
 - **Ad Inserter Plugin** - Works with the `code-block` class system
-- **Custom Age Verification Modals** - Any system that adds/removes the `d-none` class
+- **Custom Age Verification Modals** - Any JavaScript system that adds/removes the `d-none` class
 - **Blabber Theme Age Verification** - Integrated with the Blabber theme's built-in age verification modal
-
-### Technical Implementation
-
-When an age verification system determines that content should be hidden:
-
-1. The system adds the `d-none` class to banner elements
-2. The plugin's CSS immediately hides the banner with `display: none !important`
-3. The banner remains hidden until the class is removed
-
-### Usage Examples
-
-```javascript
-// Hide age-restricted banners
-document.querySelectorAll('.code-block').forEach((element) => {
-    element.classList.add('d-none');
-});
-
-// Show banners when age verification passes
-document.querySelectorAll('.code-block').forEach((element) => {
-    element.classList.remove('d-none');
-});
-```
 
 ### Setting Up Age Verification
 
 To use age verification with your banners:
 
-1. **Enable Banner Locations**: Configure your banners normally through the plugin settings
-2. **Add CSS Classes**: Your banners will automatically include the necessary classes
-3. **Implement Age Verification**: Use any age verification system that adds/removes the `d-none` class
-4. **Test Functionality**: Verify that banners hide/show based on age selection
+1. **Install the Banner Container Plugin**: Configure your banners normally through the plugin settings
+2. **Implement JavaScript Modal**: Create an age verification modal with the required JavaScript functions (see [Development Guide](DEVELOPMENT.md#age-verification-implementation))
+3. **Add Modal HTML**: Include the modal HTML structure in your theme's footer.php
+4. **Test Functionality**: Verify that banners hide/show based on age selection and cookie persistence
+
+### Technical Notes
+
+- The `.d-none` class uses `!important` declarations to ensure reliable hiding
+- Cookie-based persistence maintains user preferences across sessions
+- The system targets elements with the `code-block` class (commonly used by Ad Inserter)
+- All Banner Container plugin banners automatically include the necessary CSS classes
 
 ## Frequently Asked Questions
 
