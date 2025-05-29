@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.9.2]
+* Enhancement: Added automatic `code-block` class to all banner container wrappers for improved age verification compatibility
+* Age Verification: All banners now automatically include both their location-specific class AND `code-block` class
+* CSS Enhancement: Updated age verification selectors to target the new automatic `code-block` class pattern
+* Compatibility: Enhanced integration with JavaScript-based age verification systems that target `.code-block.d-none`
+* System Design: Implements additive class system where banners receive: location class + `code-block` + any custom classes
+* Technical Note: This ensures consistent age verification functionality across all banner locations without requiring manual class configuration
+
 ## [1.9.1]
 * Enhancement: Added age verification CSS support for improved compatibility with JavaScript-based age verification modals
 * Important: Age verification functionality requires JavaScript modal implementation that adds/removes the `d-none` class
