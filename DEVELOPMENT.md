@@ -164,3 +164,90 @@ This test file simulates the theme structure and demonstrates how the banner inj
 - Content banners have additional positioning and post type options
 - Legacy single banner settings are maintained for backward compatibility
 - Settings are automatically migrated from old format to new multi-banner format
+
+## Age Verification Implementation
+
+### Required JavaScript Implementation
+
+Your age verification modal must include JavaScript functions that manipulate the `d-none` class:
+
+```javascript
+// Hide age-restricted banners (when user selects "under 18")
+const hideCasinoHighlightBlocks = () => {
+  document.querySelectorAll('.code-block').forEach((element) => {
+    if (element) {
+      element.classList.add('d-none');
+    }
+  });
+};
+
+// Show banners (when user selects "18+" and accepts ads)
+const displayCasinoHighlightBlocks = () => {
+  document.querySelectorAll('.code-block').forEach((element) => {
+    if (element) {
+      element.classList.remove('d-none');
+    }
+  });
+};
+
+// Example button event handlers
+document.getElementById('under-18').addEventListener('click', () => {
+  setCookie('canSeeAds', 'false', 1);
+  hideModal();
+  hideCasinoHighlightBlocks(); // Hide banners
+});
+
+document.getElementById('over-18').addEventListener('click', () => {
+  const advStatus = canSeeAds.checked ? 'true' : 'false';
+  setCookie('canSeeAds', advStatus, 365);
+  hideModal();
+  if (advStatus === 'false') {
+    hideCasinoHighlightBlocks(); // Hide banners
+  } else {
+    displayCasinoHighlightBlocks(); // Show banners
+  }
+});
+```
+
+### Modal HTML Structure Example
+
+Your age verification modal should include buttons that trigger the JavaScript functions:
+
+```html
+<div class="modal-verification" id="modal_verification">
+  <div class="modal-data-panel">
+    <div class="modal-header-panel">
+      <h2>Age Verification Required</h2>
+      <p>Please confirm your age to continue</p>
+    </div>
+    
+    <div class="modal-content-panel">
+      <div class="btn-stack">
+        <a href="javascript:void(0)" id="under-18" class="btn-default">Under 18</a>
+        <a href="javascript:void(0)" id="18-23" class="btn-default">18-23</a>
+        <a href="javascript:void(0)" id="over-24" class="btn-default">24+</a>
+      </div>
+      
+      <div class="verification-check">
+        <input type="checkbox" id="age_verify" name="age_verify" />
+        <label for="age_verify">I accept advertising content</label>
+      </div>
+    </div>
+  </div>
+</div>
+```
+
+### Implementation Requirements
+
+1. **JavaScript Functions**: Implement the `hideCasinoHighlightBlocks()` and `displayCasinoHighlightBlocks()` functions
+2. **Event Handlers**: Attach click events to age selection buttons
+3. **Cookie Management**: Implement `setCookie()` function for persistence
+4. **Modal Control**: Implement `hideModal()` function to close the modal
+5. **DOM Ready**: Ensure functions execute after DOM is loaded
+
+### Integration Notes
+
+- The plugin automatically applies the necessary CSS classes to all banners
+- Your JavaScript modal controls banner visibility by adding/removing the `d-none` class
+- Cookie persistence maintains user preferences across sessions
+- The system is compatible with Ad Inserter plugin's `code-block` class system

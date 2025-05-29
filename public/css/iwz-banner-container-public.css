@@ -4,6 +4,18 @@
  */
 
 /*
+ * Age Verification Support
+ * Utility class for hiding age-restricted content
+ * All banner containers automatically include the 'code-block' class for age verification compatibility
+ */
+.d-none,
+.code-block.d-none,
+.iwz-blabber-footer-banner.d-none {
+	display: none !important;
+	visibility: hidden !important;
+}
+
+/*
  * Default Banner Wrapper Classes
  * These classes provide consistent styling for banners across different locations
  */

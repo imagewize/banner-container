@@ -123,6 +123,58 @@ The plugin includes comprehensive default styling for all wrapper classes. You c
 }
 ```
 
+## Age Verification Support
+
+### Overview
+
+The Banner Container Plugin includes built-in support for age verification systems, allowing banners to be automatically hidden when users indicate they are below a certain age threshold. **Important: This feature requires a JavaScript-based age verification modal implementation.**
+
+### How Age Verification Works
+
+The plugin provides CSS classes that work with JavaScript modal systems:
+
+- **`.d-none`** - Primary utility class for hiding elements with `display: none !important`
+- **`.code-block.d-none`** - Specific targeting for Ad Inserter plugin integration
+- **`.iwz-blabber-footer-banner.d-none`** - Targeted hiding for Blabber footer banners
+
+### JavaScript Modal Requirement
+
+**This feature only works if you implement a JavaScript modal that adds/removes the `d-none` class.** The plugin provides the CSS; you must provide the JavaScript modal functionality.
+
+### Implementation Details
+
+For complete implementation examples including JavaScript functions, modal HTML structure, and event handlers, see the [Age Verification Development Guide](DEVELOPMENT.md#age-verification-implementation) in the development documentation.
+
+### Complete Implementation Example
+
+For a complete implementation example, see:
+- [Age Verification JavaScript](https://github.com/imagewize/wordpress-tools/blob/main/age-verification/age-verification.js)
+- [Footer with Modal](https://github.com/imagewize/wordpress-tools/blob/main/age-verification/footer.php)
+
+### Compatibility
+
+The plugin is compatible with:
+
+- **Ad Inserter Plugin** - Works with the `code-block` class system
+- **Custom Age Verification Modals** - Any JavaScript system that adds/removes the `d-none` class
+- **Blabber Theme Age Verification** - Integrated with the Blabber theme's built-in age verification modal
+
+### Setting Up Age Verification
+
+To use age verification with your banners:
+
+1. **Install the Banner Container Plugin**: Configure your banners normally through the plugin settings
+2. **Implement JavaScript Modal**: Create an age verification modal with the required JavaScript functions (see [Development Guide](DEVELOPMENT.md#age-verification-implementation))
+3. **Add Modal HTML**: Include the modal HTML structure in your theme's footer.php
+4. **Test Functionality**: Verify that banners hide/show based on age selection and cookie persistence
+
+### Technical Notes
+
+- The `.d-none` class uses `!important` declarations to ensure reliable hiding
+- Cookie-based persistence maintains user preferences across sessions
+- The system targets elements with the `code-block` class (commonly used by Ad Inserter)
+- All Banner Container plugin banners automatically include the necessary CSS classes
+
 ## Frequently Asked Questions
 
 ### How do wrapper classes work in the Banner Container Plugin?

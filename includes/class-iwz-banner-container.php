@@ -762,6 +762,9 @@ class IWZ_Banner_Container {
 			$classes[] = $default_wrapper_classes[ $location ];
 		}
 
+		// Always add code-block class as second default for age verification support.
+		$classes[] = 'code-block';
+
 		// Add user-specified classes.
 		if ( ! empty( $wrapper_class ) ) {
 			$user_classes = explode( ' ', $wrapper_class );
