@@ -10,8 +10,8 @@
 .d-none,
 .code-block.d-none,
 .iwz-blabber-footer-banner.d-none {
-    display: none !important;
-    visibility: hidden !important;
+	display: none !important;
+	visibility: hidden !important;
 }
 
 /*
