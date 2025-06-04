@@ -179,19 +179,6 @@ class IWZ_Banner_Container_Settings {
 					);
 				}
 
-				// For footer banners only, add sticky setting.
-				if ( 'wp_footer' === $location_key ) {
-					register_setting(
-						'iwz_banner_container_settings',
-						'iwz_banner_wp_footer_sticky',
-						array(
-							'type'              => 'boolean',
-							'sanitize_callback' => 'rest_sanitize_boolean',
-							'default'           => false,
-						)
-					);
-				}
-
 				// Keep legacy settings for backward compatibility.
 				register_setting(
 					'iwz_banner_container_settings',
@@ -352,6 +339,11 @@ class IWZ_Banner_Container_Settings {
 			// Add alignment for head/footer banners.
 			if ( isset( $banner['alignment'] ) ) {
 				$sanitized_banner['alignment'] = sanitize_text_field( $banner['alignment'] );
+			}
+
+			// Add sticky setting for footer banners.
+			if ( isset( $banner['sticky'] ) ) {
+				$sanitized_banner['sticky'] = ! empty( $banner['sticky'] );
 			}
 
 			// Add content-specific fields if they exist.
@@ -755,29 +747,6 @@ class IWZ_Banner_Container_Settings {
 										</tr>
 										<?php endif; ?>
 										
-										<?php if ( 'wp_footer' === $location_key ) : ?>
-										<tr>
-											<th scope="row">
-												<label for="iwz_banner_wp_footer_sticky">
-													<?php esc_html_e( 'Sticky Footer Banner', 'banner-container-plugin' ); ?>
-												</label>
-											</th>
-											<td>
-												<input type="checkbox" 
-													id="iwz_banner_wp_footer_sticky" 
-													name="iwz_banner_wp_footer_sticky" 
-													value="1" 
-													<?php checked( 1, get_option( 'iwz_banner_wp_footer_sticky', false ) ); ?> />
-												<label for="iwz_banner_wp_footer_sticky">
-													<?php esc_html_e( 'Make footer banners stick to bottom of screen', 'banner-container-plugin' ); ?>
-												</label>
-												<p class="description">
-													<?php esc_html_e( 'When enabled, footer banners will remain fixed at the bottom of the viewport when scrolling.', 'banner-container-plugin' ); ?>
-												</p>
-											</td>
-										</tr>
-										<?php endif; ?>
-										
 										<tr>
 											<td colspan="2">
 												<?php if ( 'dynamic_sidebar_before' === $location_key ) : ?>
@@ -871,6 +840,28 @@ class IWZ_Banner_Container_Settings {
 																		</select>
 																		<p class="description">
 																			<?php esc_html_e( 'Choose the alignment for this banner.', 'banner-container-plugin' ); ?>
+																		</p>
+																	</td>
+																</tr>
+																<?php endif; ?>
+																<?php if ( 'wp_footer' === $location_key ) : ?>
+																<tr>
+																	<th scope="row">
+																		<label for="iwz_<?php echo esc_attr( $location_key ); ?>_banner_sticky_<?php echo esc_attr( $index ); ?>">
+																			<?php esc_html_e( 'Sticky Banner', 'banner-container-plugin' ); ?>
+																		</label>
+																	</th>
+																	<td>
+																		<input type="checkbox" 
+																			id="iwz_<?php echo esc_attr( $location_key ); ?>_banner_sticky_<?php echo esc_attr( $index ); ?>" 
+																			name="iwz_banner_<?php echo esc_attr( $location_key ); ?>_banners[<?php echo esc_attr( $index ); ?>][sticky]" 
+																			value="1" 
+																			<?php checked( ! empty( $banner['sticky'] ) ); ?> />
+																		<label for="iwz_<?php echo esc_attr( $location_key ); ?>_banner_sticky_<?php echo esc_attr( $index ); ?>">
+																			<?php esc_html_e( 'Make this banner stick to bottom of screen', 'banner-container-plugin' ); ?>
+																		</label>
+																		<p class="description">
+																			<?php esc_html_e( 'When enabled, this banner will remain fixed at the bottom of the viewport when scrolling.', 'banner-container-plugin' ); ?>
 																		</p>
 																	</td>
 																</tr>
@@ -1187,6 +1178,16 @@ class IWZ_Banner_Container_Settings {
 					'</tr>';
 				}
 				
+				var stickyField = '';
+				if (location === 'wp_footer') {
+					stickyField = '<tr>' +
+						'<th scope="row"><label for="iwz_' + location + '_banner_sticky_' + newIndex + '"><?php esc_html_e( 'Sticky Banner', 'banner-container-plugin' ); ?></label></th>' +
+						'<td><input type="checkbox" id="iwz_' + location + '_banner_sticky_' + newIndex + '" name="iwz_banner_' + location + '_banners[' + newIndex + '][sticky]" value="1" />' +
+						'<label for="iwz_' + location + '_banner_sticky_' + newIndex + '"><?php esc_html_e( 'Make this banner stick to bottom of screen', 'banner-container-plugin' ); ?></label>' +
+						'<p class="description"><?php esc_html_e( 'When enabled, this banner will remain fixed at the bottom of the viewport when scrolling.', 'banner-container-plugin' ); ?></p></td>' +
+					'</tr>';
+				}
+				
 				var newBannerHtml = '<div class="iwz-location-banner-item" data-index="' + newIndex + '" data-location="' + location + '">' +
 					'<div class="iwz-location-banner-header">' +
 						'<h4><?php esc_html_e( 'Banner', 'banner-container-plugin' ); ?> ' + (newIndex + 1) + '</h4>' +
@@ -1202,6 +1203,7 @@ class IWZ_Banner_Container_Settings {
 							'<td><textarea id="iwz_' + location + '_banner_code_' + newIndex + '" name="iwz_banner_' + location + '_banners[' + newIndex + '][code]" rows="6" class="large-text code"></textarea><p class="description"><?php esc_html_e( 'Enter the iframe or banner code to insert.', 'banner-container-plugin' ); ?></p></td>' +
 						'</tr>' +
 						alignmentField +
+						stickyField +
 						'<tr>' +
 							'<th scope="row"><label for="iwz_' + location + '_banner_device_' + newIndex + '"><?php esc_html_e( 'Device Targeting', 'banner-container-plugin' ); ?></label></th>' +
 							'<td><select id="iwz_' + location + '_banner_device_' + newIndex + '" name="iwz_banner_' + location + '_banners[' + newIndex + '][device_targeting]">' +

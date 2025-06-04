@@ -297,8 +297,7 @@ class IWZ_Banner_Container {
 			return;
 		}
 
-		// Get global sticky and wrapper background color settings.
-		$sticky           = get_option( 'iwz_banner_wp_footer_sticky', false );
+		// Get global wrapper background color setting.
 		$wrapper_bg_color = get_option( 'iwz_banner_wp_footer_wrapper_bg_color', '#161515' );
 
 		// Get multiple banners.
@@ -308,8 +307,8 @@ class IWZ_Banner_Container {
 		if ( empty( $banners ) ) {
 			$legacy_code = get_option( 'iwz_banner_wp_footer_code', '' );
 			if ( ! empty( $legacy_code ) ) {
-				$alignment      = get_option( 'iwz_banner_wp_footer_alignment', 'left' );
-				$wrapped_banner = $this->wrap_banner_html( $this->sanitize_banner_html( $legacy_code ), '', 'wp_footer', $alignment, $sticky, $wrapper_bg_color );
+				$alignment = get_option( 'iwz_banner_wp_footer_alignment', 'left' );
+				$wrapped_banner = $this->wrap_banner_html( $this->sanitize_banner_html( $legacy_code ), '', 'wp_footer', $alignment, false, $wrapper_bg_color );
 				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Content is sanitized via sanitize_banner_html method
 				echo $wrapped_banner;
 			}
@@ -322,11 +321,15 @@ class IWZ_Banner_Container {
 				$device_targeting = $banner['device_targeting'] ?? 'all';
 				if ( $this->should_display_for_device( $device_targeting ) ) {
 					// Use individual banner alignment if set, otherwise use global default.
-					$alignment      = $banner['alignment'] ?? get_option( 'iwz_banner_wp_footer_alignment', 'left' );
+					$alignment = $banner['alignment'] ?? get_option( 'iwz_banner_wp_footer_alignment', 'left' );
+					// Use ONLY individual banner sticky setting.
+					$sticky = isset( $banner['sticky'] ) ? $banner['sticky'] : false;
 					$wrapped_banner = $this->wrap_banner_html( $this->sanitize_banner_html( $banner['code'] ), $banner['wrapper_class'] ?? '', 'wp_footer', $alignment, $sticky, $wrapper_bg_color );
 					// Add debug comment when sticky is enabled.
 					if ( $sticky ) {
-						echo '<!-- DEBUG: Footer banner with sticky enabled -->';
+						echo '<!-- DEBUG: Footer banner with individual sticky enabled -->';
+					} else {
+						echo '<!-- DEBUG: Footer banner with individual sticky disabled -->';
 					}
 					// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Content is sanitized via sanitize_banner_html method and wrapped
 					echo $wrapped_banner;
