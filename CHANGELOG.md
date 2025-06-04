@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.9.6]
+* Breaking Change: Removed global sticky footer banner option - sticky behavior is now controlled per individual banner
+* Enhancement: Each footer banner now has its own independent sticky setting for granular control
+* UI Improvement: Cleaner admin interface with sticky setting only available per banner, not globally
+* Backward Compatibility: Removed legacy global sticky setting registration and fallback logic
+* User Experience: Users can now mix sticky and non-sticky footer banners in the same location
+* Technical Enhancement: Simplified sticky footer logic by removing global setting dependencies
+
 ## [1.9.5]
 * UI Enhancement: Moved header and footer banner locations to the bottom of the settings page for better organization
 * Bug Fix: Fixed sticky footer banner option to properly toggle on/off
