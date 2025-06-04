@@ -326,7 +326,7 @@ class IWZ_Banner_Container_Settings {
 				'wrapper_class'    => sanitize_text_field( $banner['wrapper_class'] ?? '' ),
 			);
 
-			// Add alignment for head/footer banners
+			// Add alignment for head/footer banners.
 			if ( isset( $banner['alignment'] ) ) {
 				$sanitized_banner['alignment'] = sanitize_text_field( $banner['alignment'] );
 			}
