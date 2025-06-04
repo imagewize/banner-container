@@ -1346,19 +1346,20 @@ class IWZ_Banner_Container_Settings {
 			<div class="notice notice-success is-dismissible iwz-banner-container-success">
 				<p><strong><?php esc_html_e( 'Banner Container settings saved successfully!', 'banner-container-plugin' ); ?></strong></p>
 			</div>
-			<script>		}, 5000);
-			jQuery(document).ready(function($) {		});
-				// Smooth scroll to top to show the notification.			</script>
-
-
-
-
-
-
-
-
-					$('.iwz-banner-container-success').fadeOut();				setTimeout(function() {				// Auto-dismiss the notice after 5 seconds.								}, 500);					scrollTop: 0				$('html, body').animate({			
-					<?php
+			<script>
+			jQuery(document).ready(function($) {
+				// Smooth scroll to top to show the notification.
+				$('html, body').animate({
+					scrollTop: 0
+				}, 500);
+				
+				// Auto-dismiss the notice after 5 seconds.
+				setTimeout(function() {
+					$('.iwz-banner-container-success').fadeOut();
+				}, 5000);
+			});
+			</script>
+			<?php
 		}
 	}
 }
