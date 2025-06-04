@@ -179,6 +179,9 @@ class IWZ_Banner_Container {
 			return;
 		}
 
+		// Get alignment setting.
+		$alignment = get_option( 'iwz_banner_wp_head_alignment', 'left' );
+
 		// Get multiple banners.
 		$banners = get_option( 'iwz_banner_wp_head_banners', array() );
 
@@ -186,8 +189,9 @@ class IWZ_Banner_Container {
 		if ( empty( $banners ) ) {
 			$legacy_code = get_option( 'iwz_banner_wp_head_code', '' );
 			if ( ! empty( $legacy_code ) ) {
+				$wrapped_banner = $this->wrap_banner_html( $this->sanitize_banner_html( $legacy_code ), '', 'wp_head', $alignment );
 				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Content is sanitized via sanitize_banner_html method
-				echo $this->sanitize_banner_html( $legacy_code );
+				echo $wrapped_banner;
 				$this->header_banner_displayed = true;
 			}
 			return;
@@ -199,7 +203,7 @@ class IWZ_Banner_Container {
 			if ( ! empty( $banner['enabled'] ) && ! empty( $banner['code'] ) ) {
 				$device_targeting = $banner['device_targeting'] ?? 'all';
 				if ( $this->should_display_for_device( $device_targeting ) ) {
-					$wrapped_banner = $this->wrap_banner_html( $this->sanitize_banner_html( $banner['code'] ), $banner['wrapper_class'] ?? '', 'wp_head' );
+					$wrapped_banner = $this->wrap_banner_html( $this->sanitize_banner_html( $banner['code'] ), $banner['wrapper_class'] ?? '', 'wp_head', $alignment );
 					$banner_output .= $wrapped_banner;
 				}
 			}
@@ -226,6 +230,9 @@ class IWZ_Banner_Container {
 			return;
 		}
 
+		// Get alignment setting.
+		$alignment = get_option( 'iwz_banner_wp_head_alignment', 'left' );
+
 		// Get multiple banners.
 		$banners = get_option( 'iwz_banner_wp_head_banners', array() );
 
@@ -233,7 +240,8 @@ class IWZ_Banner_Container {
 		if ( empty( $banners ) ) {
 			$legacy_code = get_option( 'iwz_banner_wp_head_code', '' );
 			if ( ! empty( $legacy_code ) ) {
-				$this->output_body_banner_script( $legacy_code );
+				$wrapped_banner = $this->wrap_banner_html( $legacy_code, '', 'wp_head', $alignment );
+				$this->output_body_banner_script( $wrapped_banner );
 				$this->header_banner_displayed = true;
 			}
 			return;
@@ -245,7 +253,7 @@ class IWZ_Banner_Container {
 			if ( ! empty( $banner['enabled'] ) && ! empty( $banner['code'] ) ) {
 				$device_targeting = $banner['device_targeting'] ?? 'all';
 				if ( $this->should_display_for_device( $device_targeting ) ) {
-					$wrapped_banner = $this->wrap_banner_html( $this->sanitize_banner_html( $banner['code'] ), $banner['wrapper_class'] ?? '', 'wp_head' );
+					$wrapped_banner = $this->wrap_banner_html( $this->sanitize_banner_html( $banner['code'] ), $banner['wrapper_class'] ?? '', 'wp_head', $alignment );
 					$banner_html   .= $wrapped_banner;
 				}
 			}
@@ -283,6 +291,9 @@ class IWZ_Banner_Container {
 			return;
 		}
 
+		// Get alignment setting.
+		$alignment = get_option( 'iwz_banner_wp_footer_alignment', 'left' );
+
 		// Get multiple banners.
 		$banners = get_option( 'iwz_banner_wp_footer_banners', array() );
 
@@ -290,8 +301,9 @@ class IWZ_Banner_Container {
 		if ( empty( $banners ) ) {
 			$legacy_code = get_option( 'iwz_banner_wp_footer_code', '' );
 			if ( ! empty( $legacy_code ) ) {
+				$wrapped_banner = $this->wrap_banner_html( $this->sanitize_banner_html( $legacy_code ), '', 'wp_footer', $alignment );
 				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Content is sanitized via sanitize_banner_html method
-				echo $this->sanitize_banner_html( $legacy_code );
+				echo $wrapped_banner;
 			}
 			return;
 		}
@@ -301,7 +313,7 @@ class IWZ_Banner_Container {
 			if ( ! empty( $banner['enabled'] ) && ! empty( $banner['code'] ) ) {
 				$device_targeting = $banner['device_targeting'] ?? 'all';
 				if ( $this->should_display_for_device( $device_targeting ) ) {
-					$wrapped_banner = $this->wrap_banner_html( $this->sanitize_banner_html( $banner['code'] ), $banner['wrapper_class'] ?? '', 'wp_footer' );
+					$wrapped_banner = $this->wrap_banner_html( $this->sanitize_banner_html( $banner['code'] ), $banner['wrapper_class'] ?? '', 'wp_footer', $alignment );
 					// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Content is sanitized via sanitize_banner_html method and wrapped
 					echo $wrapped_banner;
 				}
@@ -736,9 +748,10 @@ class IWZ_Banner_Container {
 	 * @param string $banner_html The banner HTML content.
 	 * @param string $wrapper_class The CSS class for the wrapper div.
 	 * @param string $location The banner location for default class determination.
+	 * @param string $alignment The alignment for header/footer banners (left, center, right).
 	 * @return string Wrapped banner HTML or original HTML if no wrapper class.
 	 */
-	private function wrap_banner_html( $banner_html, $wrapper_class = '', $location = '' ) {
+	private function wrap_banner_html( $banner_html, $wrapper_class = '', $location = '', $alignment = '' ) {
 		if ( empty( $banner_html ) ) {
 			return $banner_html;
 		}
@@ -764,6 +777,11 @@ class IWZ_Banner_Container {
 
 		// Always add code-block class as second default for age verification support.
 		$classes[] = 'code-block';
+
+		// Add alignment class for header and footer banners.
+		if ( in_array( $location, array( 'wp_head', 'wp_footer' ), true ) && ! empty( $alignment ) ) {
+			$classes[] = 'iwz-align-' . sanitize_html_class( $alignment );
+		}
 
 		// Add user-specified classes.
 		if ( ! empty( $wrapper_class ) ) {

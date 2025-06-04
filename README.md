@@ -6,8 +6,8 @@ A WordPress plugin to add banners to different locations in your WordPress theme
 
 The Banner Container Plugin allows you to easily add iframe codes to various locations in your WordPress site, such as:
 
-- Header (after initial `<body>`tag) - with support for multiple banners and device targeting
-- Footer (before `</body>` tag) - with support for multiple banners and device targeting
+- Header (after initial `<body>`tag) - with support for multiple banners, device targeting, and alignment options (left, center, right)
+- Footer (before `</body>` tag) - with support for multiple banners, device targeting, and alignment options (left, center, right)
 - Content (beginning content, end content or after x paragraphs) (with options for multiple banners, individual placement, and device targeting)
 - Before Sidebar Content - Uses `dynamic_sidebar_before` hook to display banners before any sidebar widgets load, ensuring proper positioning above all sidebar content. Supports multiple banners and device targeting.
 - In Navigation Menu - with support for multiple banners and device targeting
@@ -32,10 +32,12 @@ The Banner Container Plugin allows you to easily add iframe codes to various loc
 4. For all banner locations, you can add multiple banners with individual settings:
    - Choose device targeting (all devices, desktop only, or mobile only)
    - Enable or disable individual banners
-5. For content banners, additional options include:
+5. For header and footer banners, additional options include:
+   - Choose alignment (left, center, or right) for each individual banner
+6. For content banners, additional options include:
    - Choose placement options (top, bottom, or after a specific paragraph)
    - Select which post types to display each banner on
-6. Save your settings
+7. Save your settings
 
 ## Banner Wrapper Classes
 
@@ -176,6 +178,35 @@ To use age verification with your banners:
 - All Banner Container plugin banners automatically include the necessary CSS classes
 
 ## Frequently Asked Questions
+
+### How do banner alignment options work for header and footer locations?
+
+**Banner Alignment for Header and Footer**
+
+Header (wp_head) and footer (wp_footer) banner locations now support individual alignment settings for each banner:
+
+**Available Alignment Options:**
+- **Left**: Banner aligns to the left side of its container (default)
+- **Center**: Banner centers within its container
+- **Right**: Banner aligns to the right side of its container
+
+**How Alignment Works:**
+- Each banner in header and footer locations can have its own alignment setting
+- Alignment is applied via CSS `text-align` property on the banner wrapper
+- The alignment affects the banner content within its wrapper div
+- Default alignment is "left" to maintain backward compatibility with existing banners
+
+**Setting Alignment:**
+1. Go to Banner Container settings
+2. Expand the "Top of Page (After <body>)" or "Footer (Before </body>)" section
+3. For each banner, select the desired alignment from the "Banner Alignment" dropdown
+4. Choose from Left, Center, or Right alignment options
+5. Save settings
+
+**Technical Implementation:**
+- Alignment is applied to the wrapper div class (`iwz-head-banner` or `iwz-footer-banner`)
+- The CSS `text-align` property controls the banner positioning
+- Each banner can have independent alignment regardless of other banners in the same location
 
 ### How do wrapper classes work in the Banner Container Plugin?
 

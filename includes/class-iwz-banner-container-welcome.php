@@ -21,7 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Banner Container Plugin - Welcome Page
  *
- * @link       https://example.com
+ * @link       https://imagewize.com
  * @since      1.0.0
  *
  * @package    IWZ_Banner_Container
