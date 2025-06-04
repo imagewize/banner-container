@@ -64,7 +64,7 @@ When you specify a wrapper class for a banner:
 
 Each banner location now has its own unique default wrapper class with predefined styling:
 
-- **Top of Page (wp_head)**: `iwz-head-banner`
+- **Header (Top of Page) (wp_head)**: `iwz-head-banner`
 - **Footer (wp_footer)**: `iwz-footer-banner`
 - **Within Content (the_content)**: `iwz-content-banner`
 - **Before Sidebar Content**: `iwz-sidebar-banner`

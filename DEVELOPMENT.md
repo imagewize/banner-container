@@ -142,7 +142,7 @@ This test file simulates the theme structure and demonstrates how the banner inj
 
 ### Banner Locations
 
-1. **wp_head** - Top of page (after `<body>` tag)
+1. **wp_head** - Header (Top of page (after `<body>` tag))
 2. **wp_footer** - Footer (before `</body>` tag)  
 3. **the_content** - Within post/page content with configurable positioning
 4. **get_sidebar** - Before sidebar widgets

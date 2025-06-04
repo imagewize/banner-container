@@ -83,7 +83,7 @@ class IWZ_Banner_Container_Settings {
 			'wp_nav_menu_items'      => __( 'In Navigation Menu', 'banner-container-plugin' ),
 			'content_wrap_inside'    => __( 'Inside Blabber Theme Content Wrap (Top of Content Area)', 'banner-container-plugin' ),
 			'blabber_footer_start'   => __( 'Blabber Footer Start (Just Above Footer Area)', 'banner-container-plugin' ),
-			'wp_head'                => __( 'Top of Page (After <body>)', 'banner-container-plugin' ),
+			'wp_head'                => __( 'Header( Top of Page) (After <body>)', 'banner-container-plugin' ),
 			'wp_footer'              => __( 'Footer (Before </body>)', 'banner-container-plugin' ),
 		);
 
