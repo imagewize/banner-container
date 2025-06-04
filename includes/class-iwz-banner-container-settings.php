@@ -156,7 +156,7 @@ class IWZ_Banner_Container_Settings {
 					)
 				);
 
-				// For header and footer banners, add alignment setting.
+				// For header and footer banners, add alignment and wrapper background color settings.
 				if ( in_array( $location_key, array( 'wp_head', 'wp_footer' ), true ) ) {
 					register_setting(
 						'iwz_banner_container_settings',
@@ -165,6 +165,29 @@ class IWZ_Banner_Container_Settings {
 							'type'              => 'string',
 							'sanitize_callback' => 'sanitize_text_field',
 							'default'           => 'left',
+						)
+					);
+
+					register_setting(
+						'iwz_banner_container_settings',
+						'iwz_banner_' . $location_key . '_wrapper_bg_color',
+						array(
+							'type'              => 'string',
+							'sanitize_callback' => 'sanitize_hex_color',
+							'default'           => 'wp_head' === $location_key ? '#ffffff' : '#161515',
+						)
+					);
+				}
+
+				// For footer banners only, add sticky setting.
+				if ( 'wp_footer' === $location_key ) {
+					register_setting(
+						'iwz_banner_container_settings',
+						'iwz_banner_wp_footer_sticky',
+						array(
+							'type'              => 'boolean',
+							'sanitize_callback' => 'rest_sanitize_boolean',
+							'default'           => false,
 						)
 					);
 				}

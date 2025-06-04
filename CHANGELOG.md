@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.9.4]
+* New Feature: Added sticky footer banner option - footer banners can now stick to the bottom of the viewport
+* New Feature: Added wrapper background color customization for header and footer banner sections
+* Enhancement: Header banner wrapper sections can now have custom background colors (default: #ffffff)
+* Enhancement: Footer banner wrapper sections can now have custom background colors (default: #161515)
+* UI Enhancement: Added color picker input for wrapper background color selection in admin interface
+* CSS Enhancement: Added sticky positioning support with proper z-index and responsive behavior
+* CSS Enhancement: Added wrapper div structure with background color support for header and footer banners
+* User Experience: Sticky footer banners remain visible when scrolling for better advertisement visibility
+* Admin Interface: Added sticky checkbox option specifically for footer banner location
+* Responsive Design: Sticky footer banners maintain proper positioning across all device sizes
+
 ## [1.9.3]
 * New Feature: Added alignment options for header (wp_head) and footer (wp_footer) banner locations
 * Enhancement: Header banners can now be aligned left, center, or right within their container
