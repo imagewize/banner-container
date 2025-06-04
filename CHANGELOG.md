@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.9.5]
+* UI Enhancement: Moved header and footer banner locations to the bottom of the settings page for better organization
+* Bug Fix: Fixed sticky footer banner option to properly toggle on/off
+* Bug Fix: Fixed wrapper background color fields to load with proper default values (#ffffff for header, #161515 for footer)
+* Admin Interface: Improved settings page layout with header/footer sections positioned at the bottom
+* User Experience: Enhanced settings page organization with content-related banners at the top and page-level banners at the bottom
+
 ## [1.9.4]
 * New Feature: Added sticky footer banner option - footer banners can now stick to the bottom of the viewport
 * New Feature: Added wrapper background color customization for header and footer banner sections

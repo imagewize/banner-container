@@ -94,6 +94,16 @@
 }
 
 /*
+ * Responsive adjustments for sticky footer banners
+ */
+@media (max-width: 768px) {
+	.iwz-footer-banner.iwz-sticky {
+		position: fixed !important;
+		bottom: 0 !important;
+	}
+}
+
+/*
  * Banner Wrapper Background Colors
  * Support for custom background colors on header and footer banner wrappers
  */

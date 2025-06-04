@@ -78,13 +78,13 @@ class IWZ_Banner_Container_Settings {
 	 */
 	public function register_banner_locations() {
 		$this->banner_locations = array(
-			'wp_head'                => __( 'Top of Page (After <body>)', 'banner-container-plugin' ),
-			'wp_footer'              => __( 'Footer (Before </body>)', 'banner-container-plugin' ),
 			'the_content'            => __( 'Within Content', 'banner-container-plugin' ),
 			'dynamic_sidebar_before' => __( 'Before Sidebar Content', 'banner-container-plugin' ),
 			'wp_nav_menu_items'      => __( 'In Navigation Menu', 'banner-container-plugin' ),
 			'content_wrap_inside'    => __( 'Inside Blabber Theme Content Wrap (Top of Content Area)', 'banner-container-plugin' ),
 			'blabber_footer_start'   => __( 'Blabber Footer Start (Just Above Footer Area)', 'banner-container-plugin' ),
+			'wp_head'                => __( 'Top of Page (After <body>)', 'banner-container-plugin' ),
+			'wp_footer'              => __( 'Footer (Before </body>)', 'banner-container-plugin' ),
 		);
 
 		// Allow theme/plugins to modify available locations.
@@ -736,6 +736,48 @@ class IWZ_Banner_Container_Settings {
 									}
 									?>
 									<table class="form-table">
+										<?php if ( in_array( $location_key, array( 'wp_head', 'wp_footer' ), true ) ) : ?>
+										<tr>
+											<th scope="row">
+												<label for="iwz_banner_<?php echo esc_attr( $location_key ); ?>_wrapper_bg_color">
+													<?php esc_html_e( 'Wrapper Background Color', 'banner-container-plugin' ); ?>
+												</label>
+											</th>
+											<td>
+												<input type="color" 
+													id="iwz_banner_<?php echo esc_attr( $location_key ); ?>_wrapper_bg_color" 
+													name="iwz_banner_<?php echo esc_attr( $location_key ); ?>_wrapper_bg_color" 
+													value="<?php echo esc_attr( get_option( 'iwz_banner_' . $location_key . '_wrapper_bg_color', ( 'wp_head' === $location_key ? '#ffffff' : '#161515' ) ) ); ?>" />
+												<p class="description">
+													<?php esc_html_e( 'Background color for the banner wrapper section.', 'banner-container-plugin' ); ?>
+												</p>
+											</td>
+										</tr>
+										<?php endif; ?>
+										
+										<?php if ( 'wp_footer' === $location_key ) : ?>
+										<tr>
+											<th scope="row">
+												<label for="iwz_banner_wp_footer_sticky">
+													<?php esc_html_e( 'Sticky Footer Banner', 'banner-container-plugin' ); ?>
+												</label>
+											</th>
+											<td>
+												<input type="checkbox" 
+													id="iwz_banner_wp_footer_sticky" 
+													name="iwz_banner_wp_footer_sticky" 
+													value="1" 
+													<?php checked( 1, get_option( 'iwz_banner_wp_footer_sticky', false ) ); ?> />
+												<label for="iwz_banner_wp_footer_sticky">
+													<?php esc_html_e( 'Make footer banners stick to bottom of screen', 'banner-container-plugin' ); ?>
+												</label>
+												<p class="description">
+													<?php esc_html_e( 'When enabled, footer banners will remain fixed at the bottom of the viewport when scrolling.', 'banner-container-plugin' ); ?>
+												</p>
+											</td>
+										</tr>
+										<?php endif; ?>
+										
 										<tr>
 											<td colspan="2">
 												<?php if ( 'dynamic_sidebar_before' === $location_key ) : ?>
