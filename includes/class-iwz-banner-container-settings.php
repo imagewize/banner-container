@@ -839,6 +839,11 @@ class IWZ_Banner_Container_Settings {
 																					name="iwz_banner_<?php echo esc_attr( $location_key ); ?>_banners[<?php echo esc_attr( $index ); ?>][code]" 
 																					rows="6" 
 																					class="large-text code"><?php echo esc_textarea( $banner['code'] ?? '' ); ?></textarea>
+																		<?php if ( 'wp_footer' === $location_key ) : ?>
+																		<br><button type="button" class="button iwz-test-banner-button" data-target="iwz_<?php echo esc_attr( $location_key ); ?>_banner_code_<?php echo esc_attr( $index ); ?>">
+																			<?php esc_html_e( 'Insert Test Banner', 'banner-container-plugin' ); ?>
+																		</button>
+																		<?php endif; ?>
 																		<p class="description">
 																			<?php esc_html_e( 'Enter the iframe or banner code to insert.', 'banner-container-plugin' ); ?>
 																		</p>
@@ -974,6 +979,16 @@ class IWZ_Banner_Container_Settings {
 		
 		<script>
 		jQuery(document).ready(function($) {
+			// Test banner functionality
+			$(document).on('click', '.iwz-test-banner-button', function() {
+				var targetId = $(this).data('target');
+				var testBanner = '<div style="background: linear-gradient(45deg, #ff6b6b, #4ecdc4); color: white; padding: 20px; text-align: center; font-family: Arial, sans-serif; font-size: 18px; font-weight: bold; border: 3px solid #fff; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">' +
+					'🎯 TEST STICKY BANNER 🎯<br>' +
+					'<span style="font-size: 14px; font-weight: normal;">This is a test banner to verify sticky footer functionality</span>' +
+					'</div>';
+				$('#' + targetId).val(testBanner);
+			});
+			
 			// Helper function to get default wrapper class for a location
 			function getDefaultWrapperClass(location) {
 				var defaults = {
@@ -1331,20 +1346,19 @@ class IWZ_Banner_Container_Settings {
 			<div class="notice notice-success is-dismissible iwz-banner-container-success">
 				<p><strong><?php esc_html_e( 'Banner Container settings saved successfully!', 'banner-container-plugin' ); ?></strong></p>
 			</div>
-			<script>
-			jQuery(document).ready(function($) {
-				// Smooth scroll to top to show the notification.
-				$('html, body').animate({
-					scrollTop: 0
-				}, 500);
-				
-				// Auto-dismiss the notice after 5 seconds.
-				setTimeout(function() {
-					$('.iwz-banner-container-success').fadeOut();
-				}, 5000);
-			});
-			</script>
-			<?php
+			<script>		}, 5000);
+			jQuery(document).ready(function($) {		});
+				// Smooth scroll to top to show the notification.			</script>
+
+
+
+
+
+
+
+
+					$('.iwz-banner-container-success').fadeOut();				setTimeout(function() {				// Auto-dismiss the notice after 5 seconds.								}, 500);					scrollTop: 0				$('html, body').animate({			
+					<?php
 		}
 	}
 }

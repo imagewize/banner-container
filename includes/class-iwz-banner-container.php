@@ -179,8 +179,7 @@ class IWZ_Banner_Container {
 			return;
 		}
 
-		// Get alignment and wrapper background color settings.
-		$alignment        = get_option( 'iwz_banner_wp_head_alignment', 'left' );
+		// Get global wrapper background color setting.
 		$wrapper_bg_color = get_option( 'iwz_banner_wp_head_wrapper_bg_color', '#ffffff' );
 
 		// Get multiple banners.
@@ -190,6 +189,7 @@ class IWZ_Banner_Container {
 		if ( empty( $banners ) ) {
 			$legacy_code = get_option( 'iwz_banner_wp_head_code', '' );
 			if ( ! empty( $legacy_code ) ) {
+				$alignment      = get_option( 'iwz_banner_wp_head_alignment', 'left' );
 				$wrapped_banner = $this->wrap_banner_html( $this->sanitize_banner_html( $legacy_code ), '', 'wp_head', $alignment, false, $wrapper_bg_color );
 				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Content is sanitized via sanitize_banner_html method
 				echo $wrapped_banner;
@@ -204,6 +204,8 @@ class IWZ_Banner_Container {
 			if ( ! empty( $banner['enabled'] ) && ! empty( $banner['code'] ) ) {
 				$device_targeting = $banner['device_targeting'] ?? 'all';
 				if ( $this->should_display_for_device( $device_targeting ) ) {
+					// Use individual banner alignment if set, otherwise use global default.
+					$alignment      = $banner['alignment'] ?? get_option( 'iwz_banner_wp_head_alignment', 'left' );
 					$wrapped_banner = $this->wrap_banner_html( $this->sanitize_banner_html( $banner['code'] ), $banner['wrapper_class'] ?? '', 'wp_head', $alignment, false, $wrapper_bg_color );
 					$banner_output .= $wrapped_banner;
 				}
@@ -231,8 +233,7 @@ class IWZ_Banner_Container {
 			return;
 		}
 
-		// Get alignment and wrapper background color settings.
-		$alignment        = get_option( 'iwz_banner_wp_head_alignment', 'left' );
+		// Get global wrapper background color setting.
 		$wrapper_bg_color = get_option( 'iwz_banner_wp_head_wrapper_bg_color', '#ffffff' );
 
 		// Get multiple banners.
@@ -242,6 +243,7 @@ class IWZ_Banner_Container {
 		if ( empty( $banners ) ) {
 			$legacy_code = get_option( 'iwz_banner_wp_head_code', '' );
 			if ( ! empty( $legacy_code ) ) {
+				$alignment      = get_option( 'iwz_banner_wp_head_alignment', 'left' );
 				$wrapped_banner = $this->wrap_banner_html( $legacy_code, '', 'wp_head', $alignment, false, $wrapper_bg_color );
 				$this->output_body_banner_script( $wrapped_banner );
 				$this->header_banner_displayed = true;
@@ -255,6 +257,8 @@ class IWZ_Banner_Container {
 			if ( ! empty( $banner['enabled'] ) && ! empty( $banner['code'] ) ) {
 				$device_targeting = $banner['device_targeting'] ?? 'all';
 				if ( $this->should_display_for_device( $device_targeting ) ) {
+					// Use individual banner alignment if set, otherwise use global default.
+					$alignment      = $banner['alignment'] ?? get_option( 'iwz_banner_wp_head_alignment', 'left' );
 					$wrapped_banner = $this->wrap_banner_html( $this->sanitize_banner_html( $banner['code'] ), $banner['wrapper_class'] ?? '', 'wp_head', $alignment, false, $wrapper_bg_color );
 					$banner_html   .= $wrapped_banner;
 				}
@@ -293,8 +297,7 @@ class IWZ_Banner_Container {
 			return;
 		}
 
-		// Get alignment, sticky, and wrapper background color settings.
-		$alignment        = get_option( 'iwz_banner_wp_footer_alignment', 'left' );
+		// Get global sticky and wrapper background color settings.
 		$sticky           = get_option( 'iwz_banner_wp_footer_sticky', false );
 		$wrapper_bg_color = get_option( 'iwz_banner_wp_footer_wrapper_bg_color', '#161515' );
 
@@ -305,6 +308,7 @@ class IWZ_Banner_Container {
 		if ( empty( $banners ) ) {
 			$legacy_code = get_option( 'iwz_banner_wp_footer_code', '' );
 			if ( ! empty( $legacy_code ) ) {
+				$alignment      = get_option( 'iwz_banner_wp_footer_alignment', 'left' );
 				$wrapped_banner = $this->wrap_banner_html( $this->sanitize_banner_html( $legacy_code ), '', 'wp_footer', $alignment, $sticky, $wrapper_bg_color );
 				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Content is sanitized via sanitize_banner_html method
 				echo $wrapped_banner;
@@ -317,7 +321,13 @@ class IWZ_Banner_Container {
 			if ( ! empty( $banner['enabled'] ) && ! empty( $banner['code'] ) ) {
 				$device_targeting = $banner['device_targeting'] ?? 'all';
 				if ( $this->should_display_for_device( $device_targeting ) ) {
+					// Use individual banner alignment if set, otherwise use global default.
+					$alignment      = $banner['alignment'] ?? get_option( 'iwz_banner_wp_footer_alignment', 'left' );
 					$wrapped_banner = $this->wrap_banner_html( $this->sanitize_banner_html( $banner['code'] ), $banner['wrapper_class'] ?? '', 'wp_footer', $alignment, $sticky, $wrapper_bg_color );
+					// Add debug comment when sticky is enabled.
+					if ( $sticky ) {
+						echo '<!-- DEBUG: Footer banner with sticky enabled -->';
+					}
 					// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Content is sanitized via sanitize_banner_html method and wrapped
 					echo $wrapped_banner;
 				}
@@ -818,7 +828,13 @@ class IWZ_Banner_Container {
 			$wrapper_type  = 'wp_head' === $location ? 'header' : 'footer';
 			$wrapper_style = 'background-color: ' . esc_attr( $wrapper_bg_color ) . ';';
 
-			return '<div class="iwz-banner-wrapper iwz-' . $wrapper_type . '-wrapper" style="' . $wrapper_style . '">' .
+			// Add sticky class to wrapper for footer banners when sticky is enabled.
+			$wrapper_classes = 'iwz-banner-wrapper iwz-' . $wrapper_type . '-wrapper';
+			if ( 'wp_footer' === $location && $sticky ) {
+				$wrapper_classes .= ' iwz-sticky-wrapper';
+			}
+
+			return '<div class="' . $wrapper_classes . '" style="' . $wrapper_style . '">' .
 					'<div class="' . esc_attr( $class_string ) . '">' . $banner_html . '</div>' .
 					'</div>';
 		}
