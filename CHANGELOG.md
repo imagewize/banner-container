@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.9.3]
+* New Feature: Added alignment options for header (wp_head) and footer (wp_footer) banner locations
+* Enhancement: Header banners can now be aligned left, center, or right within their container
+* Enhancement: Footer banners can now be aligned left, center, or right within their container
+* Admin Interface: Added alignment dropdown selection for each individual header and footer banner
+* CSS Enhancement: Added text-align styling support for banner alignment in iwz-head-banner and iwz-footer-banner wrapper classes
+* User Experience: Each banner in header and footer locations can have independent alignment settings
+* Backward Compatibility: Existing banners default to left alignment to maintain current behavior
+
 ## [1.9.2]
 * Enhancement: Added automatic `code-block` class to all banner container wrappers for improved age verification compatibility
 * Age Verification: All banners now automatically include both their location-specific class AND `code-block` class

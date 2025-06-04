@@ -78,13 +78,13 @@ class IWZ_Banner_Container_Settings {
 	 */
 	public function register_banner_locations() {
 		$this->banner_locations = array(
-			'wp_head'                => __( 'Top of Page (After <body>)', 'banner-container-plugin' ),
-			'wp_footer'              => __( 'Footer (Before </body>)', 'banner-container-plugin' ),
 			'the_content'            => __( 'Within Content', 'banner-container-plugin' ),
 			'dynamic_sidebar_before' => __( 'Before Sidebar Content', 'banner-container-plugin' ),
 			'wp_nav_menu_items'      => __( 'In Navigation Menu', 'banner-container-plugin' ),
 			'content_wrap_inside'    => __( 'Inside Blabber Theme Content Wrap (Top of Content Area)', 'banner-container-plugin' ),
 			'blabber_footer_start'   => __( 'Blabber Footer Start (Just Above Footer Area)', 'banner-container-plugin' ),
+			'wp_head'                => __( 'Top of Page (After <body>)', 'banner-container-plugin' ),
+			'wp_footer'              => __( 'Footer (Before </body>)', 'banner-container-plugin' ),
 		);
 
 		// Allow theme/plugins to modify available locations.
@@ -155,6 +155,19 @@ class IWZ_Banner_Container_Settings {
 						'default'           => array(),
 					)
 				);
+
+				// For header and footer banners, add alignment setting.
+				if ( in_array( $location_key, array( 'wp_head', 'wp_footer' ), true ) ) {
+					register_setting(
+						'iwz_banner_container_settings',
+						'iwz_banner_' . $location_key . '_alignment',
+						array(
+							'type'              => 'string',
+							'sanitize_callback' => 'sanitize_text_field',
+							'default'           => 'left',
+						)
+					);
+				}
 
 				// Keep legacy settings for backward compatibility.
 				register_setting(
@@ -312,6 +325,11 @@ class IWZ_Banner_Container_Settings {
 				'enabled'          => ! empty( $banner['enabled'] ),
 				'wrapper_class'    => sanitize_text_field( $banner['wrapper_class'] ?? '' ),
 			);
+
+			// Add alignment for head/footer banners
+			if ( isset( $banner['alignment'] ) ) {
+				$sanitized_banner['alignment'] = sanitize_text_field( $banner['alignment'] );
+			}
 
 			// Add content-specific fields if they exist.
 			if ( isset( $banner['position'] ) ) {
@@ -729,7 +747,7 @@ class IWZ_Banner_Container_Settings {
 																	<?php esc_html_e( 'Remove', 'banner-container-plugin' ); ?>
 																</button>
 															</div>
-															
+														
 															<table class="form-table iwz-location-banner-settings">
 																<tr>
 																	<th scope="row">
@@ -761,6 +779,32 @@ class IWZ_Banner_Container_Settings {
 																		</p>
 																	</td>
 																</tr>
+																<?php if ( in_array( $location_key, array( 'wp_head', 'wp_footer' ), true ) ) : ?>
+																<tr>
+																	<th scope="row">
+																		<label for="iwz_<?php echo esc_attr( $location_key ); ?>_banner_alignment_<?php echo esc_attr( $index ); ?>">
+																			<?php esc_html_e( 'Banner Alignment', 'banner-container-plugin' ); ?>
+																		</label>
+																	</th>
+																	<td>
+																		<select id="iwz_<?php echo esc_attr( $location_key ); ?>_banner_alignment_<?php echo esc_attr( $index ); ?>" 
+																				name="iwz_banner_<?php echo esc_attr( $location_key ); ?>_banners[<?php echo esc_attr( $index ); ?>][alignment]">
+																			<option value="left" <?php selected( 'left', $banner['alignment'] ?? 'left' ); ?>>
+																				<?php esc_html_e( 'Left', 'banner-container-plugin' ); ?>
+																			</option>
+																			<option value="center" <?php selected( 'center', $banner['alignment'] ?? 'left' ); ?>>
+																				<?php esc_html_e( 'Center', 'banner-container-plugin' ); ?>
+																			</option>
+																			<option value="right" <?php selected( 'right', $banner['alignment'] ?? 'left' ); ?>>
+																				<?php esc_html_e( 'Right', 'banner-container-plugin' ); ?>
+																			</option>
+																		</select>
+																		<p class="description">
+																			<?php esc_html_e( 'Choose the alignment for this banner.', 'banner-container-plugin' ); ?>
+																		</p>
+																	</td>
+																</tr>
+																<?php endif; ?>
 																<tr>
 																	<th scope="row">
 																		<label for="iwz_<?php echo esc_attr( $location_key ); ?>_banner_device_<?php echo esc_attr( $index ); ?>">
@@ -1031,10 +1075,6 @@ class IWZ_Banner_Container_Settings {
 							'<th scope="row"><label for="iwz_content_banner_wrapper_class_' + newIndex + '"><?php esc_html_e( 'Wrapper CSS Class', 'banner-container-plugin' ); ?></label></th>' +
 							'<td><input type="text" id="iwz_content_banner_wrapper_class_' + newIndex + '" name="iwz_banner_the_content_banners[' + newIndex + '][wrapper_class]" value="iwz-content-banner" class="regular-text" /><p class="description"><?php esc_html_e( 'CSS class(es) for the div wrapper around this banner. Defaults to "iwz-content-banner" with predefined styling if left empty.', 'banner-container-plugin' ); ?></p></td>' +
 						'</tr>' +
-						'<tr>' +
-							'<th scope="row"><label><?php esc_html_e( 'Apply to Post Types', 'banner-container-plugin' ); ?></label></th>' +
-							'<td>' + postTypesHtml + '<p class="description"><?php esc_html_e( 'Select which post types should display this banner.', 'banner-container-plugin' ); ?></p></td>' +
-						'</tr>' +
 					'</table>' +
 				'</div>';
 				
@@ -1055,6 +1095,18 @@ class IWZ_Banner_Container_Settings {
 				var $container = $('#iwz-' + location + '-banners-container');
 				var newIndex = $container.find('.iwz-location-banner-item').length;
 				
+				var alignmentField = '';
+				if (location === 'wp_head' || location === 'wp_footer') {
+					alignmentField = '<tr>' +
+						'<th scope="row"><label for="iwz_' + location + '_banner_alignment_' + newIndex + '"><?php esc_html_e( 'Banner Alignment', 'banner-container-plugin' ); ?></label></th>' +
+						'<td><select id="iwz_' + location + '_banner_alignment_' + newIndex + '" name="iwz_banner_' + location + '_banners[' + newIndex + '][alignment]">' +
+							'<option value="left"><?php esc_html_e( 'Left', 'banner-container-plugin' ); ?></option>' +
+							'<option value="center"><?php esc_html_e( 'Center', 'banner-container-plugin' ); ?></option>' +
+							'<option value="right"><?php esc_html_e( 'Right', 'banner-container-plugin' ); ?></option>' +
+						'</select><p class="description"><?php esc_html_e( 'Choose the alignment for this banner.', 'banner-container-plugin' ); ?></p></td>' +
+					'</tr>';
+				}
+				
 				var newBannerHtml = '<div class="iwz-location-banner-item" data-index="' + newIndex + '" data-location="' + location + '">' +
 					'<div class="iwz-location-banner-header">' +
 						'<h4><?php esc_html_e( 'Banner', 'banner-container-plugin' ); ?> ' + (newIndex + 1) + '</h4>' +
@@ -1069,6 +1121,7 @@ class IWZ_Banner_Container_Settings {
 							'<th scope="row"><label for="iwz_' + location + '_banner_code_' + newIndex + '"><?php esc_html_e( 'Banner Code', 'banner-container-plugin' ); ?></label></th>' +
 							'<td><textarea id="iwz_' + location + '_banner_code_' + newIndex + '" name="iwz_banner_' + location + '_banners[' + newIndex + '][code]" rows="6" class="large-text code"></textarea><p class="description"><?php esc_html_e( 'Enter the iframe or banner code to insert.', 'banner-container-plugin' ); ?></p></td>' +
 						'</tr>' +
+						alignmentField +
 						'<tr>' +
 							'<th scope="row"><label for="iwz_' + location + '_banner_device_' + newIndex + '"><?php esc_html_e( 'Device Targeting', 'banner-container-plugin' ); ?></label></th>' +
 							'<td><select id="iwz_' + location + '_banner_device_' + newIndex + '" name="iwz_banner_' + location + '_banners[' + newIndex + '][device_targeting]">' +
