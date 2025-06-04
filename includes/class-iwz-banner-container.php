@@ -180,7 +180,7 @@ class IWZ_Banner_Container {
 		}
 
 		// Get alignment and wrapper background color settings.
-		$alignment = get_option( 'iwz_banner_wp_head_alignment', 'left' );
+		$alignment        = get_option( 'iwz_banner_wp_head_alignment', 'left' );
 		$wrapper_bg_color = get_option( 'iwz_banner_wp_head_wrapper_bg_color', '#ffffff' );
 
 		// Get multiple banners.
@@ -232,7 +232,7 @@ class IWZ_Banner_Container {
 		}
 
 		// Get alignment and wrapper background color settings.
-		$alignment = get_option( 'iwz_banner_wp_head_alignment', 'left' );
+		$alignment        = get_option( 'iwz_banner_wp_head_alignment', 'left' );
 		$wrapper_bg_color = get_option( 'iwz_banner_wp_head_wrapper_bg_color', '#ffffff' );
 
 		// Get multiple banners.
@@ -294,8 +294,8 @@ class IWZ_Banner_Container {
 		}
 
 		// Get alignment, sticky, and wrapper background color settings.
-		$alignment = get_option( 'iwz_banner_wp_footer_alignment', 'left' );
-		$sticky = get_option( 'iwz_banner_wp_footer_sticky', false );
+		$alignment        = get_option( 'iwz_banner_wp_footer_alignment', 'left' );
+		$sticky           = get_option( 'iwz_banner_wp_footer_sticky', false );
 		$wrapper_bg_color = get_option( 'iwz_banner_wp_footer_wrapper_bg_color', '#161515' );
 
 		// Get multiple banners.
@@ -815,12 +815,12 @@ class IWZ_Banner_Container {
 
 		// Add wrapper div for header/footer with background color.
 		if ( in_array( $location, array( 'wp_head', 'wp_footer' ), true ) && ! empty( $wrapper_bg_color ) ) {
-			$wrapper_type = 'wp_head' === $location ? 'header' : 'footer';
+			$wrapper_type  = 'wp_head' === $location ? 'header' : 'footer';
 			$wrapper_style = 'background-color: ' . esc_attr( $wrapper_bg_color ) . ';';
-			
+
 			return '<div class="iwz-banner-wrapper iwz-' . $wrapper_type . '-wrapper" style="' . $wrapper_style . '">' .
-				   '<div class="' . esc_attr( $class_string ) . '">' . $banner_html . '</div>' .
-				   '</div>';
+					'<div class="' . esc_attr( $class_string ) . '">' . $banner_html . '</div>' .
+					'</div>';
 		}
 
 		return '<div class="' . esc_attr( $class_string ) . '">' . $banner_html . '</div>';
