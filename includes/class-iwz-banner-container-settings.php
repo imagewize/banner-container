@@ -78,13 +78,13 @@ class IWZ_Banner_Container_Settings {
 	 */
 	public function register_banner_locations() {
 		$this->banner_locations = array(
+			'wp_head'                => __( 'Top of Page (After <body>)', 'banner-container-plugin' ),
+			'wp_footer'              => __( 'Footer (Before </body>)', 'banner-container-plugin' ),
 			'the_content'            => __( 'Within Content', 'banner-container-plugin' ),
 			'dynamic_sidebar_before' => __( 'Before Sidebar Content', 'banner-container-plugin' ),
 			'wp_nav_menu_items'      => __( 'In Navigation Menu', 'banner-container-plugin' ),
 			'content_wrap_inside'    => __( 'Inside Blabber Theme Content Wrap (Top of Content Area)', 'banner-container-plugin' ),
 			'blabber_footer_start'   => __( 'Blabber Footer Start (Just Above Footer Area)', 'banner-container-plugin' ),
-			'wp_head'                => __( 'Top of Page (After <body>)', 'banner-container-plugin' ),
-			'wp_footer'              => __( 'Footer (Before </body>)', 'banner-container-plugin' ),
 		);
 
 		// Allow theme/plugins to modify available locations.
