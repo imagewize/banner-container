@@ -126,13 +126,13 @@ class IWZ_Banner_Container_Welcome {
 			<div class="iwz-banner-container-section">
 				<h2><?php esc_html_e( 'Available Banner Locations', 'banner-container-plugin' ); ?></h2>
 				<ul style="list-style: disc; margin-left: 20px;">
-					<li><?php esc_html_e( 'Header (before &lt;/head&gt;)', 'banner-container-plugin' ); ?></li>
-					<li><?php esc_html_e( 'Footer (before &lt;/body&gt;)', 'banner-container-plugin' ); ?></li>
 					<li><?php esc_html_e( 'Within Content (with options for placement)', 'banner-container-plugin' ); ?></li>
 					<li><?php esc_html_e( 'Before Sidebar Content (above all sidebar widgets)', 'banner-container-plugin' ); ?></li>
 					<li><?php esc_html_e( 'In Navigation Menu', 'banner-container-plugin' ); ?></li>
 					<li><?php esc_html_e( 'Top Blabber Content Wrap', 'banner-container-plugin' ); ?></li>
 					<li><?php esc_html_e( 'Blabber Footer Start (Just Above Footer Area)', 'banner-container-plugin' ); ?></li>
+					<li><?php esc_html_e( 'Header (after &lt;body&gt; tag) - with background color and alignment options', 'banner-container-plugin' ); ?></li>
+					<li><?php esc_html_e( 'Footer (before &lt;/body&gt; tag) - with background color, alignment, and sticky options', 'banner-container-plugin' ); ?></li>
 				</ul>
 			</div>
 		</div>

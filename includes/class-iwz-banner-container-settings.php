@@ -78,13 +78,13 @@ class IWZ_Banner_Container_Settings {
 	 */
 	public function register_banner_locations() {
 		$this->banner_locations = array(
-			'wp_head'                => __( 'Top of Page (After <body>)', 'banner-container-plugin' ),
-			'wp_footer'              => __( 'Footer (Before </body>)', 'banner-container-plugin' ),
 			'the_content'            => __( 'Within Content', 'banner-container-plugin' ),
 			'dynamic_sidebar_before' => __( 'Before Sidebar Content', 'banner-container-plugin' ),
 			'wp_nav_menu_items'      => __( 'In Navigation Menu', 'banner-container-plugin' ),
 			'content_wrap_inside'    => __( 'Inside Blabber Theme Content Wrap (Top of Content Area)', 'banner-container-plugin' ),
 			'blabber_footer_start'   => __( 'Blabber Footer Start (Just Above Footer Area)', 'banner-container-plugin' ),
+			'wp_head'                => __( 'Header( Top of Page) (After <body>)', 'banner-container-plugin' ),
+			'wp_footer'              => __( 'Footer (Before </body>)', 'banner-container-plugin' ),
 		);
 
 		// Allow theme/plugins to modify available locations.
@@ -156,7 +156,7 @@ class IWZ_Banner_Container_Settings {
 					)
 				);
 
-				// For header and footer banners, add alignment setting.
+				// For header and footer banners, add alignment and wrapper background color settings.
 				if ( in_array( $location_key, array( 'wp_head', 'wp_footer' ), true ) ) {
 					register_setting(
 						'iwz_banner_container_settings',
@@ -165,6 +165,29 @@ class IWZ_Banner_Container_Settings {
 							'type'              => 'string',
 							'sanitize_callback' => 'sanitize_text_field',
 							'default'           => 'left',
+						)
+					);
+
+					register_setting(
+						'iwz_banner_container_settings',
+						'iwz_banner_' . $location_key . '_wrapper_bg_color',
+						array(
+							'type'              => 'string',
+							'sanitize_callback' => 'sanitize_hex_color',
+							'default'           => 'wp_head' === $location_key ? '#ffffff' : '#161515',
+						)
+					);
+				}
+
+				// For footer banners only, add sticky setting.
+				if ( 'wp_footer' === $location_key ) {
+					register_setting(
+						'iwz_banner_container_settings',
+						'iwz_banner_wp_footer_sticky',
+						array(
+							'type'              => 'boolean',
+							'sanitize_callback' => 'rest_sanitize_boolean',
+							'default'           => false,
 						)
 					);
 				}
@@ -713,6 +736,48 @@ class IWZ_Banner_Container_Settings {
 									}
 									?>
 									<table class="form-table">
+										<?php if ( in_array( $location_key, array( 'wp_head', 'wp_footer' ), true ) ) : ?>
+										<tr>
+											<th scope="row">
+												<label for="iwz_banner_<?php echo esc_attr( $location_key ); ?>_wrapper_bg_color">
+													<?php esc_html_e( 'Wrapper Background Color', 'banner-container-plugin' ); ?>
+												</label>
+											</th>
+											<td>
+												<input type="color" 
+													id="iwz_banner_<?php echo esc_attr( $location_key ); ?>_wrapper_bg_color" 
+													name="iwz_banner_<?php echo esc_attr( $location_key ); ?>_wrapper_bg_color" 
+													value="<?php echo esc_attr( get_option( 'iwz_banner_' . $location_key . '_wrapper_bg_color', ( 'wp_head' === $location_key ? '#ffffff' : '#161515' ) ) ); ?>" />
+												<p class="description">
+													<?php esc_html_e( 'Background color for the banner wrapper section.', 'banner-container-plugin' ); ?>
+												</p>
+											</td>
+										</tr>
+										<?php endif; ?>
+										
+										<?php if ( 'wp_footer' === $location_key ) : ?>
+										<tr>
+											<th scope="row">
+												<label for="iwz_banner_wp_footer_sticky">
+													<?php esc_html_e( 'Sticky Footer Banner', 'banner-container-plugin' ); ?>
+												</label>
+											</th>
+											<td>
+												<input type="checkbox" 
+													id="iwz_banner_wp_footer_sticky" 
+													name="iwz_banner_wp_footer_sticky" 
+													value="1" 
+													<?php checked( 1, get_option( 'iwz_banner_wp_footer_sticky', false ) ); ?> />
+												<label for="iwz_banner_wp_footer_sticky">
+													<?php esc_html_e( 'Make footer banners stick to bottom of screen', 'banner-container-plugin' ); ?>
+												</label>
+												<p class="description">
+													<?php esc_html_e( 'When enabled, footer banners will remain fixed at the bottom of the viewport when scrolling.', 'banner-container-plugin' ); ?>
+												</p>
+											</td>
+										</tr>
+										<?php endif; ?>
+										
 										<tr>
 											<td colspan="2">
 												<?php if ( 'dynamic_sidebar_before' === $location_key ) : ?>
@@ -774,6 +839,11 @@ class IWZ_Banner_Container_Settings {
 																					name="iwz_banner_<?php echo esc_attr( $location_key ); ?>_banners[<?php echo esc_attr( $index ); ?>][code]" 
 																					rows="6" 
 																					class="large-text code"><?php echo esc_textarea( $banner['code'] ?? '' ); ?></textarea>
+																		<?php if ( 'wp_footer' === $location_key ) : ?>
+																		<br><button type="button" class="button iwz-test-banner-button" data-target="iwz_<?php echo esc_attr( $location_key ); ?>_banner_code_<?php echo esc_attr( $index ); ?>">
+																			<?php esc_html_e( 'Insert Test Banner', 'banner-container-plugin' ); ?>
+																		</button>
+																		<?php endif; ?>
 																		<p class="description">
 																			<?php esc_html_e( 'Enter the iframe or banner code to insert.', 'banner-container-plugin' ); ?>
 																		</p>
@@ -909,6 +979,16 @@ class IWZ_Banner_Container_Settings {
 		
 		<script>
 		jQuery(document).ready(function($) {
+			// Test banner functionality
+			$(document).on('click', '.iwz-test-banner-button', function() {
+				var targetId = $(this).data('target');
+				var testBanner = '<div style="background: linear-gradient(45deg, #ff6b6b, #4ecdc4); color: white; padding: 20px; text-align: center; font-family: Arial, sans-serif; font-size: 18px; font-weight: bold; border: 3px solid #fff; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">' +
+					'🎯 TEST STICKY BANNER 🎯<br>' +
+					'<span style="font-size: 14px; font-weight: normal;">This is a test banner to verify sticky footer functionality</span>' +
+					'</div>';
+				$('#' + targetId).val(testBanner);
+			});
+			
 			// Helper function to get default wrapper class for a location
 			function getDefaultWrapperClass(location) {
 				var defaults = {
