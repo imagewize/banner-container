@@ -93,9 +93,9 @@
 	margin: 0 !important;
 	padding: 0 !important;
 	box-sizing: border-box !important;
-	display: block !important;
 	visibility: visible !important;
 	opacity: 1 !important;
+	/* Removed display: block to allow flexbox alignment */
 }
 
 /* Ensure wrapper also gets sticky positioning when footer banner is sticky */
@@ -138,6 +138,25 @@
 	opacity: 1 !important;
 	position: relative !important;
 	z-index: 1 !important;
+}
+
+/* Override iframe inline styles for proper alignment */
+.iwz-footer-banner.align-center iframe {
+	max-width: 100% !important;
+	width: auto !important;
+	margin: 0 auto !important;
+}
+
+.iwz-footer-banner.align-left iframe {
+	max-width: 100% !important;
+	width: auto !important;
+	margin: 0 !important;
+}
+
+.iwz-footer-banner.align-right iframe {
+	max-width: 100% !important;
+	width: auto !important;
+	margin: 0 !important;
 }
 
 /*
