@@ -203,26 +203,26 @@
 
 /* Footer Banner Alignment (both sticky and non-sticky) */
 .iwz-footer-banner.align-left {
-    text-align: left !important;
+	text-align: left !important;
 }
 
 .iwz-footer-banner.align-center {
-    text-align: center !important;
+	text-align: center !important;
 }
 
 .iwz-footer-banner.align-right {
-    text-align: right !important;
+	text-align: right !important;
 }
 
 /* Sticky Footer Banner Alignment (for backwards compatibility) */
 .iwz-footer-banner.iwz-sticky.align-left {
-    text-align: left !important;
+	text-align: left !important;
 }
 
 .iwz-footer-banner.iwz-sticky.align-center {
-    text-align: center !important;
+	text-align: center !important;
 }
 
 .iwz-footer-banner.iwz-sticky.align-right {
-    text-align: right !important;
+	text-align: right !important;
 }
