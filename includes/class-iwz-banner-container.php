@@ -799,7 +799,7 @@ class IWZ_Banner_Container {
 
 		// Add alignment class for header and footer banners.
 		if ( in_array( $location, array( 'wp_head', 'wp_footer' ), true ) && ! empty( $alignment ) ) {
-			$classes[] = 'iwz-align-' . sanitize_html_class( $alignment );
+			$classes[] = 'align-' . sanitize_html_class( $alignment );
 		}
 
 		// Add sticky class for footer banners.
