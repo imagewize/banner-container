@@ -143,21 +143,23 @@
 /* Override iframe inline styles for proper alignment */
 .iwz-footer-banner.align-center iframe {
 	max-width: 100% !important;
-	/* Preserve original width attribute but allow centering */
 	display: block !important;
 	margin: 0 auto !important;
+	height: auto !important;
 }
 
 .iwz-footer-banner.align-left iframe {
 	max-width: 100% !important;
 	display: block !important;
 	margin: 0 !important;
+	height: auto !important;
 }
 
 .iwz-footer-banner.align-right iframe {
 	max-width: 100% !important;
 	display: block !important;
 	margin: 0 0 0 auto !important;
+	height: auto !important;
 }
 
 /*
