@@ -201,28 +201,34 @@
 
 }
 
-/* Footer Banner Alignment (both sticky and non-sticky) */
+/* Footer Banner Alignment (both sticky and non-sticky) - Using Flexbox */
 .iwz-footer-banner.align-left {
-	text-align: left !important;
+	display: flex !important;
+	justify-content: flex-start !important;
 }
 
 .iwz-footer-banner.align-center {
-	text-align: center !important;
+	display: flex !important;
+	justify-content: center !important;
 }
 
 .iwz-footer-banner.align-right {
-	text-align: right !important;
+	display: flex !important;
+	justify-content: flex-end !important;
 }
 
-/* Sticky Footer Banner Alignment (for backwards compatibility) */
+/* Sticky Footer Banner Alignment - Using Flexbox (more reliable for fixed positioning) */
 .iwz-footer-banner.iwz-sticky.align-left {
-	text-align: left !important;
+	display: flex !important;
+	justify-content: flex-start !important;
 }
 
 .iwz-footer-banner.iwz-sticky.align-center {
-	text-align: center !important;
+	display: flex !important;
+	justify-content: center !important;
 }
 
 .iwz-footer-banner.iwz-sticky.align-right {
-	text-align: right !important;
+	display: flex !important;
+	justify-content: flex-end !important;
 }
