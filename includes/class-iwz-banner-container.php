@@ -817,6 +817,7 @@ class IWZ_Banner_Container {
 	 * @param string $wrapper_bg_color Background color for header/footer/blabber footer wrapper.
 	 * @param string $wrapper_margin Custom margin for the wrapper.
 	 * @param string $wrapper_padding Custom padding for the wrapper.
+	 * @param string $bottom_spacing Custom bottom spacing for footer banners.
 	 * @return string Wrapped banner HTML or original HTML if no wrapper class.
 	 */
 	private function wrap_banner_html( $banner_html, $wrapper_class = '', $location = '', $alignment = '', $sticky = false, $wrapper_bg_color = '', $wrapper_margin = '', $wrapper_padding = '', $bottom_spacing = '' ) {
