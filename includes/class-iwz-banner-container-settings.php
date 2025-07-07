@@ -174,7 +174,7 @@ class IWZ_Banner_Container_Settings {
 						array(
 							'type'              => 'string',
 							'sanitize_callback' => 'sanitize_hex_color',
-							'default'           => 'wp_head' === $location_key ? '#ffffff' : ( 'wp_footer' === $location_key ? '#161515' : '#ffffff' ),
+							'default'           => 'wp_head' === $location_key ? '#ffffff' : ( 'wp_footer' === $location_key ? '#161515' : '' ),
 						)
 					);
 
@@ -786,7 +786,7 @@ class IWZ_Banner_Container_Settings {
 												<input type="color" 
 													id="iwz_banner_<?php echo esc_attr( $location_key ); ?>_wrapper_bg_color" 
 													name="iwz_banner_<?php echo esc_attr( $location_key ); ?>_wrapper_bg_color" 
-													value="<?php echo esc_attr( get_option( 'iwz_banner_' . $location_key . '_wrapper_bg_color', ( 'wp_head' === $location_key ? '#ffffff' : ( 'wp_footer' === $location_key ? '#161515' : '#ffffff' ) ) ) ); ?>" />
+													value="<?php echo esc_attr( get_option( 'iwz_banner_' . $location_key . '_wrapper_bg_color', ( 'wp_head' === $location_key ? '#ffffff' : ( 'wp_footer' === $location_key ? '#161515' : '' ) ) ) ); ?>" />
 												<p class="description">
 													<?php esc_html_e( 'Background color for the banner wrapper section.', 'banner-container-plugin' ); ?>
 												</p>

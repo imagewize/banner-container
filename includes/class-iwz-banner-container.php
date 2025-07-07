@@ -633,7 +633,7 @@ class IWZ_Banner_Container {
 		}
 
 		// Get global wrapper background color, alignment, and spacing settings.
-		$wrapper_bg_color  = get_option( 'iwz_banner_blabber_footer_start_wrapper_bg_color', '#ffffff' );
+		$wrapper_bg_color  = get_option( 'iwz_banner_blabber_footer_start_wrapper_bg_color', '' );
 		$default_alignment = get_option( 'iwz_banner_blabber_footer_start_alignment', 'left' );
 		$wrapper_margin    = get_option( 'iwz_banner_blabber_footer_start_wrapper_margin', '' );
 		$wrapper_padding   = get_option( 'iwz_banner_blabber_footer_start_wrapper_padding', '' );

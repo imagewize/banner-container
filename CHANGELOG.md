@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
 * New Feature: Added wrapper background color customization for Blabber Footer Start banners.
 * Enhancement: Blabber Footer Start banners now support the same alignment and styling options as header and footer banners.
 * Enhancement: Individual Blabber Footer Start banners can override global alignment settings.
+* Enhancement: Blabber Footer Start banners default to transparent background for cleaner integration.
 * Admin Interface: Added alignment dropdown, margin field, padding field, and background color picker for Blabber Footer Start location.
 * CSS Enhancement: Extended wrapper styling system to include Blabber Footer Start banners with margin and padding support.
 * User Experience: Improved control over Blabber Footer Start banner positioning and spacing, especially for left spacing adjustments.
