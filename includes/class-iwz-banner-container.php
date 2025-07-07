@@ -348,31 +348,6 @@ class IWZ_Banner_Container {
 	 * that prevents the theme from resizing banner iframes in the first place.
 	 */
 
-	/*
-	Commented out code start
-	private function output_banner_alignment_script() {
-		echo '<script type="text/javascript">';
-		echo 'document.addEventListener("DOMContentLoaded", function() {';
-		echo 'function fixBannerAlignment() {';
-		echo 'var footerBanners = document.querySelectorAll(".iwz-footer-banner iframe");';
-		echo 'footerBanners.forEach(function(iframe) {';
-		echo 'var originalWidth = iframe.getAttribute("width");';
-		echo 'var originalHeight = iframe.getAttribute("height");';
-		echo 'if (originalWidth) {';
-		echo 'iframe.style.width = originalWidth + "px";';
-		echo '}';
-		echo 'if (originalHeight) {';
-		echo 'iframe.style.height = originalHeight + "px";';
-		echo '}';
-		echo '});';
-		echo '}';
-		echo 'fixBannerAlignment();';
-		echo 'setTimeout(fixBannerAlignment, 1000);'; // Run again after potential resize scripts.
-		echo '});';
-		echo '</script>';
-	}
-	*/
-
 	/**
 	 * Display banner in content.
 	 *
