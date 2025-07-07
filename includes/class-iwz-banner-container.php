@@ -319,28 +319,38 @@ class IWZ_Banner_Container {
 			return;
 		}
 
-		// Display enabled banners that match device targeting.
-		$banner_index = 0;
+		// Count active banners that will be displayed to determine if we need unique IDs.
+		$active_banners = array();
 		foreach ( $banners as $banner ) {
 			if ( ! empty( $banner['enabled'] ) && ! empty( $banner['code'] ) ) {
 				$device_targeting = $banner['device_targeting'] ?? 'all';
 				if ( $this->should_display_for_device( $device_targeting ) ) {
-					// Use individual banner alignment if set, otherwise use global default.
-					$alignment = $banner['alignment'] ?? get_option( 'iwz_banner_wp_footer_alignment', 'left' );
-					// Use ONLY individual banner sticky setting.
-					$sticky         = isset( $banner['sticky'] ) ? $banner['sticky'] : false;
-					$bottom_spacing = $banner['bottom_spacing'] ?? '';
-					$wrapped_banner = $this->wrap_banner_html( $this->sanitize_banner_html( $banner['code'] ), $banner['wrapper_class'] ?? '', 'wp_footer', $alignment, $sticky, $wrapper_bg_color, '', '', $bottom_spacing, $banner_index );
-					// Add debug comment when sticky is enabled.
-					if ( $sticky ) {
-						echo '<!-- DEBUG: Footer banner with individual sticky enabled -->';
-					} else {
-						echo '<!-- DEBUG: Footer banner with individual sticky disabled -->';
-					}
-					// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Content is sanitized via sanitize_banner_html method and wrapped
-					echo $wrapped_banner;
-					++$banner_index;
+					$active_banners[] = $banner;
 				}
+			}
+		}
+
+		$total_active_banners = count( $active_banners );
+		$banner_index         = $total_active_banners > 1 ? 1 : 0; // Start with 1 if multiple banners, 0 if single.
+
+		// Display enabled banners that match device targeting.
+		foreach ( $active_banners as $banner ) {
+			// Use individual banner alignment if set, otherwise use global default.
+			$alignment = $banner['alignment'] ?? get_option( 'iwz_banner_wp_footer_alignment', 'left' );
+			// Use ONLY individual banner sticky setting.
+			$sticky         = isset( $banner['sticky'] ) ? $banner['sticky'] : false;
+			$bottom_spacing = $banner['bottom_spacing'] ?? '';
+			$wrapped_banner = $this->wrap_banner_html( $this->sanitize_banner_html( $banner['code'] ), $banner['wrapper_class'] ?? '', 'wp_footer', $alignment, $sticky, $wrapper_bg_color, '', '', $bottom_spacing, $banner_index );
+			// Add debug comment when sticky is enabled.
+			if ( $sticky ) {
+				echo '<!-- DEBUG: Footer banner with individual sticky enabled -->';
+			} else {
+				echo '<!-- DEBUG: Footer banner with individual sticky disabled -->';
+			}
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Content is sanitized via sanitize_banner_html method and wrapped
+			echo $wrapped_banner;
+			if ( $total_active_banners > 1 ) {
+				++$banner_index; // Increment index for next banner only if multiple banners.
 			}
 		}
 
