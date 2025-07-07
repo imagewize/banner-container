@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.9.9]
+* Enhancement: Improved footer banner bottom spacing functionality with proper per-banner control.
+* New Feature: Added bottom spacing support to JavaScript for dynamically created footer banners.
+* Bug Fix: Fixed missing bottom spacing field when adding new footer banners via admin interface.
+* Technical Enhancement: Updated wrap_banner_html function to properly handle bottom spacing parameter for footer banners.
+* Code Quality: Enhanced PHPCS compliance throughout the codebase with proper parameter handling.
+* User Experience: Bottom spacing now properly prevents footer banners from covering age verification sliders and other bottom elements.
+* Admin Interface: Bottom spacing field is now properly included when adding new footer banners dynamically.
+
 ## [1.9.8]
 * Breaking Change: Moved alignment, background color, margin, and padding settings from global to per-banner level for `blabber_footer_start` banners.
 * Enhancement: Each Blabber Footer Start banner now has individual control over alignment (left, center, right), background color, margin, and padding settings.
