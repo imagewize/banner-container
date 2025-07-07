@@ -888,7 +888,7 @@ class IWZ_Banner_Container {
 			$wrapper_style_parts[] = 'padding: ' . esc_attr( $wrapper_padding );
 		}
 		if ( ! empty( $bottom_spacing ) && 'wp_footer' === $location ) {
-			// Use 'bottom' property for sticky banners, 'margin-bottom' for non-sticky
+			// Use 'bottom' property for sticky banners, 'margin-bottom' for non-sticky.
 			if ( $sticky ) {
 				$wrapper_style_parts[] = 'bottom: ' . esc_attr( $bottom_spacing );
 			} else {
