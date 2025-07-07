@@ -339,7 +339,7 @@ class IWZ_Banner_Container {
 
 		// COMMENTED OUT: JavaScript solution to fix iframe alignment
 		// This has been replaced with a better solution in the child theme
-		// $this->output_banner_alignment_script();
+		// `$this->output_banner_alignment_script();`.
 	}
 
 	/**
@@ -347,7 +347,9 @@ class IWZ_Banner_Container {
 	 * This method has been replaced with a better solution in the child theme's functions.php
 	 * that prevents the theme from resizing banner iframes in the first place.
 	 */
+
 	/*
+	Commented out code start
 	private function output_banner_alignment_script() {
 		echo '<script type="text/javascript">';
 		echo 'document.addEventListener("DOMContentLoaded", function() {';
