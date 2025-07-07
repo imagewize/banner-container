@@ -336,8 +336,8 @@ class IWZ_Banner_Container {
 				}
 			}
 		}
-		
-		// Add JavaScript to fix iframe inline styles for proper alignment
+
+		// Add JavaScript to fix iframe inline styles for proper alignment.
 		$this->output_banner_alignment_script();
 	}
 
@@ -361,7 +361,7 @@ class IWZ_Banner_Container {
 		echo '});';
 		echo '}';
 		echo 'fixBannerAlignment();';
-		echo 'setTimeout(fixBannerAlignment, 1000);'; // Run again after potential resize scripts
+		echo 'setTimeout(fixBannerAlignment, 1000);'; // Run again after potential resize scripts.
 		echo '});';
 		echo '</script>';
 	}
