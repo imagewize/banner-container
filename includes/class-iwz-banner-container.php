@@ -200,7 +200,7 @@ class IWZ_Banner_Container {
 
 		// Display enabled banners that match device targeting.
 		$banner_output = '';
-		$banner_index = 0;
+		$banner_index  = 0;
 		foreach ( $banners as $banner ) {
 			if ( ! empty( $banner['enabled'] ) && ! empty( $banner['code'] ) ) {
 				$device_targeting = $banner['device_targeting'] ?? 'all';
@@ -209,7 +209,7 @@ class IWZ_Banner_Container {
 					$alignment      = $banner['alignment'] ?? get_option( 'iwz_banner_wp_head_alignment', 'left' );
 					$wrapped_banner = $this->wrap_banner_html( $this->sanitize_banner_html( $banner['code'] ), $banner['wrapper_class'] ?? '', 'wp_head', $alignment, false, $wrapper_bg_color, '', '', '', $banner_index );
 					$banner_output .= $wrapped_banner;
-					$banner_index++;
+					++$banner_index;
 				}
 			}
 		}
@@ -254,7 +254,7 @@ class IWZ_Banner_Container {
 		}
 
 		// Display enabled banners that match device targeting.
-		$banner_html = '';
+		$banner_html  = '';
 		$banner_index = 0;
 		foreach ( $banners as $banner ) {
 			if ( ! empty( $banner['enabled'] ) && ! empty( $banner['code'] ) ) {
@@ -264,7 +264,7 @@ class IWZ_Banner_Container {
 					$alignment      = $banner['alignment'] ?? get_option( 'iwz_banner_wp_head_alignment', 'left' );
 					$wrapped_banner = $this->wrap_banner_html( $this->sanitize_banner_html( $banner['code'] ), $banner['wrapper_class'] ?? '', 'wp_head', $alignment, false, $wrapper_bg_color, '', '', '', $banner_index );
 					$banner_html   .= $wrapped_banner;
-					$banner_index++;
+					++$banner_index;
 				}
 			}
 		}
@@ -339,7 +339,7 @@ class IWZ_Banner_Container {
 					}
 					// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Content is sanitized via sanitize_banner_html method and wrapped
 					echo $wrapped_banner;
-					$banner_index++;
+					++$banner_index;
 				}
 			}
 		}
@@ -826,6 +826,7 @@ class IWZ_Banner_Container {
 	 * @param string $wrapper_margin Custom margin for the wrapper.
 	 * @param string $wrapper_padding Custom padding for the wrapper.
 	 * @param string $bottom_spacing Custom bottom spacing for footer banners.
+	 * @param int    $banner_index The banner index for unique ID generation to prevent conflicts.
 	 * @return string Wrapped banner HTML or original HTML if no wrapper class.
 	 */
 	private function wrap_banner_html( $banner_html, $wrapper_class = '', $location = '', $alignment = '', $sticky = false, $wrapper_bg_color = '', $wrapper_margin = '', $wrapper_padding = '', $bottom_spacing = '', $banner_index = 0 ) {
