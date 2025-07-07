@@ -890,7 +890,7 @@ class IWZ_Banner_Container {
 		if ( ! empty( $bottom_spacing ) && 'wp_footer' === $location ) {
 			// Use 'bottom' property for sticky banners, 'margin-bottom' for non-sticky.
 			if ( $sticky ) {
-				$wrapper_style_parts[] = 'bottom: ' . esc_attr( $bottom_spacing );
+				$wrapper_style_parts[] = 'bottom: ' . esc_attr( $bottom_spacing ) . ' !important';
 			} else {
 				$wrapper_style_parts[] = 'margin-bottom: ' . esc_attr( $bottom_spacing );
 			}
@@ -905,6 +905,10 @@ class IWZ_Banner_Container {
 			$wrapper_classes = 'iwz-banner-wrapper iwz-' . $wrapper_type . '-wrapper';
 			if ( 'wp_footer' === $location && $sticky ) {
 				$wrapper_classes .= ' iwz-sticky-wrapper';
+				// Add bottom spacing class for CSS targeting.
+				if ( ! empty( $bottom_spacing ) ) {
+					$wrapper_classes .= ' iwz-has-bottom-spacing';
+				}
 			}
 
 			return '<div class="' . $wrapper_classes . '" style="' . $wrapper_style . '">' .
