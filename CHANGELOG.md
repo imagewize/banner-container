@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.9.7]
+* New Feature: Added alignment options (left, center, right) for Blabber Footer Start banners.
+* New Feature: Added wrapper margin setting for Blabber Footer Start banners for custom spacing control.
+* New Feature: Added wrapper padding setting for Blabber Footer Start banners for inner spacing control.
+* New Feature: Added wrapper background color customization for Blabber Footer Start banners.
+* Enhancement: Blabber Footer Start banners now support the same alignment and styling options as header and footer banners.
+* Enhancement: Individual Blabber Footer Start banners can override global alignment settings.
+* Admin Interface: Added alignment dropdown, margin field, padding field, and background color picker for Blabber Footer Start location.
+* CSS Enhancement: Extended wrapper styling system to include Blabber Footer Start banners with margin and padding support.
+* User Experience: Improved control over Blabber Footer Start banner positioning and spacing, especially for left spacing adjustments.
+* Backward Compatibility: Existing Blabber Footer Start banners default to left alignment and no additional spacing.
+
 ## [1.9.6]
 * Breaking Change: Removed global sticky footer banner option - sticky behavior is now controlled per individual banner
 * Enhancement: Each footer banner now has its own independent sticky setting for granular control

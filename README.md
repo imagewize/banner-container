@@ -12,7 +12,7 @@ The Banner Container Plugin allows you to easily add iframe codes to various loc
 - Before Sidebar Content - Uses `dynamic_sidebar_before` hook to display banners before any sidebar widgets load, ensuring proper positioning above all sidebar content. Supports multiple banners and device targeting.
 - In Navigation Menu - with support for multiple banners and device targeting
 - Content Wrap (inside content wrapper elements) - **Blabber theme exclusive feature** that targets elements with the `content_wrapper` CSS class. This location uses JavaScript insertion and is specifically designed for the Blabber theme structure.
-- Blabber Footer Start (Top of Footer Area) - **Blabber theme exclusive feature** that displays banners just above the footer element with class `footer_wrap`. This location uses JavaScript insertion and is specifically designed for the Blabber theme footer structure.
+- Blabber Footer Start (Top of Footer Area) - **Blabber theme exclusive feature** that displays banners just above the footer element with class `footer_wrap`. This location uses JavaScript insertion and is specifically designed for the Blabber theme footer structure. Supports alignment options (left, center, right), background color customization, and margin/padding settings for precise spacing control.
 
 ## Requirements
 
@@ -32,12 +32,16 @@ The Banner Container Plugin allows you to easily add iframe codes to various loc
 4. For all banner locations, you can add multiple banners with individual settings:
    - Choose device targeting (all devices, desktop only, or mobile only)
    - Enable or disable individual banners
-5. For header and footer banners, additional options include:
+5. For header, footer, and Blabber Footer Start banners, additional options include:
    - Choose alignment (left, center, or right) for each individual banner
-6. For content banners, additional options include:
+   - Set wrapper background color for enhanced styling
+6. For Blabber Footer Start banners, additional spacing options include:
+   - Set wrapper margin for outer spacing control
+   - Set wrapper padding for inner spacing control
+7. For content banners, additional options include:
    - Choose placement options (top, bottom, or after a specific paragraph)
    - Select which post types to display each banner on
-7. Save your settings
+8. Save your settings
 
 ## Banner Wrapper Classes
 
