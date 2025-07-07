@@ -855,6 +855,10 @@ class IWZ_Banner_Container {
 		// Add sticky class for footer banners.
 		if ( 'wp_footer' === $location && $sticky ) {
 			$classes[] = 'iwz-sticky';
+			// Add bottom spacing class for CSS targeting.
+			if ( ! empty( $bottom_spacing ) ) {
+				$classes[] = 'iwz-has-bottom-spacing';
+			}
 		}
 
 		// Add user-specified classes.
