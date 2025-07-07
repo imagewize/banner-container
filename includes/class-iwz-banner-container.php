@@ -190,7 +190,7 @@ class IWZ_Banner_Container {
 			$legacy_code = get_option( 'iwz_banner_wp_head_code', '' );
 			if ( ! empty( $legacy_code ) ) {
 				$alignment      = get_option( 'iwz_banner_wp_head_alignment', 'left' );
-				$wrapped_banner = $this->wrap_banner_html( $this->sanitize_banner_html( $legacy_code ), '', 'wp_head', $alignment, false, $wrapper_bg_color, '', '', '' );
+				$wrapped_banner = $this->wrap_banner_html( $this->sanitize_banner_html( $legacy_code ), '', 'wp_head', $alignment, false, $wrapper_bg_color, '', '', '', 0 );
 				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Content is sanitized via sanitize_banner_html method
 				echo $wrapped_banner;
 				$this->header_banner_displayed = true;
@@ -200,14 +200,16 @@ class IWZ_Banner_Container {
 
 		// Display enabled banners that match device targeting.
 		$banner_output = '';
+		$banner_index = 0;
 		foreach ( $banners as $banner ) {
 			if ( ! empty( $banner['enabled'] ) && ! empty( $banner['code'] ) ) {
 				$device_targeting = $banner['device_targeting'] ?? 'all';
 				if ( $this->should_display_for_device( $device_targeting ) ) {
 					// Use individual banner alignment if set, otherwise use global default.
 					$alignment      = $banner['alignment'] ?? get_option( 'iwz_banner_wp_head_alignment', 'left' );
-					$wrapped_banner = $this->wrap_banner_html( $this->sanitize_banner_html( $banner['code'] ), $banner['wrapper_class'] ?? '', 'wp_head', $alignment, false, $wrapper_bg_color, '', '', '' );
+					$wrapped_banner = $this->wrap_banner_html( $this->sanitize_banner_html( $banner['code'] ), $banner['wrapper_class'] ?? '', 'wp_head', $alignment, false, $wrapper_bg_color, '', '', '', $banner_index );
 					$banner_output .= $wrapped_banner;
+					$banner_index++;
 				}
 			}
 		}
@@ -244,7 +246,7 @@ class IWZ_Banner_Container {
 			$legacy_code = get_option( 'iwz_banner_wp_head_code', '' );
 			if ( ! empty( $legacy_code ) ) {
 				$alignment      = get_option( 'iwz_banner_wp_head_alignment', 'left' );
-				$wrapped_banner = $this->wrap_banner_html( $legacy_code, '', 'wp_head', $alignment, false, $wrapper_bg_color, '', '', '' );
+				$wrapped_banner = $this->wrap_banner_html( $legacy_code, '', 'wp_head', $alignment, false, $wrapper_bg_color, '', '', '', 0 );
 				$this->output_body_banner_script( $wrapped_banner );
 				$this->header_banner_displayed = true;
 			}
@@ -253,14 +255,16 @@ class IWZ_Banner_Container {
 
 		// Display enabled banners that match device targeting.
 		$banner_html = '';
+		$banner_index = 0;
 		foreach ( $banners as $banner ) {
 			if ( ! empty( $banner['enabled'] ) && ! empty( $banner['code'] ) ) {
 				$device_targeting = $banner['device_targeting'] ?? 'all';
 				if ( $this->should_display_for_device( $device_targeting ) ) {
 					// Use individual banner alignment if set, otherwise use global default.
 					$alignment      = $banner['alignment'] ?? get_option( 'iwz_banner_wp_head_alignment', 'left' );
-					$wrapped_banner = $this->wrap_banner_html( $this->sanitize_banner_html( $banner['code'] ), $banner['wrapper_class'] ?? '', 'wp_head', $alignment, false, $wrapper_bg_color, '', '', '' );
+					$wrapped_banner = $this->wrap_banner_html( $this->sanitize_banner_html( $banner['code'] ), $banner['wrapper_class'] ?? '', 'wp_head', $alignment, false, $wrapper_bg_color, '', '', '', $banner_index );
 					$banner_html   .= $wrapped_banner;
+					$banner_index++;
 				}
 			}
 		}
@@ -308,7 +312,7 @@ class IWZ_Banner_Container {
 			$legacy_code = get_option( 'iwz_banner_wp_footer_code', '' );
 			if ( ! empty( $legacy_code ) ) {
 				$alignment      = get_option( 'iwz_banner_wp_footer_alignment', 'left' );
-				$wrapped_banner = $this->wrap_banner_html( $this->sanitize_banner_html( $legacy_code ), '', 'wp_footer', $alignment, false, $wrapper_bg_color, '', '', '' );
+				$wrapped_banner = $this->wrap_banner_html( $this->sanitize_banner_html( $legacy_code ), '', 'wp_footer', $alignment, false, $wrapper_bg_color, '', '', '', 0 );
 				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Content is sanitized via sanitize_banner_html method
 				echo $wrapped_banner;
 			}
@@ -316,6 +320,7 @@ class IWZ_Banner_Container {
 		}
 
 		// Display enabled banners that match device targeting.
+		$banner_index = 0;
 		foreach ( $banners as $banner ) {
 			if ( ! empty( $banner['enabled'] ) && ! empty( $banner['code'] ) ) {
 				$device_targeting = $banner['device_targeting'] ?? 'all';
@@ -325,7 +330,7 @@ class IWZ_Banner_Container {
 					// Use ONLY individual banner sticky setting.
 					$sticky         = isset( $banner['sticky'] ) ? $banner['sticky'] : false;
 					$bottom_spacing = $banner['bottom_spacing'] ?? '';
-					$wrapped_banner = $this->wrap_banner_html( $this->sanitize_banner_html( $banner['code'] ), $banner['wrapper_class'] ?? '', 'wp_footer', $alignment, $sticky, $wrapper_bg_color, '', '', $bottom_spacing );
+					$wrapped_banner = $this->wrap_banner_html( $this->sanitize_banner_html( $banner['code'] ), $banner['wrapper_class'] ?? '', 'wp_footer', $alignment, $sticky, $wrapper_bg_color, '', '', $bottom_spacing, $banner_index );
 					// Add debug comment when sticky is enabled.
 					if ( $sticky ) {
 						echo '<!-- DEBUG: Footer banner with individual sticky enabled -->';
@@ -334,6 +339,7 @@ class IWZ_Banner_Container {
 					}
 					// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Content is sanitized via sanitize_banner_html method and wrapped
 					echo $wrapped_banner;
+					$banner_index++;
 				}
 			}
 		}
@@ -422,10 +428,10 @@ class IWZ_Banner_Container {
 			// Group by position.
 			switch ( $banner['position'] ?? 'top' ) {
 				case 'top':
-					$top_banners[] = $this->wrap_banner_html( $banner['code'], $banner['wrapper_class'] ?? '', 'the_content', '', false, '', '', '', '' );
+					$top_banners[] = $this->wrap_banner_html( $banner['code'], $banner['wrapper_class'] ?? '', 'the_content', '', false, '', '', '', '', 0 );
 					break;
 				case 'bottom':
-					$bottom_banners[] = $this->wrap_banner_html( $banner['code'], $banner['wrapper_class'] ?? '', 'the_content', '', false, '', '', '', '' );
+					$bottom_banners[] = $this->wrap_banner_html( $banner['code'], $banner['wrapper_class'] ?? '', 'the_content', '', false, '', '', '', '', 0 );
 					break;
 				case 'after_paragraph':
 					$paragraph_number = (int) ( $banner['paragraph'] ?? 3 );
@@ -435,7 +441,7 @@ class IWZ_Banner_Container {
 					if ( ! isset( $paragraph_banners[ $paragraph_number ] ) ) {
 						$paragraph_banners[ $paragraph_number ] = array();
 					}
-					$paragraph_banners[ $paragraph_number ][] = $this->wrap_banner_html( $banner['code'], $banner['wrapper_class'] ?? '', 'the_content', '', false, '', '', '', '' );
+					$paragraph_banners[ $paragraph_number ][] = $this->wrap_banner_html( $banner['code'], $banner['wrapper_class'] ?? '', 'the_content', '', false, '', '', '', '', 0 );
 					break;
 			}
 		}
@@ -508,7 +514,7 @@ class IWZ_Banner_Container {
 				continue;
 			}
 
-			$wrapped_banner = $this->wrap_banner_html( $this->sanitize_banner_html( $banner['code'] ), $banner['wrapper_class'] ?? '', 'dynamic_sidebar_before', '', false, '', '', '', '' );
+			$wrapped_banner = $this->wrap_banner_html( $this->sanitize_banner_html( $banner['code'] ), $banner['wrapper_class'] ?? '', 'dynamic_sidebar_before', '', false, '', '', '', '', 0 );
 			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Content is sanitized via sanitize_banner_html method and wrapped
 			echo $wrapped_banner;
 		}
@@ -555,7 +561,7 @@ class IWZ_Banner_Container {
 			}
 
 			// Wrap in li for proper menu structure.
-			$wrapped_banner = $this->wrap_banner_html( $this->sanitize_banner_html( $banner['code'] ), $banner['wrapper_class'] ?? '', 'wp_nav_menu_items', '', false, '', '', '', '' );
+			$wrapped_banner = $this->wrap_banner_html( $this->sanitize_banner_html( $banner['code'] ), $banner['wrapper_class'] ?? '', 'wp_nav_menu_items', '', false, '', '', '', '', 0 );
 			$banner_html    = '<li class="menu-item iwz-banner-container-menu-item">' . $wrapped_banner . '</li>';
 			$items         .= $banner_html;
 		}
@@ -595,7 +601,7 @@ class IWZ_Banner_Container {
 				continue;
 			}
 
-			$wrapped_banner = $this->wrap_banner_html( $this->sanitize_banner_html( $banner['code'] ), $banner['wrapper_class'] ?? '', 'content_wrap_inside', '', false, '', '', '', '' );
+			$wrapped_banner = $this->wrap_banner_html( $this->sanitize_banner_html( $banner['code'] ), $banner['wrapper_class'] ?? '', 'content_wrap_inside', '', false, '', '', '', '', 0 );
 			$banner_html   .= $wrapped_banner;
 		}
 
@@ -658,7 +664,8 @@ class IWZ_Banner_Container {
 					$wrapper_bg_color,
 					$wrapper_margin,
 					$wrapper_padding,
-					''
+					'',
+					0
 				);
 				$this->output_blabber_footer_start_script( $wrapped_banner );
 			}
@@ -692,7 +699,8 @@ class IWZ_Banner_Container {
 				$wrapper_bg_color,
 				$wrapper_margin,
 				$wrapper_padding,
-				''
+				'',
+				0
 			);
 			$banner_html   .= $wrapped_banner;
 		}
@@ -820,7 +828,7 @@ class IWZ_Banner_Container {
 	 * @param string $bottom_spacing Custom bottom spacing for footer banners.
 	 * @return string Wrapped banner HTML or original HTML if no wrapper class.
 	 */
-	private function wrap_banner_html( $banner_html, $wrapper_class = '', $location = '', $alignment = '', $sticky = false, $wrapper_bg_color = '', $wrapper_margin = '', $wrapper_padding = '', $bottom_spacing = '' ) {
+	private function wrap_banner_html( $banner_html, $wrapper_class = '', $location = '', $alignment = '', $sticky = false, $wrapper_bg_color = '', $wrapper_margin = '', $wrapper_padding = '', $bottom_spacing = '', $banner_index = 0 ) {
 		if ( empty( $banner_html ) ) {
 			return $banner_html;
 		}
@@ -915,7 +923,13 @@ class IWZ_Banner_Container {
 				}
 			}
 
-			return '<div class="' . $wrapper_classes . '" style="' . $wrapper_style . '">' .
+			// Add unique ID for multiple banners to prevent conflicts.
+			$wrapper_id = '';
+			if ( $banner_index > 0 ) {
+				$wrapper_id = ' id="iwz-banner-' . esc_attr( $location ) . '-' . esc_attr( $banner_index ) . '"';
+			}
+
+			return '<div class="' . $wrapper_classes . '"' . $wrapper_id . ' style="' . $wrapper_style . '">' .
 					'<div class="' . esc_attr( $class_string ) . '">' . $banner_html . '</div>' .
 					'</div>';
 		}
