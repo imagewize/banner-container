@@ -719,19 +719,19 @@ class IWZ_Banner_Container_Settings {
 										// Ensure at least one banner for new setups.
 									if ( empty( $location_banners ) ) {
 										$default_banner = array(
-											'code'             => '',
+											'code'    => '',
 											'device_targeting' => 'all',
-											'enabled'          => false,
+											'enabled' => false,
 										);
 
 										// Add default wrapper class based on location.
 										$default_wrapper_classes = array(
-											'content_wrap_inside'    => 'iwz-blabber-header-banner',
-											'blabber_footer_start'   => 'iwz-blabber-footer-banner',
-											'wp_head'                => 'iwz-head-banner',
-											'wp_footer'              => 'iwz-footer-banner',
+											'content_wrap_inside' => 'iwz-blabber-header-banner',
+											'blabber_footer_start' => 'iwz-blabber-footer-banner',
+											'wp_head'   => 'iwz-head-banner',
+											'wp_footer' => 'iwz-footer-banner',
 											'dynamic_sidebar_before' => 'iwz-sidebar-banner',
-											'wp_nav_menu_items'      => 'iwz-menu-banner',
+											'wp_nav_menu_items' => 'iwz-menu-banner',
 										);
 
 										if ( isset( $default_wrapper_classes[ $location_key ] ) ) {
