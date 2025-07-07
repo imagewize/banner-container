@@ -888,7 +888,12 @@ class IWZ_Banner_Container {
 			$wrapper_style_parts[] = 'padding: ' . esc_attr( $wrapper_padding );
 		}
 		if ( ! empty( $bottom_spacing ) && 'wp_footer' === $location ) {
-			$wrapper_style_parts[] = 'margin-bottom: ' . esc_attr( $bottom_spacing );
+			// Use 'bottom' property for sticky banners, 'margin-bottom' for non-sticky
+			if ( $sticky ) {
+				$wrapper_style_parts[] = 'bottom: ' . esc_attr( $bottom_spacing );
+			} else {
+				$wrapper_style_parts[] = 'margin-bottom: ' . esc_attr( $bottom_spacing );
+			}
 		}
 
 		// Add wrapper div for header/footer/blabber footer with styling.
