@@ -190,7 +190,7 @@ class IWZ_Banner_Container {
 			$legacy_code = get_option( 'iwz_banner_wp_head_code', '' );
 			if ( ! empty( $legacy_code ) ) {
 				$alignment      = get_option( 'iwz_banner_wp_head_alignment', 'left' );
-				$wrapped_banner = $this->wrap_banner_html( $this->sanitize_banner_html( $legacy_code ), '', 'wp_head', $alignment, false, $wrapper_bg_color );
+				$wrapped_banner = $this->wrap_banner_html( $this->sanitize_banner_html( $legacy_code ), '', 'wp_head', $alignment, false, $wrapper_bg_color, '', '' );
 				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Content is sanitized via sanitize_banner_html method
 				echo $wrapped_banner;
 				$this->header_banner_displayed = true;
@@ -206,7 +206,7 @@ class IWZ_Banner_Container {
 				if ( $this->should_display_for_device( $device_targeting ) ) {
 					// Use individual banner alignment if set, otherwise use global default.
 					$alignment      = $banner['alignment'] ?? get_option( 'iwz_banner_wp_head_alignment', 'left' );
-					$wrapped_banner = $this->wrap_banner_html( $this->sanitize_banner_html( $banner['code'] ), $banner['wrapper_class'] ?? '', 'wp_head', $alignment, false, $wrapper_bg_color );
+					$wrapped_banner = $this->wrap_banner_html( $this->sanitize_banner_html( $banner['code'] ), $banner['wrapper_class'] ?? '', 'wp_head', $alignment, false, $wrapper_bg_color, '', '' );
 					$banner_output .= $wrapped_banner;
 				}
 			}
@@ -244,7 +244,7 @@ class IWZ_Banner_Container {
 			$legacy_code = get_option( 'iwz_banner_wp_head_code', '' );
 			if ( ! empty( $legacy_code ) ) {
 				$alignment      = get_option( 'iwz_banner_wp_head_alignment', 'left' );
-				$wrapped_banner = $this->wrap_banner_html( $legacy_code, '', 'wp_head', $alignment, false, $wrapper_bg_color );
+				$wrapped_banner = $this->wrap_banner_html( $legacy_code, '', 'wp_head', $alignment, false, $wrapper_bg_color, '', '' );
 				$this->output_body_banner_script( $wrapped_banner );
 				$this->header_banner_displayed = true;
 			}
@@ -259,7 +259,7 @@ class IWZ_Banner_Container {
 				if ( $this->should_display_for_device( $device_targeting ) ) {
 					// Use individual banner alignment if set, otherwise use global default.
 					$alignment      = $banner['alignment'] ?? get_option( 'iwz_banner_wp_head_alignment', 'left' );
-					$wrapped_banner = $this->wrap_banner_html( $this->sanitize_banner_html( $banner['code'] ), $banner['wrapper_class'] ?? '', 'wp_head', $alignment, false, $wrapper_bg_color );
+					$wrapped_banner = $this->wrap_banner_html( $this->sanitize_banner_html( $banner['code'] ), $banner['wrapper_class'] ?? '', 'wp_head', $alignment, false, $wrapper_bg_color, '', '' );
 					$banner_html   .= $wrapped_banner;
 				}
 			}
@@ -308,7 +308,7 @@ class IWZ_Banner_Container {
 			$legacy_code = get_option( 'iwz_banner_wp_footer_code', '' );
 			if ( ! empty( $legacy_code ) ) {
 				$alignment      = get_option( 'iwz_banner_wp_footer_alignment', 'left' );
-				$wrapped_banner = $this->wrap_banner_html( $this->sanitize_banner_html( $legacy_code ), '', 'wp_footer', $alignment, false, $wrapper_bg_color );
+				$wrapped_banner = $this->wrap_banner_html( $this->sanitize_banner_html( $legacy_code ), '', 'wp_footer', $alignment, false, $wrapper_bg_color, '', '' );
 				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Content is sanitized via sanitize_banner_html method
 				echo $wrapped_banner;
 			}
@@ -324,7 +324,7 @@ class IWZ_Banner_Container {
 					$alignment = $banner['alignment'] ?? get_option( 'iwz_banner_wp_footer_alignment', 'left' );
 					// Use ONLY individual banner sticky setting.
 					$sticky         = isset( $banner['sticky'] ) ? $banner['sticky'] : false;
-					$wrapped_banner = $this->wrap_banner_html( $this->sanitize_banner_html( $banner['code'] ), $banner['wrapper_class'] ?? '', 'wp_footer', $alignment, $sticky, $wrapper_bg_color );
+					$wrapped_banner = $this->wrap_banner_html( $this->sanitize_banner_html( $banner['code'] ), $banner['wrapper_class'] ?? '', 'wp_footer', $alignment, $sticky, $wrapper_bg_color, '', '' );
 					// Add debug comment when sticky is enabled.
 					if ( $sticky ) {
 						echo '<!-- DEBUG: Footer banner with individual sticky enabled -->';
@@ -421,10 +421,10 @@ class IWZ_Banner_Container {
 			// Group by position.
 			switch ( $banner['position'] ?? 'top' ) {
 				case 'top':
-					$top_banners[] = $this->wrap_banner_html( $banner['code'], $banner['wrapper_class'] ?? '', 'the_content' );
+					$top_banners[] = $this->wrap_banner_html( $banner['code'], $banner['wrapper_class'] ?? '', 'the_content', '', false, '', '', '' );
 					break;
 				case 'bottom':
-					$bottom_banners[] = $this->wrap_banner_html( $banner['code'], $banner['wrapper_class'] ?? '', 'the_content' );
+					$bottom_banners[] = $this->wrap_banner_html( $banner['code'], $banner['wrapper_class'] ?? '', 'the_content', '', false, '', '', '' );
 					break;
 				case 'after_paragraph':
 					$paragraph_number = (int) ( $banner['paragraph'] ?? 3 );
@@ -434,7 +434,7 @@ class IWZ_Banner_Container {
 					if ( ! isset( $paragraph_banners[ $paragraph_number ] ) ) {
 						$paragraph_banners[ $paragraph_number ] = array();
 					}
-					$paragraph_banners[ $paragraph_number ][] = $this->wrap_banner_html( $banner['code'], $banner['wrapper_class'] ?? '', 'the_content' );
+					$paragraph_banners[ $paragraph_number ][] = $this->wrap_banner_html( $banner['code'], $banner['wrapper_class'] ?? '', 'the_content', '', false, '', '', '' );
 					break;
 			}
 		}
@@ -507,7 +507,7 @@ class IWZ_Banner_Container {
 				continue;
 			}
 
-			$wrapped_banner = $this->wrap_banner_html( $this->sanitize_banner_html( $banner['code'] ), $banner['wrapper_class'] ?? '', 'dynamic_sidebar_before' );
+			$wrapped_banner = $this->wrap_banner_html( $this->sanitize_banner_html( $banner['code'] ), $banner['wrapper_class'] ?? '', 'dynamic_sidebar_before', '', false, '', '', '' );
 			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Content is sanitized via sanitize_banner_html method and wrapped
 			echo $wrapped_banner;
 		}
@@ -554,7 +554,7 @@ class IWZ_Banner_Container {
 			}
 
 			// Wrap in li for proper menu structure.
-			$wrapped_banner = $this->wrap_banner_html( $this->sanitize_banner_html( $banner['code'] ), $banner['wrapper_class'] ?? '', 'wp_nav_menu_items' );
+			$wrapped_banner = $this->wrap_banner_html( $this->sanitize_banner_html( $banner['code'] ), $banner['wrapper_class'] ?? '', 'wp_nav_menu_items', '', false, '', '', '' );
 			$banner_html    = '<li class="menu-item iwz-banner-container-menu-item">' . $wrapped_banner . '</li>';
 			$items         .= $banner_html;
 		}
@@ -594,7 +594,7 @@ class IWZ_Banner_Container {
 				continue;
 			}
 
-			$wrapped_banner = $this->wrap_banner_html( $this->sanitize_banner_html( $banner['code'] ), $banner['wrapper_class'] ?? '', 'content_wrap_inside' );
+			$wrapped_banner = $this->wrap_banner_html( $this->sanitize_banner_html( $banner['code'] ), $banner['wrapper_class'] ?? '', 'content_wrap_inside', '', false, '', '', '' );
 			$banner_html   .= $wrapped_banner;
 		}
 
@@ -627,6 +627,9 @@ class IWZ_Banner_Container {
 	/**
 	 * Display banner at the start of Blabber footer.
 	 */
+	/**
+	 * Display banner in Blabber footer start position.
+	 */
 	public function display_blabber_footer_start_banner() {
 		if ( ! get_option( 'iwz_banner_blabber_footer_start_enabled' ) ) {
 			return;
@@ -639,12 +642,28 @@ class IWZ_Banner_Container {
 			// Check for legacy single banner.
 			$legacy_code = get_option( 'iwz_banner_blabber_footer_start_code', '' );
 			if ( ! empty( $legacy_code ) ) {
-				$this->output_blabber_footer_start_script( $legacy_code );
+				// Use legacy global settings for backward compatibility.
+				$wrapper_bg_color  = get_option( 'iwz_banner_blabber_footer_start_wrapper_bg_color', '' );
+				$default_alignment = get_option( 'iwz_banner_blabber_footer_start_alignment', 'left' );
+				$wrapper_margin    = get_option( 'iwz_banner_blabber_footer_start_wrapper_margin', '' );
+				$wrapper_padding   = get_option( 'iwz_banner_blabber_footer_start_wrapper_padding', '' );
+
+				$wrapped_banner = $this->wrap_banner_html(
+					$this->sanitize_banner_html( $legacy_code ),
+					'',
+					'blabber_footer_start',
+					$default_alignment,
+					false,
+					$wrapper_bg_color,
+					$wrapper_margin,
+					$wrapper_padding
+				);
+				$this->output_blabber_footer_start_script( $wrapped_banner );
 			}
 			return;
 		}
 
-		// Display multiple banners with device targeting.
+		// Display multiple banners with device targeting and individual settings.
 		$banner_html = '';
 		foreach ( $banners as $banner ) {
 			if ( empty( $banner['enabled'] ) || empty( $banner['code'] ) ) {
@@ -656,7 +675,22 @@ class IWZ_Banner_Container {
 				continue;
 			}
 
-			$wrapped_banner = $this->wrap_banner_html( $this->sanitize_banner_html( $banner['code'] ), $banner['wrapper_class'] ?? '', 'blabber_footer_start' );
+			// Use individual banner settings with fallbacks to defaults.
+			$alignment        = $banner['alignment'] ?? 'left';
+			$wrapper_bg_color = $banner['wrapper_bg_color'] ?? '';
+			$wrapper_margin   = $banner['wrapper_margin'] ?? '';
+			$wrapper_padding  = $banner['wrapper_padding'] ?? '';
+
+			$wrapped_banner = $this->wrap_banner_html(
+				$this->sanitize_banner_html( $banner['code'] ),
+				$banner['wrapper_class'] ?? '',
+				'blabber_footer_start',
+				$alignment,
+				false,
+				$wrapper_bg_color,
+				$wrapper_margin,
+				$wrapper_padding
+			);
 			$banner_html   .= $wrapped_banner;
 		}
 
@@ -775,12 +809,14 @@ class IWZ_Banner_Container {
 	 * @param string $banner_html The banner HTML content.
 	 * @param string $wrapper_class The CSS class for the wrapper div.
 	 * @param string $location The banner location for default class determination.
-	 * @param string $alignment The alignment for header/footer banners (left, center, right).
+	 * @param string $alignment The alignment for header/footer/blabber footer banners (left, center, right).
 	 * @param bool   $sticky Whether footer banner should be sticky (footer only).
-	 * @param string $wrapper_bg_color Background color for header/footer wrapper.
+	 * @param string $wrapper_bg_color Background color for header/footer/blabber footer wrapper.
+	 * @param string $wrapper_margin Custom margin for the wrapper.
+	 * @param string $wrapper_padding Custom padding for the wrapper.
 	 * @return string Wrapped banner HTML or original HTML if no wrapper class.
 	 */
-	private function wrap_banner_html( $banner_html, $wrapper_class = '', $location = '', $alignment = '', $sticky = false, $wrapper_bg_color = '' ) {
+	private function wrap_banner_html( $banner_html, $wrapper_class = '', $location = '', $alignment = '', $sticky = false, $wrapper_bg_color = '', $wrapper_margin = '', $wrapper_padding = '' ) {
 		if ( empty( $banner_html ) ) {
 			return $banner_html;
 		}
@@ -807,8 +843,8 @@ class IWZ_Banner_Container {
 		// Always add code-block class as second default for age verification support.
 		$classes[] = 'code-block';
 
-		// Add alignment class for header and footer banners.
-		if ( in_array( $location, array( 'wp_head', 'wp_footer' ), true ) && ! empty( $alignment ) ) {
+		// Add alignment class for header, footer, and blabber footer banners.
+		if ( in_array( $location, array( 'wp_head', 'wp_footer', 'blabber_footer_start' ), true ) && ! empty( $alignment ) ) {
 			$classes[] = 'align-' . sanitize_html_class( $alignment );
 		}
 
@@ -836,10 +872,22 @@ class IWZ_Banner_Container {
 		// Create class string.
 		$class_string = implode( ' ', array_filter( $classes ) );
 
-		// Add wrapper div for header/footer with background color.
-		if ( in_array( $location, array( 'wp_head', 'wp_footer' ), true ) && ! empty( $wrapper_bg_color ) ) {
-			$wrapper_type  = 'wp_head' === $location ? 'header' : 'footer';
-			$wrapper_style = 'background-color: ' . esc_attr( $wrapper_bg_color ) . ';';
+		// Build wrapper style.
+		$wrapper_style_parts = array();
+		if ( ! empty( $wrapper_bg_color ) ) {
+			$wrapper_style_parts[] = 'background-color: ' . esc_attr( $wrapper_bg_color );
+		}
+		if ( ! empty( $wrapper_margin ) ) {
+			$wrapper_style_parts[] = 'margin: ' . esc_attr( $wrapper_margin );
+		}
+		if ( ! empty( $wrapper_padding ) ) {
+			$wrapper_style_parts[] = 'padding: ' . esc_attr( $wrapper_padding );
+		}
+
+		// Add wrapper div for header/footer/blabber footer with styling.
+		if ( in_array( $location, array( 'wp_head', 'wp_footer', 'blabber_footer_start' ), true ) && ! empty( $wrapper_style_parts ) ) {
+			$wrapper_type  = 'wp_head' === $location ? 'header' : ( 'wp_footer' === $location ? 'footer' : 'blabber-footer' );
+			$wrapper_style = implode( '; ', $wrapper_style_parts ) . ';';
 
 			// Add sticky class to wrapper for footer banners when sticky is enabled.
 			$wrapper_classes = 'iwz-banner-wrapper iwz-' . $wrapper_type . '-wrapper';
