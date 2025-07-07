@@ -336,11 +336,18 @@ class IWZ_Banner_Container {
 				}
 			}
 		}
+
+		// COMMENTED OUT: JavaScript solution to fix iframe alignment
+		// This has been replaced with a better solution in the child theme
+		// $this->output_banner_alignment_script();
 	}
 
 	/**
-	 * Output JavaScript to fix iframe inline styles that interfere with alignment.
+	 * COMMENTED OUT: Output JavaScript to fix iframe inline styles that interfere with alignment.
+	 * This method has been replaced with a better solution in the child theme's functions.php
+	 * that prevents the theme from resizing banner iframes in the first place.
 	 */
+	/*
 	private function output_banner_alignment_script() {
 		echo '<script type="text/javascript">';
 		echo 'document.addEventListener("DOMContentLoaded", function() {';
@@ -362,6 +369,7 @@ class IWZ_Banner_Container {
 		echo '});';
 		echo '</script>';
 	}
+	*/
 
 	/**
 	 * Display banner in content.
