@@ -627,16 +627,13 @@ class IWZ_Banner_Container {
 	/**
 	 * Display banner at the start of Blabber footer.
 	 */
+	/**
+	 * Display banner in Blabber footer start position.
+	 */
 	public function display_blabber_footer_start_banner() {
 		if ( ! get_option( 'iwz_banner_blabber_footer_start_enabled' ) ) {
 			return;
 		}
-
-		// Get global wrapper background color, alignment, and spacing settings.
-		$wrapper_bg_color  = get_option( 'iwz_banner_blabber_footer_start_wrapper_bg_color', '' );
-		$default_alignment = get_option( 'iwz_banner_blabber_footer_start_alignment', 'left' );
-		$wrapper_margin    = get_option( 'iwz_banner_blabber_footer_start_wrapper_margin', '' );
-		$wrapper_padding   = get_option( 'iwz_banner_blabber_footer_start_wrapper_padding', '' );
 
 		// Get multiple banners or fall back to legacy single banner.
 		$banners = get_option( 'iwz_banner_blabber_footer_start_banners', array() );
@@ -645,6 +642,12 @@ class IWZ_Banner_Container {
 			// Check for legacy single banner.
 			$legacy_code = get_option( 'iwz_banner_blabber_footer_start_code', '' );
 			if ( ! empty( $legacy_code ) ) {
+				// Use legacy global settings for backward compatibility.
+				$wrapper_bg_color  = get_option( 'iwz_banner_blabber_footer_start_wrapper_bg_color', '' );
+				$default_alignment = get_option( 'iwz_banner_blabber_footer_start_alignment', 'left' );
+				$wrapper_margin    = get_option( 'iwz_banner_blabber_footer_start_wrapper_margin', '' );
+				$wrapper_padding   = get_option( 'iwz_banner_blabber_footer_start_wrapper_padding', '' );
+
 				$wrapped_banner = $this->wrap_banner_html(
 					$this->sanitize_banner_html( $legacy_code ),
 					'',
@@ -660,7 +663,7 @@ class IWZ_Banner_Container {
 			return;
 		}
 
-		// Display multiple banners with device targeting.
+		// Display multiple banners with device targeting and individual settings.
 		$banner_html = '';
 		foreach ( $banners as $banner ) {
 			if ( empty( $banner['enabled'] ) || empty( $banner['code'] ) ) {
@@ -672,8 +675,12 @@ class IWZ_Banner_Container {
 				continue;
 			}
 
-			// Use individual banner alignment if set, otherwise use global default.
-			$alignment      = $banner['alignment'] ?? $default_alignment;
+			// Use individual banner settings with fallbacks to defaults.
+			$alignment        = $banner['alignment'] ?? 'left';
+			$wrapper_bg_color = $banner['wrapper_bg_color'] ?? '';
+			$wrapper_margin   = $banner['wrapper_margin'] ?? '';
+			$wrapper_padding  = $banner['wrapper_padding'] ?? '';
+
 			$wrapped_banner = $this->wrap_banner_html(
 				$this->sanitize_banner_html( $banner['code'] ),
 				$banner['wrapper_class'] ?? '',

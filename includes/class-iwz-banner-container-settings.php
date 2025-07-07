@@ -156,8 +156,8 @@ class IWZ_Banner_Container_Settings {
 					)
 				);
 
-				// For header, footer, and blabber footer banners, add alignment and wrapper styling settings.
-				if ( in_array( $location_key, array( 'wp_head', 'wp_footer', 'blabber_footer_start' ), true ) ) {
+				// For header and footer banners, add alignment and wrapper styling settings.
+				if ( in_array( $location_key, array( 'wp_head', 'wp_footer' ), true ) ) {
 					register_setting(
 						'iwz_banner_container_settings',
 						'iwz_banner_' . $location_key . '_alignment',
@@ -174,32 +174,9 @@ class IWZ_Banner_Container_Settings {
 						array(
 							'type'              => 'string',
 							'sanitize_callback' => 'sanitize_hex_color',
-							'default'           => 'wp_head' === $location_key ? '#ffffff' : ( 'wp_footer' === $location_key ? '#161515' : '' ),
+							'default'           => 'wp_head' === $location_key ? '#ffffff' : '#161515',
 						)
 					);
-
-					// Add margin and padding settings for blabber footer start.
-					if ( 'blabber_footer_start' === $location_key ) {
-						register_setting(
-							'iwz_banner_container_settings',
-							'iwz_banner_' . $location_key . '_wrapper_margin',
-							array(
-								'type'              => 'string',
-								'sanitize_callback' => 'sanitize_text_field',
-								'default'           => '',
-							)
-						);
-
-						register_setting(
-							'iwz_banner_container_settings',
-							'iwz_banner_' . $location_key . '_wrapper_padding',
-							array(
-								'type'              => 'string',
-								'sanitize_callback' => 'sanitize_text_field',
-								'default'           => '',
-							)
-						);
-					}
 				}
 
 				// Keep legacy settings for backward compatibility.
@@ -359,7 +336,7 @@ class IWZ_Banner_Container_Settings {
 				'wrapper_class'    => sanitize_text_field( $banner['wrapper_class'] ?? '' ),
 			);
 
-			// Add alignment for head/footer banners.
+			// Add alignment for head/footer/blabber_footer_start banners.
 			if ( isset( $banner['alignment'] ) ) {
 				$sanitized_banner['alignment'] = sanitize_text_field( $banner['alignment'] );
 			}
@@ -367,6 +344,20 @@ class IWZ_Banner_Container_Settings {
 			// Add sticky setting for footer banners.
 			if ( isset( $banner['sticky'] ) ) {
 				$sanitized_banner['sticky'] = ! empty( $banner['sticky'] );
+			}
+
+			// Add background color for head/footer/blabber_footer_start banners.
+			if ( isset( $banner['wrapper_bg_color'] ) ) {
+				$sanitized_banner['wrapper_bg_color'] = sanitize_hex_color( $banner['wrapper_bg_color'] );
+			}
+
+			// Add margin and padding for blabber_footer_start banners.
+			if ( isset( $banner['wrapper_margin'] ) ) {
+				$sanitized_banner['wrapper_margin'] = sanitize_text_field( $banner['wrapper_margin'] );
+			}
+
+			if ( isset( $banner['wrapper_padding'] ) ) {
+				$sanitized_banner['wrapper_padding'] = sanitize_text_field( $banner['wrapper_padding'] );
 			}
 
 			// Add content-specific fields if they exist.
@@ -728,30 +719,52 @@ class IWZ_Banner_Container_Settings {
 										// Ensure at least one banner for new setups.
 									if ( empty( $location_banners ) ) {
 										$default_banner = array(
-											'code'    => '',
+											'code'             => '',
 											'device_targeting' => 'all',
-											'enabled' => false,
+											'enabled'          => false,
 										);
 
 										// Add default wrapper class based on location.
 										$default_wrapper_classes = array(
-											'content_wrap_inside' => 'iwz-blabber-header-banner',
-											'blabber_footer_start' => 'iwz-blabber-footer-banner',
-											'wp_head'   => 'iwz-head-banner',
-											'wp_footer' => 'iwz-footer-banner',
+											'content_wrap_inside'    => 'iwz-blabber-header-banner',
+											'blabber_footer_start'   => 'iwz-blabber-footer-banner',
+											'wp_head'                => 'iwz-head-banner',
+											'wp_footer'              => 'iwz-footer-banner',
 											'dynamic_sidebar_before' => 'iwz-sidebar-banner',
-											'wp_nav_menu_items' => 'iwz-menu-banner',
+											'wp_nav_menu_items'      => 'iwz-menu-banner',
 										);
 
 										if ( isset( $default_wrapper_classes[ $location_key ] ) ) {
 											$default_banner['wrapper_class'] = $default_wrapper_classes[ $location_key ];
 										}
 
+										// Add default alignment for header, footer, and blabber_footer_start banners.
+										if ( in_array( $location_key, array( 'wp_head', 'wp_footer', 'blabber_footer_start' ), true ) ) {
+											$default_banner['alignment'] = 'left';
+										}
+
+										// Add default background color for header, footer, and blabber_footer_start banners.
+										if ( in_array( $location_key, array( 'wp_head', 'wp_footer', 'blabber_footer_start' ), true ) ) {
+											if ( 'wp_head' === $location_key ) {
+												$default_banner['wrapper_bg_color'] = '#ffffff';
+											} elseif ( 'wp_footer' === $location_key ) {
+												$default_banner['wrapper_bg_color'] = '#161515';
+											} else {
+												$default_banner['wrapper_bg_color'] = '';
+											}
+										}
+
+										// Add default margin and padding for blabber_footer_start banners.
+										if ( 'blabber_footer_start' === $location_key ) {
+											$default_banner['wrapper_margin']  = '';
+											$default_banner['wrapper_padding'] = '';
+										}
+
 										$location_banners = array( $default_banner );
 									}
 									?>
 									<table class="form-table">
-										<?php if ( in_array( $location_key, array( 'wp_head', 'wp_footer', 'blabber_footer_start' ), true ) ) : ?>
+										<?php if ( in_array( $location_key, array( 'wp_head', 'wp_footer' ), true ) ) : ?>
 										<tr>
 											<th scope="row">
 												<label for="iwz_banner_<?php echo esc_attr( $location_key ); ?>_alignment">
@@ -786,50 +799,12 @@ class IWZ_Banner_Container_Settings {
 												<input type="color" 
 													id="iwz_banner_<?php echo esc_attr( $location_key ); ?>_wrapper_bg_color" 
 													name="iwz_banner_<?php echo esc_attr( $location_key ); ?>_wrapper_bg_color" 
-													value="<?php echo esc_attr( get_option( 'iwz_banner_' . $location_key . '_wrapper_bg_color', ( 'wp_head' === $location_key ? '#ffffff' : ( 'wp_footer' === $location_key ? '#161515' : '' ) ) ) ); ?>" />
+													value="<?php echo esc_attr( get_option( 'iwz_banner_' . $location_key . '_wrapper_bg_color', ( 'wp_head' === $location_key ? '#ffffff' : '#161515' ) ) ); ?>" />
 												<p class="description">
 													<?php esc_html_e( 'Background color for the banner wrapper section.', 'banner-container-plugin' ); ?>
 												</p>
 											</td>
 										</tr>
-											<?php if ( 'blabber_footer_start' === $location_key ) : ?>
-										<tr>
-											<th scope="row">
-												<label for="iwz_banner_<?php echo esc_attr( $location_key ); ?>_wrapper_margin">
-													<?php esc_html_e( 'Wrapper Margin', 'banner-container-plugin' ); ?>
-												</label>
-											</th>
-											<td>
-												<input type="text" 
-													id="iwz_banner_<?php echo esc_attr( $location_key ); ?>_wrapper_margin" 
-													name="iwz_banner_<?php echo esc_attr( $location_key ); ?>_wrapper_margin" 
-													value="<?php echo esc_attr( get_option( 'iwz_banner_' . $location_key . '_wrapper_margin', '' ) ); ?>" 
-													class="regular-text" 
-													placeholder="e.g., 10px 0 or 1rem auto" />
-												<p class="description">
-													<?php esc_html_e( 'CSS margin for the banner wrapper. Use this to add spacing around the banner. Example: "0 20px" for left/right spacing.', 'banner-container-plugin' ); ?>
-												</p>
-											</td>
-										</tr>
-										<tr>
-											<th scope="row">
-												<label for="iwz_banner_<?php echo esc_attr( $location_key ); ?>_wrapper_padding">
-													<?php esc_html_e( 'Wrapper Padding', 'banner-container-plugin' ); ?>
-												</label>
-											</th>
-											<td>
-												<input type="text" 
-													id="iwz_banner_<?php echo esc_attr( $location_key ); ?>_wrapper_padding" 
-													name="iwz_banner_<?php echo esc_attr( $location_key ); ?>_wrapper_padding" 
-													value="<?php echo esc_attr( get_option( 'iwz_banner_' . $location_key . '_wrapper_padding', '' ) ); ?>" 
-													class="regular-text" 
-													placeholder="e.g., 20px or 1rem 2rem" />
-												<p class="description">
-													<?php esc_html_e( 'CSS padding for the banner wrapper. Use this to add inner spacing within the banner wrapper.', 'banner-container-plugin' ); ?>
-												</p>
-											</td>
-										</tr>
-										<?php endif; ?>
 										<?php endif; ?>
 										
 										<tr>
@@ -925,6 +900,62 @@ class IWZ_Banner_Container_Settings {
 																		</select>
 																		<p class="description">
 																			<?php esc_html_e( 'Choose the alignment for this banner.', 'banner-container-plugin' ); ?>
+																		</p>
+																	</td>
+																</tr>
+																<?php endif; ?>
+																<?php if ( in_array( $location_key, array( 'wp_head', 'wp_footer', 'blabber_footer_start' ), true ) ) : ?>
+																<tr>
+																	<th scope="row">
+																		<label for="iwz_<?php echo esc_attr( $location_key ); ?>_banner_wrapper_bg_color_<?php echo esc_attr( $index ); ?>">
+																			<?php esc_html_e( 'Wrapper Background Color', 'banner-container-plugin' ); ?>
+																		</label>
+																	</th>
+																	<td>
+																		<input type="color" 
+																			id="iwz_<?php echo esc_attr( $location_key ); ?>_banner_wrapper_bg_color_<?php echo esc_attr( $index ); ?>" 
+																			name="iwz_banner_<?php echo esc_attr( $location_key ); ?>_banners[<?php echo esc_attr( $index ); ?>][wrapper_bg_color]" 
+																			value="<?php echo esc_attr( $banner['wrapper_bg_color'] ?? ( 'wp_head' === $location_key ? '#ffffff' : ( 'wp_footer' === $location_key ? '#161515' : '' ) ) ); ?>" />
+																		<p class="description">
+																			<?php esc_html_e( 'Background color for this banner wrapper.', 'banner-container-plugin' ); ?>
+																		</p>
+																	</td>
+																</tr>
+																<?php endif; ?>
+																<?php if ( 'blabber_footer_start' === $location_key ) : ?>
+																<tr>
+																	<th scope="row">
+																		<label for="iwz_<?php echo esc_attr( $location_key ); ?>_banner_wrapper_margin_<?php echo esc_attr( $index ); ?>">
+																			<?php esc_html_e( 'Wrapper Margin', 'banner-container-plugin' ); ?>
+																		</label>
+																	</th>
+																	<td>
+																		<input type="text" 
+																			id="iwz_<?php echo esc_attr( $location_key ); ?>_banner_wrapper_margin_<?php echo esc_attr( $index ); ?>" 
+																			name="iwz_banner_<?php echo esc_attr( $location_key ); ?>_banners[<?php echo esc_attr( $index ); ?>][wrapper_margin]" 
+																			value="<?php echo esc_attr( $banner['wrapper_margin'] ?? '' ); ?>" 
+																			class="regular-text" 
+																			placeholder="e.g., 10px 0 or 1rem auto" />
+																		<p class="description">
+																			<?php esc_html_e( 'CSS margin for this banner wrapper. Use this to add spacing around the banner. Example: "0 20px" for left/right spacing.', 'banner-container-plugin' ); ?>
+																		</p>
+																	</td>
+																</tr>
+																<tr>
+																	<th scope="row">
+																		<label for="iwz_<?php echo esc_attr( $location_key ); ?>_banner_wrapper_padding_<?php echo esc_attr( $index ); ?>">
+																			<?php esc_html_e( 'Wrapper Padding', 'banner-container-plugin' ); ?>
+																		</label>
+																	</th>
+																	<td>
+																		<input type="text" 
+																			id="iwz_<?php echo esc_attr( $location_key ); ?>_banner_wrapper_padding_<?php echo esc_attr( $index ); ?>" 
+																			name="iwz_banner_<?php echo esc_attr( $location_key ); ?>_banners[<?php echo esc_attr( $index ); ?>][wrapper_padding]" 
+																			value="<?php echo esc_attr( $banner['wrapper_padding'] ?? '' ); ?>" 
+																			class="regular-text" 
+																			placeholder="e.g., 20px or 1rem 2rem" />
+																		<p class="description">
+																			<?php esc_html_e( 'CSS padding for this banner wrapper. Use this to add inner spacing within the banner wrapper.', 'banner-container-plugin' ); ?>
 																		</p>
 																	</td>
 																</tr>

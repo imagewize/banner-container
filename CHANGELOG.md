@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.9.8]
+* Breaking Change: Moved alignment, background color, margin, and padding settings from global to per-banner level for `blabber_footer_start` banners.
+* Enhancement: Each Blabber Footer Start banner now has individual control over alignment (left, center, right), background color, margin, and padding settings.
+* User Experience: Allows different styling for mobile and desktop Blabber Footer Start banners through device targeting and individual banner settings.
+* Admin Interface: Removed global alignment, margin, and padding fields for Blabber Footer Start location, added per-banner controls instead.
+* Backward Compatibility: Legacy global settings are still supported for existing single banner configurations.
+* Code Quality: Updated sanitization functions to handle per-banner styling settings with proper PHPCS compliance.
+* Technical Enhancement: Simplified settings structure by removing redundant global styling options for Blabber Footer Start banners.
+
 ## [1.9.7]
 * New Feature: Added alignment options (left, center, right) for Blabber Footer Start banners.
 * New Feature: Added wrapper margin setting for Blabber Footer Start banners for custom spacing control.
