@@ -93,9 +93,9 @@
 	margin: 0 !important;
 	padding: 0 !important;
 	box-sizing: border-box !important;
-	display: block !important;
 	visibility: visible !important;
 	opacity: 1 !important;
+	/* Removed display: block to allow flexbox alignment */
 }
 
 /* Ensure wrapper also gets sticky positioning when footer banner is sticky */
@@ -138,6 +138,28 @@
 	opacity: 1 !important;
 	position: relative !important;
 	z-index: 1 !important;
+}
+
+/* Override iframe inline styles for proper alignment */
+.iwz-footer-banner.align-center iframe {
+	max-width: 100% !important;
+	display: block !important;
+	margin: 0 auto !important;
+	height: auto !important;
+}
+
+.iwz-footer-banner.align-left iframe {
+	max-width: 100% !important;
+	display: block !important;
+	margin: 0 !important;
+	height: auto !important;
+}
+
+.iwz-footer-banner.align-right iframe {
+	max-width: 100% !important;
+	display: block !important;
+	margin: 0 0 0 auto !important;
+	height: auto !important;
 }
 
 /*
@@ -199,4 +221,36 @@
 .home .iwz-header-banner {
 	margin: 1rem 0 0 0;
 
+}
+
+/* Footer Banner Alignment (both sticky and non-sticky) - Using Flexbox */
+.iwz-footer-banner.align-left {
+	display: flex !important;
+	justify-content: flex-start !important;
+}
+
+.iwz-footer-banner.align-center {
+	display: flex !important;
+	justify-content: center !important;
+}
+
+.iwz-footer-banner.align-right {
+	display: flex !important;
+	justify-content: flex-end !important;
+}
+
+/* Sticky Footer Banner Alignment - Using Flexbox (more reliable for fixed positioning) */
+.iwz-footer-banner.iwz-sticky.align-left {
+	display: flex !important;
+	justify-content: flex-start !important;
+}
+
+.iwz-footer-banner.iwz-sticky.align-center {
+	display: flex !important;
+	justify-content: center !important;
+}
+
+.iwz-footer-banner.iwz-sticky.align-right {
+	display: flex !important;
+	justify-content: flex-end !important;
 }

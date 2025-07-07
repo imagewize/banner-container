@@ -336,7 +336,17 @@ class IWZ_Banner_Container {
 				}
 			}
 		}
+
+		// COMMENTED OUT: JavaScript solution to fix iframe alignment
+		// This has been replaced with a better solution in the child theme
+		// `$this->output_banner_alignment_script();`.
 	}
+
+	/**
+	 * COMMENTED OUT: Output JavaScript to fix iframe inline styles that interfere with alignment.
+	 * This method has been replaced with a better solution in the child theme's functions.php
+	 * that prevents the theme from resizing banner iframes in the first place.
+	 */
 
 	/**
 	 * Display banner in content.
@@ -799,7 +809,7 @@ class IWZ_Banner_Container {
 
 		// Add alignment class for header and footer banners.
 		if ( in_array( $location, array( 'wp_head', 'wp_footer' ), true ) && ! empty( $alignment ) ) {
-			$classes[] = 'iwz-align-' . sanitize_html_class( $alignment );
+			$classes[] = 'align-' . sanitize_html_class( $alignment );
 		}
 
 		// Add sticky class for footer banners.
