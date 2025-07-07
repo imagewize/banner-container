@@ -360,6 +360,11 @@ class IWZ_Banner_Container_Settings {
 				$sanitized_banner['wrapper_padding'] = sanitize_text_field( $banner['wrapper_padding'] );
 			}
 
+			// Add bottom spacing for footer banners.
+			if ( isset( $banner['bottom_spacing'] ) ) {
+				$sanitized_banner['bottom_spacing'] = sanitize_text_field( $banner['bottom_spacing'] );
+			}
+
 			// Add content-specific fields if they exist.
 			if ( isset( $banner['position'] ) ) {
 				$sanitized_banner['position']   = sanitize_text_field( $banner['position'] );
@@ -760,6 +765,11 @@ class IWZ_Banner_Container_Settings {
 											$default_banner['wrapper_padding'] = '';
 										}
 
+										// Add default bottom spacing for footer banners.
+										if ( 'wp_footer' === $location_key ) {
+											$default_banner['bottom_spacing'] = '';
+										}
+
 										$location_banners = array( $default_banner );
 									}
 									?>
@@ -978,6 +988,24 @@ class IWZ_Banner_Container_Settings {
 																		</label>
 																		<p class="description">
 																			<?php esc_html_e( 'When enabled, this banner will remain fixed at the bottom of the viewport when scrolling.', 'banner-container-plugin' ); ?>
+																		</p>
+																	</td>
+																</tr>
+																<tr>
+																	<th scope="row">
+																		<label for="iwz_<?php echo esc_attr( $location_key ); ?>_banner_bottom_spacing_<?php echo esc_attr( $index ); ?>">
+																			<?php esc_html_e( 'Bottom Spacing', 'banner-container-plugin' ); ?>
+																		</label>
+																	</th>
+																	<td>
+																		<input type="text" 
+																			id="iwz_<?php echo esc_attr( $location_key ); ?>_banner_bottom_spacing_<?php echo esc_attr( $index ); ?>" 
+																			name="iwz_banner_<?php echo esc_attr( $location_key ); ?>_banners[<?php echo esc_attr( $index ); ?>][bottom_spacing]" 
+																			value="<?php echo esc_attr( $banner['bottom_spacing'] ?? '' ); ?>" 
+																			class="regular-text" 
+																			placeholder="e.g., 20px or 2rem" />
+																		<p class="description">
+																			<?php esc_html_e( 'Bottom spacing for this banner to prevent it from covering other elements like age verification sliders. Example: "20px" or "2rem".', 'banner-container-plugin' ); ?>
 																		</p>
 																	</td>
 																</tr>
@@ -1301,6 +1329,11 @@ class IWZ_Banner_Container_Settings {
 						'<td><input type="checkbox" id="iwz_' + location + '_banner_sticky_' + newIndex + '" name="iwz_banner_' + location + '_banners[' + newIndex + '][sticky]" value="1" />' +
 						'<label for="iwz_' + location + '_banner_sticky_' + newIndex + '"><?php esc_html_e( 'Make this banner stick to bottom of screen', 'banner-container-plugin' ); ?></label>' +
 						'<p class="description"><?php esc_html_e( 'When enabled, this banner will remain fixed at the bottom of the viewport when scrolling.', 'banner-container-plugin' ); ?></p></td>' +
+					'</tr>' +
+					'<tr>' +
+						'<th scope="row"><label for="iwz_' + location + '_banner_bottom_spacing_' + newIndex + '"><?php esc_html_e( 'Bottom Spacing', 'banner-container-plugin' ); ?></label></th>' +
+						'<td><input type="text" id="iwz_' + location + '_banner_bottom_spacing_' + newIndex + '" name="iwz_banner_' + location + '_banners[' + newIndex + '][bottom_spacing]" value="" class="regular-text" placeholder="e.g., 20px or 2rem" />' +
+						'<p class="description"><?php esc_html_e( 'Bottom spacing for this banner to prevent it from covering other elements like age verification sliders. Example: "20px" or "2rem".', 'banner-container-plugin' ); ?></p></td>' +
 					'</tr>';
 				}
 				

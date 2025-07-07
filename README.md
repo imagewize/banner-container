@@ -35,13 +35,16 @@ The Banner Container Plugin allows you to easily add iframe codes to various loc
 5. For header, footer, and Blabber Footer Start banners, additional options include:
    - Choose alignment (left, center, or right) for each individual banner
    - Set wrapper background color for enhanced styling (for each individual banner)
-6. For Blabber Footer Start banners, additional spacing options include:
+6. For footer banners, additional options include:
+   - Enable sticky positioning to make banners stay at the bottom of the viewport
+   - Set bottom spacing to prevent banners from covering other elements like age verification sliders
+7. For Blabber Footer Start banners, additional spacing options include:
    - Set wrapper margin for outer spacing control (for each individual banner)
    - Set wrapper padding for inner spacing control (for each individual banner)
-7. For content banners, additional options include:
+8. For content banners, additional options include:
    - Choose placement options (top, bottom, or after a specific paragraph)
    - Select which post types to display each banner on
-8. Save your settings
+9. Save your settings
 
 ## Banner Wrapper Classes
 
