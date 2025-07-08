@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.9.10]
+* New Feature: Added wrapper margin and padding controls for footer banners (wp_footer).
+* Enhancement: Footer banners now have the same wrapper styling options as Blabber Footer Start banners.
+* Enhancement: Per-banner control of wrapper margin and padding for footer banners provides more granular spacing control.
+* Admin Interface: Added margin and padding fields to footer banner settings in admin interface.
+* JavaScript Enhancement: Dynamically created footer banners now include margin and padding fields.
+* Code Quality: Updated sanitization functions to handle wrapper margin and padding for footer banners with PHPCS compliance.
+* User Experience: Footer banners can now be individually styled with custom margin and padding without affecting other banners.
+* Consistency: Unified styling options between footer and Blabber Footer Start banner types.
+
 ## [1.9.9]
 * Enhancement: Improved footer banner bottom spacing functionality with proper per-banner control.
 * New Feature: Added bottom spacing support to JavaScript for dynamically created footer banners.
