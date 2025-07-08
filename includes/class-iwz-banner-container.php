@@ -911,13 +911,13 @@ class IWZ_Banner_Container {
 			$wrapper_style_parts[] = 'background-color: ' . esc_attr( $wrapper_bg_color );
 		}
 
-		// For sticky footer banners with custom margin/padding, use CSS custom properties.
+		// For sticky footer banners with custom margin/padding, apply with !important.
 		if ( 'wp_footer' === $location && $sticky ) {
 			if ( ! empty( $wrapper_margin ) ) {
-				$wrapper_style_parts[] = '--iwz-custom-margin: ' . esc_attr( $wrapper_margin );
+				$wrapper_style_parts[] = 'margin: ' . esc_attr( $wrapper_margin ) . ' !important';
 			}
 			if ( ! empty( $wrapper_padding ) ) {
-				$wrapper_style_parts[] = '--iwz-custom-padding: ' . esc_attr( $wrapper_padding );
+				$wrapper_style_parts[] = 'padding: ' . esc_attr( $wrapper_padding ) . ' !important';
 			}
 		} else {
 			// For non-sticky banners, apply margin/padding directly.
