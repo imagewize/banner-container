@@ -351,7 +351,7 @@ class IWZ_Banner_Container_Settings {
 				$sanitized_banner['wrapper_bg_color'] = sanitize_hex_color( $banner['wrapper_bg_color'] );
 			}
 
-			// Add margin and padding for blabber_footer_start banners.
+			// Add margin and padding for footer and blabber_footer_start banners.
 			if ( isset( $banner['wrapper_margin'] ) ) {
 				$sanitized_banner['wrapper_margin'] = sanitize_text_field( $banner['wrapper_margin'] );
 			}
@@ -759,8 +759,8 @@ class IWZ_Banner_Container_Settings {
 											}
 										}
 
-										// Add default margin and padding for blabber_footer_start banners.
-										if ( 'blabber_footer_start' === $location_key ) {
+										// Add default margin and padding for footer and blabber_footer_start banners.
+										if ( in_array( $location_key, array( 'wp_footer', 'blabber_footer_start' ), true ) ) {
 											$default_banner['wrapper_margin']  = '';
 											$default_banner['wrapper_padding'] = '';
 										}
@@ -932,7 +932,7 @@ class IWZ_Banner_Container_Settings {
 																	</td>
 																</tr>
 																<?php endif; ?>
-																<?php if ( 'blabber_footer_start' === $location_key ) : ?>
+																<?php if ( in_array( $location_key, array( 'wp_footer', 'blabber_footer_start' ), true ) ) : ?>
 																<tr>
 																	<th scope="row">
 																		<label for="iwz_<?php echo esc_attr( $location_key ); ?>_banner_wrapper_margin_<?php echo esc_attr( $index ); ?>">
@@ -1322,6 +1322,20 @@ class IWZ_Banner_Container_Settings {
 					'</tr>';
 				}
 				
+				var marginPaddingFields = '';
+				if (location === 'wp_footer' || location === 'blabber_footer_start') {
+					marginPaddingFields = '<tr>' +
+						'<th scope="row"><label for="iwz_' + location + '_banner_wrapper_margin_' + newIndex + '"><?php esc_html_e( 'Wrapper Margin', 'banner-container-plugin' ); ?></label></th>' +
+						'<td><input type="text" id="iwz_' + location + '_banner_wrapper_margin_' + newIndex + '" name="iwz_banner_' + location + '_banners[' + newIndex + '][wrapper_margin]" value="" class="regular-text" placeholder="e.g., 10px 0 or 1rem auto" />' +
+						'<p class="description"><?php esc_html_e( 'CSS margin for this banner wrapper. Use this to add spacing around the banner. Example: "0 20px" for left/right spacing.', 'banner-container-plugin' ); ?></p></td>' +
+					'</tr>' +
+					'<tr>' +
+						'<th scope="row"><label for="iwz_' + location + '_banner_wrapper_padding_' + newIndex + '"><?php esc_html_e( 'Wrapper Padding', 'banner-container-plugin' ); ?></label></th>' +
+						'<td><input type="text" id="iwz_' + location + '_banner_wrapper_padding_' + newIndex + '" name="iwz_banner_' + location + '_banners[' + newIndex + '][wrapper_padding]" value="" class="regular-text" placeholder="e.g., 20px or 1rem 2rem" />' +
+						'<p class="description"><?php esc_html_e( 'CSS padding for this banner wrapper. Use this to add inner spacing within the banner wrapper.', 'banner-container-plugin' ); ?></p></td>' +
+					'</tr>';
+				}
+				
 				var stickyField = '';
 				if (location === 'wp_footer') {
 					stickyField = '<tr>' +
@@ -1352,6 +1366,7 @@ class IWZ_Banner_Container_Settings {
 							'<td><textarea id="iwz_' + location + '_banner_code_' + newIndex + '" name="iwz_banner_' + location + '_banners[' + newIndex + '][code]" rows="6" class="large-text code"></textarea><p class="description"><?php esc_html_e( 'Enter the iframe or banner code to insert.', 'banner-container-plugin' ); ?></p></td>' +
 						'</tr>' +
 						alignmentField +
+						marginPaddingFields +
 						stickyField +
 						'<tr>' +
 							'<th scope="row"><label for="iwz_' + location + '_banner_device_' + newIndex + '"><?php esc_html_e( 'Device Targeting', 'banner-container-plugin' ); ?></label></th>' +

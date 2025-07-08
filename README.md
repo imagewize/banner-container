@@ -38,6 +38,8 @@ The Banner Container Plugin allows you to easily add iframe codes to various loc
 6. For footer banners, additional options include:
    - Enable sticky positioning to make banners stay at the bottom of the viewport
    - Set bottom spacing to prevent banners from covering other elements like age verification sliders
+   - Set wrapper margin for outer spacing control (for each individual banner)
+   - Set wrapper padding for inner spacing control (for each individual banner)
 7. For Blabber Footer Start banners, additional spacing options include:
    - Set wrapper margin for outer spacing control (for each individual banner)
    - Set wrapper padding for inner spacing control (for each individual banner)
