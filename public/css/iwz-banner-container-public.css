@@ -294,3 +294,20 @@
 	visibility: visible !important;
 	opacity: 1 !important;
 }
+
+/*
+ * Custom Margin and Padding Override for Sticky Footer Banners
+ * Higher specificity rules to override default sticky banner CSS when custom margin/padding is set
+ */
+.iwz-banner-wrapper.iwz-footer-wrapper.iwz-sticky-wrapper.iwz-has-custom-margin {
+	margin: var(--iwz-custom-margin) !important;
+}
+
+.iwz-banner-wrapper.iwz-footer-wrapper.iwz-sticky-wrapper.iwz-has-custom-padding {
+	padding: var(--iwz-custom-padding) !important;
+}
+
+.iwz-banner-wrapper.iwz-footer-wrapper.iwz-sticky-wrapper.iwz-has-custom-margin.iwz-has-custom-padding {
+	margin: var(--iwz-custom-margin) !important;
+	padding: var(--iwz-custom-padding) !important;
+}

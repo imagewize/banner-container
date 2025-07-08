@@ -910,22 +910,25 @@ class IWZ_Banner_Container {
 		if ( ! empty( $wrapper_bg_color ) ) {
 			$wrapper_style_parts[] = 'background-color: ' . esc_attr( $wrapper_bg_color );
 		}
-		if ( ! empty( $wrapper_margin ) ) {
-			// Use !important for sticky footer banners to override default CSS.
-			if ( 'wp_footer' === $location && $sticky ) {
-				$wrapper_style_parts[] = 'margin: ' . esc_attr( $wrapper_margin ) . ' !important';
-			} else {
+
+		// For sticky footer banners with custom margin/padding, use CSS custom properties.
+		if ( 'wp_footer' === $location && $sticky ) {
+			if ( ! empty( $wrapper_margin ) ) {
+				$wrapper_style_parts[] = '--iwz-custom-margin: ' . esc_attr( $wrapper_margin );
+			}
+			if ( ! empty( $wrapper_padding ) ) {
+				$wrapper_style_parts[] = '--iwz-custom-padding: ' . esc_attr( $wrapper_padding );
+			}
+		} else {
+			// For non-sticky banners, apply margin/padding directly.
+			if ( ! empty( $wrapper_margin ) ) {
 				$wrapper_style_parts[] = 'margin: ' . esc_attr( $wrapper_margin );
 			}
-		}
-		if ( ! empty( $wrapper_padding ) ) {
-			// Use !important for sticky footer banners to override default CSS.
-			if ( 'wp_footer' === $location && $sticky ) {
-				$wrapper_style_parts[] = 'padding: ' . esc_attr( $wrapper_padding ) . ' !important';
-			} else {
+			if ( ! empty( $wrapper_padding ) ) {
 				$wrapper_style_parts[] = 'padding: ' . esc_attr( $wrapper_padding );
 			}
 		}
+
 		if ( ! empty( $bottom_spacing ) && 'wp_footer' === $location ) {
 			// Use 'bottom' property for sticky banners, 'margin-bottom' for non-sticky.
 			if ( $sticky ) {
@@ -947,6 +950,13 @@ class IWZ_Banner_Container {
 				// Add bottom spacing class for CSS targeting.
 				if ( ! empty( $bottom_spacing ) ) {
 					$wrapper_classes .= ' iwz-has-bottom-spacing';
+				}
+				// Add custom margin/padding classes for CSS targeting.
+				if ( ! empty( $wrapper_margin ) ) {
+					$wrapper_classes .= ' iwz-has-custom-margin';
+				}
+				if ( ! empty( $wrapper_padding ) ) {
+					$wrapper_classes .= ' iwz-has-custom-padding';
 				}
 			}
 
