@@ -340,7 +340,13 @@ class IWZ_Banner_Container {
 			// Use ONLY individual banner sticky setting.
 			$sticky         = isset( $banner['sticky'] ) ? $banner['sticky'] : false;
 			$bottom_spacing = $banner['bottom_spacing'] ?? '';
-			$wrapped_banner = $this->wrap_banner_html( $this->sanitize_banner_html( $banner['code'] ), $banner['wrapper_class'] ?? '', 'wp_footer', $alignment, $sticky, $wrapper_bg_color, '', '', $bottom_spacing, $banner_index );
+
+			// Add wrapper margin and padding from banner settings.
+			$wrapper_margin   = $banner['wrapper_margin'] ?? '';
+			$wrapper_padding  = $banner['wrapper_padding'] ?? '';
+			$wrapper_bg_color = $banner['wrapper_bg_color'] ?? $wrapper_bg_color;
+
+			$wrapped_banner = $this->wrap_banner_html( $this->sanitize_banner_html( $banner['code'] ), $banner['wrapper_class'] ?? '', 'wp_footer', $alignment, $sticky, $wrapper_bg_color, $wrapper_margin, $wrapper_padding, $bottom_spacing, $banner_index );
 			// Add debug comment when sticky is enabled.
 			if ( $sticky ) {
 				echo '<!-- DEBUG: Footer banner with individual sticky enabled -->';
@@ -905,10 +911,20 @@ class IWZ_Banner_Container {
 			$wrapper_style_parts[] = 'background-color: ' . esc_attr( $wrapper_bg_color );
 		}
 		if ( ! empty( $wrapper_margin ) ) {
-			$wrapper_style_parts[] = 'margin: ' . esc_attr( $wrapper_margin );
+			// Use !important for sticky footer banners to override default CSS.
+			if ( 'wp_footer' === $location && $sticky ) {
+				$wrapper_style_parts[] = 'margin: ' . esc_attr( $wrapper_margin ) . ' !important';
+			} else {
+				$wrapper_style_parts[] = 'margin: ' . esc_attr( $wrapper_margin );
+			}
 		}
 		if ( ! empty( $wrapper_padding ) ) {
-			$wrapper_style_parts[] = 'padding: ' . esc_attr( $wrapper_padding );
+			// Use !important for sticky footer banners to override default CSS.
+			if ( 'wp_footer' === $location && $sticky ) {
+				$wrapper_style_parts[] = 'padding: ' . esc_attr( $wrapper_padding ) . ' !important';
+			} else {
+				$wrapper_style_parts[] = 'padding: ' . esc_attr( $wrapper_padding );
+			}
 		}
 		if ( ! empty( $bottom_spacing ) && 'wp_footer' === $location ) {
 			// Use 'bottom' property for sticky banners, 'margin-bottom' for non-sticky.
