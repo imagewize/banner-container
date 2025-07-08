@@ -34,7 +34,9 @@ The Banner Container Plugin allows you to easily add iframe codes to various loc
    - Enable or disable individual banners
 5. For header, footer, and Blabber Footer Start banners, additional options include:
    - Choose alignment (left, center, or right) for each individual banner
-   - Set wrapper background color for enhanced styling (for each individual banner)
+   - Set wrapper background color for enhanced styling (for each individual banner):
+     - **None (Transparent)**: No background color applied (default)
+     - **Custom Color**: Choose a specific background color using the color picker
 6. For footer banners, additional options include:
    - Enable sticky positioning to make banners stay at the bottom of the viewport
    - Set bottom spacing to prevent banners from covering other elements like age verification sliders
@@ -47,6 +49,46 @@ The Banner Container Plugin allows you to easily add iframe codes to various loc
    - Choose placement options (top, bottom, or after a specific paragraph)
    - Select which post types to display each banner on
 9. Save your settings
+
+## Background Color Options
+
+### Overview
+
+The Banner Container Plugin now provides flexible background color options for header, footer, and Blabber Footer Start banners. You can choose between a transparent background (default) or a custom color for enhanced styling.
+
+### Background Color Settings
+
+For each banner location that supports background colors (header, footer, and Blabber Footer Start), you can choose:
+
+1. **None (Transparent)** - Default setting that applies no background color
+2. **Custom Color** - Choose a specific background color using the color picker
+
+### Individual vs Global Settings
+
+- **Global Settings**: Set a default background color for all banners in a specific location
+- **Individual Settings**: Each banner can override the global setting with its own background color choice
+
+### Default Behavior
+
+By default, all banners use transparent backgrounds (`none`), ensuring they inherit the styling from your theme without additional visual interference.
+
+### Usage Examples
+
+```html
+<!-- Transparent background (default) -->
+<div class="iwz-banner-wrapper iwz-footer-wrapper">
+    <div class="iwz-footer-banner">
+        <iframe src="..."></iframe>
+    </div>
+</div>
+
+<!-- Custom background color -->
+<div class="iwz-banner-wrapper iwz-footer-wrapper" style="background-color: #f0f0f0;">
+    <div class="iwz-footer-banner">
+        <iframe src="..."></iframe>
+    </div>
+</div>
+```
 
 ## Banner Wrapper Classes
 

@@ -180,7 +180,7 @@ class IWZ_Banner_Container {
 		}
 
 		// Get global wrapper background color setting.
-		$wrapper_bg_color = get_option( 'iwz_banner_wp_head_wrapper_bg_color', '#ffffff' );
+		$wrapper_bg_color = get_option( 'iwz_banner_wp_head_wrapper_bg_color', 'none' );
 
 		// Get multiple banners.
 		$banners = get_option( 'iwz_banner_wp_head_banners', array() );
@@ -236,7 +236,7 @@ class IWZ_Banner_Container {
 		}
 
 		// Get global wrapper background color setting.
-		$wrapper_bg_color = get_option( 'iwz_banner_wp_head_wrapper_bg_color', '#ffffff' );
+		$wrapper_bg_color = get_option( 'iwz_banner_wp_head_wrapper_bg_color', 'none' );
 
 		// Get multiple banners.
 		$banners = get_option( 'iwz_banner_wp_head_banners', array() );
@@ -302,7 +302,7 @@ class IWZ_Banner_Container {
 		}
 
 		// Get global wrapper background color setting.
-		$wrapper_bg_color = get_option( 'iwz_banner_wp_footer_wrapper_bg_color', '#161515' );
+		$wrapper_bg_color = get_option( 'iwz_banner_wp_footer_wrapper_bg_color', 'none' );
 
 		// Get multiple banners.
 		$banners = get_option( 'iwz_banner_wp_footer_banners', array() );
@@ -666,7 +666,7 @@ class IWZ_Banner_Container {
 			$legacy_code = get_option( 'iwz_banner_blabber_footer_start_code', '' );
 			if ( ! empty( $legacy_code ) ) {
 				// Use legacy global settings for backward compatibility.
-				$wrapper_bg_color  = get_option( 'iwz_banner_blabber_footer_start_wrapper_bg_color', '' );
+				$wrapper_bg_color  = get_option( 'iwz_banner_blabber_footer_start_wrapper_bg_color', 'none' );
 				$default_alignment = get_option( 'iwz_banner_blabber_footer_start_alignment', 'left' );
 				$wrapper_margin    = get_option( 'iwz_banner_blabber_footer_start_wrapper_margin', '' );
 				$wrapper_padding   = get_option( 'iwz_banner_blabber_footer_start_wrapper_padding', '' );
@@ -907,7 +907,7 @@ class IWZ_Banner_Container {
 
 		// Build wrapper style.
 		$wrapper_style_parts = array();
-		if ( ! empty( $wrapper_bg_color ) ) {
+		if ( ! empty( $wrapper_bg_color ) && 'none' !== $wrapper_bg_color ) {
 			$wrapper_style_parts[] = 'background-color: ' . esc_attr( $wrapper_bg_color );
 		}
 

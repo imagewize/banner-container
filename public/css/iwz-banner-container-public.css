@@ -207,20 +207,13 @@
 
 /*
  * Banner Wrapper Background Colors
- * Support for custom background colors on header and footer banner wrappers
+ * Background colors are now controlled by settings with 'none' as default
+ * No default background colors are applied
  */
 .iwz-banner-wrapper {
 	width: 100%;
 	padding: 0;
 	margin: 0;
-}
-
-.iwz-banner-wrapper.iwz-header-wrapper {
-	background-color: #ffffff; /* Default header background */
-}
-
-.iwz-banner-wrapper.iwz-footer-wrapper {
-	background-color: #161515; /* Default footer background */
 }
 
 /*

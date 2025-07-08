@@ -156,8 +156,8 @@ class IWZ_Banner_Container_Settings {
 					)
 				);
 
-				// For header and footer banners, add alignment and wrapper styling settings.
-				if ( in_array( $location_key, array( 'wp_head', 'wp_footer' ), true ) ) {
+				// For header, footer, and blabber footer banners, add alignment and wrapper styling settings.
+				if ( in_array( $location_key, array( 'wp_head', 'wp_footer', 'blabber_footer_start' ), true ) ) {
 					register_setting(
 						'iwz_banner_container_settings',
 						'iwz_banner_' . $location_key . '_alignment',
@@ -173,8 +173,8 @@ class IWZ_Banner_Container_Settings {
 						'iwz_banner_' . $location_key . '_wrapper_bg_color',
 						array(
 							'type'              => 'string',
-							'sanitize_callback' => 'sanitize_hex_color',
-							'default'           => 'wp_head' === $location_key ? '#ffffff' : '#161515',
+							'sanitize_callback' => array( $this, 'sanitize_background_color_field' ),
+							'default'           => 'none',
 						)
 					);
 				}
@@ -348,7 +348,16 @@ class IWZ_Banner_Container_Settings {
 
 			// Add background color for head/footer/blabber_footer_start banners.
 			if ( isset( $banner['wrapper_bg_color'] ) ) {
-				$sanitized_banner['wrapper_bg_color'] = sanitize_hex_color( $banner['wrapper_bg_color'] );
+				if ( 'none' === $banner['wrapper_bg_color'] ) {
+					$sanitized_banner['wrapper_bg_color'] = 'none';
+				} elseif ( 'custom' === $banner['wrapper_bg_color'] ) {
+					// Get the actual color from the color picker.
+					$color_picker_value                   = $banner['wrapper_bg_color_picker'] ?? '#ffffff';
+					$sanitized_banner['wrapper_bg_color'] = sanitize_hex_color( $color_picker_value );
+				} else {
+					// Fallback for legacy values.
+					$sanitized_banner['wrapper_bg_color'] = sanitize_hex_color( $banner['wrapper_bg_color'] );
+				}
 			}
 
 			// Add margin and padding for footer and blabber_footer_start banners.
@@ -388,6 +397,55 @@ class IWZ_Banner_Container_Settings {
 	 */
 	public function sanitize_content_banners( $input ) {
 		return $this->sanitize_location_banners( $input );
+	}
+
+	/**
+	 * Sanitize background color field.
+	 *
+	 * @param string $input The input value.
+	 * @return string Sanitized value.
+	 */
+	public function sanitize_background_color_field( $input ) {
+		if ( 'none' === $input ) {
+			return 'none';
+		}
+
+		if ( 'custom' === $input ) {
+			// Get the actual color from the color picker.
+			$field_name = '';
+			// Extract field name from the current context.
+			// phpcs:disable WordPress.Security.NonceVerification.Missing -- This is a sanitization callback called by WordPress settings API.
+			if ( isset( $_POST ) && is_array( $_POST ) ) {
+				foreach ( $_POST as $key => $value ) {
+					if ( 'custom' === $value && false !== strpos( $key, 'wrapper_bg_color' ) ) {
+						$field_name = $key . '_picker';
+						break;
+					}
+				}
+			}
+
+			if ( ! empty( $field_name ) && isset( $_POST[ $field_name ] ) ) {
+				$color_value = sanitize_hex_color( wp_unslash( $_POST[ $field_name ] ) );
+				// phpcs:enable WordPress.Security.NonceVerification.Missing
+				if ( ! empty( $color_value ) ) {
+					return $color_value;
+				}
+			}
+
+			// Fallback to white if no valid color found.
+			return '#ffffff';
+		}
+
+		// For legacy values or direct color input, sanitize as hex color.
+		if ( '#' === substr( $input, 0, 1 ) || ! empty( $input ) ) {
+			$sanitized = sanitize_hex_color( $input );
+			if ( ! empty( $sanitized ) ) {
+				return $sanitized;
+			}
+		}
+
+		// Default to 'none' for invalid input.
+		return 'none';
 	}
 
 	/**
@@ -750,13 +808,7 @@ class IWZ_Banner_Container_Settings {
 
 										// Add default background color for header, footer, and blabber_footer_start banners.
 										if ( in_array( $location_key, array( 'wp_head', 'wp_footer', 'blabber_footer_start' ), true ) ) {
-											if ( 'wp_head' === $location_key ) {
-												$default_banner['wrapper_bg_color'] = '#ffffff';
-											} elseif ( 'wp_footer' === $location_key ) {
-												$default_banner['wrapper_bg_color'] = '#161515';
-											} else {
-												$default_banner['wrapper_bg_color'] = '';
-											}
+											$default_banner['wrapper_bg_color'] = 'none';
 										}
 
 										// Add default margin and padding for footer and blabber_footer_start banners.
@@ -806,12 +858,33 @@ class IWZ_Banner_Container_Settings {
 												</label>
 											</th>
 											<td>
-												<input type="color" 
-													id="iwz_banner_<?php echo esc_attr( $location_key ); ?>_wrapper_bg_color" 
-													name="iwz_banner_<?php echo esc_attr( $location_key ); ?>_wrapper_bg_color" 
-													value="<?php echo esc_attr( get_option( 'iwz_banner_' . $location_key . '_wrapper_bg_color', ( 'wp_head' === $location_key ? '#ffffff' : '#161515' ) ) ); ?>" />
+												<?php
+												$current_bg_color = get_option( 'iwz_banner_' . $location_key . '_wrapper_bg_color', 'none' );
+												?>
+												<div class="iwz-background-color-field">
+													<label style="display: block; margin-bottom: 8px;">
+														<input type="radio" 
+															name="iwz_banner_<?php echo esc_attr( $location_key ); ?>_wrapper_bg_color" 
+															value="none" 
+															<?php checked( $current_bg_color, 'none' ); ?> 
+															style="margin-right: 5px;" />
+														<?php esc_html_e( 'None (Transparent)', 'banner-container-plugin' ); ?>
+													</label>
+													<label style="display: block;">
+														<input type="radio" 
+															name="iwz_banner_<?php echo esc_attr( $location_key ); ?>_wrapper_bg_color" 
+															value="custom" 
+															<?php checked( 'none' !== $current_bg_color, true ); ?> 
+															style="margin-right: 5px;" />
+														<?php esc_html_e( 'Custom Color:', 'banner-container-plugin' ); ?>
+														<input type="color" 
+															name="iwz_banner_<?php echo esc_attr( $location_key ); ?>_wrapper_bg_color_picker" 
+															value="<?php echo esc_attr( 'none' !== $current_bg_color ? $current_bg_color : '#ffffff' ); ?>" 
+															style="margin-left: 10px; <?php echo 'none' === $current_bg_color ? 'display: none;' : ''; ?>" />
+													</label>
+												</div>
 												<p class="description">
-													<?php esc_html_e( 'Background color for the banner wrapper section.', 'banner-container-plugin' ); ?>
+													<?php esc_html_e( 'Background color for the banner wrapper section. Choose "None" for transparent background.', 'banner-container-plugin' ); ?>
 												</p>
 											</td>
 										</tr>
@@ -922,12 +995,33 @@ class IWZ_Banner_Container_Settings {
 																		</label>
 																	</th>
 																	<td>
-																		<input type="color" 
-																			id="iwz_<?php echo esc_attr( $location_key ); ?>_banner_wrapper_bg_color_<?php echo esc_attr( $index ); ?>" 
-																			name="iwz_banner_<?php echo esc_attr( $location_key ); ?>_banners[<?php echo esc_attr( $index ); ?>][wrapper_bg_color]" 
-																			value="<?php echo esc_attr( $banner['wrapper_bg_color'] ?? ( 'wp_head' === $location_key ? '#ffffff' : ( 'wp_footer' === $location_key ? '#161515' : '' ) ) ); ?>" />
+																		<?php
+																		$current_banner_bg_color = $banner['wrapper_bg_color'] ?? 'none';
+																		?>
+																		<div class="iwz-background-color-field">
+																			<label style="display: block; margin-bottom: 8px;">
+																				<input type="radio" 
+																					name="iwz_banner_<?php echo esc_attr( $location_key ); ?>_banners[<?php echo esc_attr( $index ); ?>][wrapper_bg_color]" 
+																					value="none" 
+																					<?php checked( $current_banner_bg_color, 'none' ); ?> 
+																					style="margin-right: 5px;" />
+																				<?php esc_html_e( 'None (Transparent)', 'banner-container-plugin' ); ?>
+																			</label>
+																			<label style="display: block;">
+																				<input type="radio" 
+																					name="iwz_banner_<?php echo esc_attr( $location_key ); ?>_banners[<?php echo esc_attr( $index ); ?>][wrapper_bg_color]" 
+																					value="custom" 
+																					<?php checked( 'none' !== $current_banner_bg_color, true ); ?> 
+																					style="margin-right: 5px;" />
+																				<?php esc_html_e( 'Custom Color:', 'banner-container-plugin' ); ?>
+																				<input type="color" 
+																					name="iwz_banner_<?php echo esc_attr( $location_key ); ?>_banners[<?php echo esc_attr( $index ); ?>][wrapper_bg_color_picker]" 
+																					value="<?php echo esc_attr( 'none' !== $current_banner_bg_color ? $current_banner_bg_color : '#ffffff' ); ?>" 
+																					style="margin-left: 10px; <?php echo 'none' === $current_banner_bg_color ? 'display: none;' : ''; ?>" />
+																			</label>
+																		</div>
 																		<p class="description">
-																			<?php esc_html_e( 'Background color for this banner wrapper.', 'banner-container-plugin' ); ?>
+																			<?php esc_html_e( 'Background color for this banner wrapper. Choose "None" for transparent background.', 'banner-container-plugin' ); ?>
 																		</p>
 																	</td>
 																</tr>
@@ -1196,6 +1290,31 @@ class IWZ_Banner_Container_Settings {
 				}
 			});
 			
+			// Handle background color radio button changes
+			$(document).on('change', 'input[name$="wrapper_bg_color"], input[name$="[wrapper_bg_color]"]', function() {
+				var $colorPicker = $(this).closest('.iwz-background-color-field').find('input[type="color"]');
+				if ($(this).val() === 'custom') {
+					$colorPicker.show();
+				} else {
+					$colorPicker.hide();
+				}
+			});
+			
+			// Handle adding new banners - ensure color picker visibility is correct
+			$(document).on('click', '.iwz-add-location-banner', function() {
+				// After adding banner, set up the color picker visibility
+				setTimeout(function() {
+					$('input[name$="[wrapper_bg_color]"]').each(function() {
+						var $colorPicker = $(this).closest('.iwz-background-color-field').find('input[type="color"]');
+						if ($(this).is(':checked') && $(this).val() === 'custom') {
+							$colorPicker.show();
+						} else if ($(this).is(':checked') && $(this).val() === 'none') {
+							$colorPicker.hide();
+						}
+					});
+				}, 100);
+			});
+			
 			// Update banner count in title when banners are added/removed/enabled
 			function updateBannerCount(location) {
 				var count = 0;
@@ -1322,6 +1441,18 @@ class IWZ_Banner_Container_Settings {
 					'</tr>';
 				}
 				
+				var backgroundColorField = '';
+				if (location === 'wp_head' || location === 'wp_footer' || location === 'blabber_footer_start') {
+					backgroundColorField = '<tr>' +
+						'<th scope="row"><label for="iwz_' + location + '_banner_wrapper_bg_color_' + newIndex + '"><?php esc_html_e( 'Wrapper Background Color', 'banner-container-plugin' ); ?></label></th>' +
+						'<td><div class="iwz-background-color-field">' +
+							'<label style="display: block; margin-bottom: 8px;"><input type="radio" name="iwz_banner_' + location + '_banners[' + newIndex + '][wrapper_bg_color]" value="none" checked style="margin-right: 5px;" /><?php esc_html_e( 'None (Transparent)', 'banner-container-plugin' ); ?></label>' +
+							'<label style="display: block;"><input type="radio" name="iwz_banner_' + location + '_banners[' + newIndex + '][wrapper_bg_color]" value="custom" style="margin-right: 5px;" /><?php esc_html_e( 'Custom Color:', 'banner-container-plugin' ); ?>' +
+							'<input type="color" name="iwz_banner_' + location + '_banners[' + newIndex + '][wrapper_bg_color_picker]" value="#ffffff" style="margin-left: 10px; display: none;" /></label>' +
+						'</div><p class="description"><?php esc_html_e( 'Background color for this banner wrapper. Choose "None" for transparent background.', 'banner-container-plugin' ); ?></p></td>' +
+					'</tr>';
+				}
+				
 				var marginPaddingFields = '';
 				if (location === 'wp_footer' || location === 'blabber_footer_start') {
 					marginPaddingFields = '<tr>' +
@@ -1366,6 +1497,7 @@ class IWZ_Banner_Container_Settings {
 							'<td><textarea id="iwz_' + location + '_banner_code_' + newIndex + '" name="iwz_banner_' + location + '_banners[' + newIndex + '][code]" rows="6" class="large-text code"></textarea><p class="description"><?php esc_html_e( 'Enter the iframe or banner code to insert.', 'banner-container-plugin' ); ?></p></td>' +
 						'</tr>' +
 						alignmentField +
+						backgroundColorField +
 						marginPaddingFields +
 						stickyField +
 						'<tr>' +
