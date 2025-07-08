@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.9.11]
+* New Feature: Added "None (Transparent)" option for wrapper background colors on header, footer, and Blabber Footer Start banners.
+* Enhancement: Background color settings now display as radio buttons with "None" and "Custom Color" options instead of simple color picker.
+* User Experience: Default background color is now set to "None" (transparent) for all banner types, providing cleaner integration with themes.
+* Admin Interface: Background color fields now show clear radio button options with color picker that only appears when "Custom Color" is selected.
+* Technical Enhancement: Updated sanitization functions to handle new background color structure with proper fallback for legacy values.
+* Code Quality: Enhanced PHPCS compliance with proper input validation and sanitization for background color fields.
+* CSS Enhancement: Removed hardcoded default background colors from CSS, allowing for true transparent backgrounds by default.
+* Backward Compatibility: Existing banners with set background colors continue to work without changes.
+* JavaScript Enhancement: Added radio button handling for background color selection in dynamically created banners.
+
 ## [1.9.10]
 * New Feature: Added wrapper margin and padding controls for footer banners (wp_footer).
 * Enhancement: Footer banners now have the same wrapper styling options as Blabber Footer Start banners.
