@@ -403,7 +403,119 @@
 }
 
 /*
- * Custom Margin and Padding Override for Sticky Footer Banners
+ * Individual Blabber Footer Banner Isolation
+ * Prevent spacing conflicts between multiple blabber footer banners by using unique IDs
+ * Ensures each banner maintains its individual settings and positioning
+ */
+[id^="iwz-banner-blabber_footer_start-"] {
+	/* Ensure each blabber footer banner wrapper is isolated */
+	position: relative;
+	z-index: auto;
+}
+
+/* Blabber Footer Banner Wrapper Support */
+.iwz-banner-wrapper.iwz-blabber-footer-wrapper {
+	width: 100%;
+	position: relative;
+	z-index: auto;
+}
+
+/* Blabber Footer Banner Alignment with Wrapper Support */
+.iwz-banner-wrapper.iwz-blabber-footer-wrapper.align-left {
+	display: flex !important;
+	justify-content: flex-start !important;
+}
+
+.iwz-banner-wrapper.iwz-blabber-footer-wrapper.align-center {
+	display: flex !important;
+	justify-content: center !important;
+}
+
+.iwz-banner-wrapper.iwz-blabber-footer-wrapper.align-right {
+	display: flex !important;
+	justify-content: flex-end !important;
+}
+
+/* 
+ * Blabber Footer Banner Custom Margin and Padding Support
+ * Custom margin and padding are applied via inline styles with !important
+ * The .iwz-has-custom-margin and .iwz-has-custom-padding classes indicate
+ * that custom styling is applied but don't need CSS rules as they use inline styles
+ */
+
+/* Responsive alignment for blabber footer banner wrappers */
+@media screen and (min-width: 769px) {
+	/* Desktop wrapper alignment */
+	.iwz-banner-wrapper.iwz-blabber-footer-wrapper {
+		text-align: left;
+	}
+	
+	.iwz-banner-wrapper.iwz-blabber-footer-wrapper.align-left {
+		text-align: left !important;
+	}
+	
+	.iwz-banner-wrapper.iwz-blabber-footer-wrapper.align-center {
+		text-align: center !important;
+	}
+	
+	.iwz-banner-wrapper.iwz-blabber-footer-wrapper.align-right {
+		text-align: right !important;
+	}
+}
+
+@media screen and (max-width: 768px) {
+	/* Mobile wrapper alignment - force center */
+	.iwz-banner-wrapper.iwz-blabber-footer-wrapper {
+		display: flex !important;
+		justify-content: center !important;
+		text-align: center !important;
+	}
+}
+
+/* Ensure blabber footer banners with unique IDs respect wrapper alignment */
+[id^="iwz-banner-blabber_footer_start-"] .iwz-banner-wrapper.iwz-blabber-footer-wrapper.align-left .iwz-blabber-footer-banner {
+	justify-content: flex-start !important;
+	text-align: left !important;
+}
+
+[id^="iwz-banner-blabber_footer_start-"] .iwz-banner-wrapper.iwz-blabber-footer-wrapper.align-center .iwz-blabber-footer-banner {
+	justify-content: center !important;
+	text-align: center !important;
+}
+
+[id^="iwz-banner-blabber_footer_start-"] .iwz-banner-wrapper.iwz-blabber-footer-wrapper.align-right .iwz-blabber-footer-banner {
+	justify-content: flex-end !important;
+	text-align: right !important;
+}
+
+/* Blabber Footer Banner Wrapper iframe alignment support */
+.iwz-banner-wrapper.iwz-blabber-footer-wrapper.align-left iframe {
+	margin: 0 0 1rem 0 !important;
+}
+
+.iwz-banner-wrapper.iwz-blabber-footer-wrapper.align-center iframe {
+	margin: 0 auto 1rem auto !important;
+}
+
+.iwz-banner-wrapper.iwz-blabber-footer-wrapper.align-right iframe {
+	margin: 0 0 1rem 0 !important;
+}
+
+/* Unique ID support for blabber footer banner wrapper iframe alignment */
+[id^="iwz-banner-blabber_footer_start-"] .iwz-banner-wrapper.iwz-blabber-footer-wrapper.align-left iframe {
+	margin: 0 0 1rem 0 !important;
+}
+
+[id^="iwz-banner-blabber_footer_start-"] .iwz-banner-wrapper.iwz-blabber-footer-wrapper.align-center iframe {
+	margin: 0 auto 1rem auto !important;
+}
+
+[id^="iwz-banner-blabber_footer_start-"] .iwz-banner-wrapper.iwz-blabber-footer-wrapper.align-right iframe {
+	margin: 0 0 1rem 0 !important;
+}
+
+/*
+ * Custom Margin and Padding Override for Blabber Footer Banners
  * Custom margin and padding are now applied via inline styles with !important
  * This ensures they override any conflicting CSS rules
  */

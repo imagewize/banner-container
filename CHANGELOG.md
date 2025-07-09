@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.9.17]
+* Enhancement: Added comprehensive wrapper system for Blabber Footer Start banners matching regular footer banner functionality.
+* Enhancement: Implemented individual banner isolation using unique IDs to prevent spacing conflicts between multiple blabber footer banners.
+* Enhancement: Added custom margin and padding wrapper support for Blabber Footer Start banners with inline style override system.
+* Enhancement: Implemented wrapper-based alignment system (align-left, align-center, align-right) for Blabber Footer Start banners.
+* Technical Enhancement: Added `.iwz-banner-wrapper.iwz-blabber-footer-wrapper` class support for consistent banner wrapping.
+* Technical Enhancement: Enhanced unique ID selector support with `[id^="iwz-banner-blabber_footer_start-"]` for individual banner isolation.
+* Technical Enhancement: Added responsive wrapper alignment with desktop and mobile specific behavior.
+* Technical Enhancement: Implemented iframe alignment support that works with wrapper classes and unique IDs.
+* Code Quality: Standardized Blabber Footer Start banner CSS architecture to match regular footer banner system.
+* Code Quality: Improved CSS organization with comprehensive wrapper support and individual banner isolation.
+* Code Quality: Enhanced CSS commenting and documentation following PHPCS standards.
+* User Experience: Per-banner alignment, margin, and padding settings now work consistently across all banner types.
+* CSS Enhancement: Added wrapper-level alignment classes that work seamlessly with unique banner IDs.
+* CSS Enhancement: Implemented mobile-first responsive design for blabber footer banner wrappers.
+* CSS Enhancement: Ensured iframe alignment matches wrapper alignment for proper banner display.
+
 ## [1.9.16]
 * Bug Fix: Fixed conflicting CSS rule that was overriding per-banner alignment settings for Blabber Footer Start banners.
 * Enhancement: Removed conflicting `text-align: center` from general `.iwz-banner-container[data-location="blabber_footer"]` rule.
