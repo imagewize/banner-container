@@ -11,6 +11,8 @@ All notable changes to this project will be documented in this file.
 * Technical Enhancement: Enhanced unique ID selector support with `[id^="iwz-banner-blabber_footer_start-"]` for individual banner isolation.
 * Technical Enhancement: Added responsive wrapper alignment with desktop and mobile specific behavior.
 * Technical Enhancement: Implemented iframe alignment support that works with wrapper classes and unique IDs.
+* Bug Fix: Added enhanced CSS specificity rules to override inline styles that were preventing proper alignment of blabber footer banners.
+* Bug Fix: Added specific targeting for iframe elements with inline margin styles to ensure alignment settings are respected.
 * Code Quality: Standardized Blabber Footer Start banner CSS architecture to match regular footer banner system.
 * Code Quality: Improved CSS organization with comprehensive wrapper support and individual banner isolation.
 * Code Quality: Enhanced CSS commenting and documentation following PHPCS standards.
@@ -18,6 +20,7 @@ All notable changes to this project will be documented in this file.
 * CSS Enhancement: Added wrapper-level alignment classes that work seamlessly with unique banner IDs.
 * CSS Enhancement: Implemented mobile-first responsive design for blabber footer banner wrappers.
 * CSS Enhancement: Ensured iframe alignment matches wrapper alignment for proper banner display.
+* CSS Enhancement: Added highly specific CSS selectors to override JavaScript-generated inline styles.
 
 ## [1.9.16]
 * Bug Fix: Fixed conflicting CSS rule that was overriding per-banner alignment settings for Blabber Footer Start banners.

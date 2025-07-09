@@ -443,6 +443,19 @@
  * that custom styling is applied but don't need CSS rules as they use inline styles
  */
 
+/* Specific targeting for inline style overrides */
+	.iwz-banner-container[data-location="blabber_footer"] div[id^="iwz-banner-blabber_footer_start-"].iwz-blabber-footer-banner.align-right iframe[style*="margin"] {
+		margin: 0 0 1rem 0 !important;
+	}
+
+	.iwz-banner-container[data-location="blabber_footer"] div[id^="iwz-banner-blabber_footer_start-"].iwz-blabber-footer-banner.align-center iframe[style*="margin"] {
+		margin: 0 auto 1rem auto !important;
+	}
+
+	.iwz-banner-container[data-location="blabber_footer"] div[id^="iwz-banner-blabber_footer_start-"].iwz-blabber-footer-banner.align-left iframe[style*="margin"] {
+		margin: 0 0 1rem 0 !important;
+	}
+
 /* Responsive alignment for blabber footer banner wrappers */
 @media screen and (min-width: 769px) {
 	/* Desktop wrapper alignment */
@@ -519,3 +532,16 @@
  * Custom margin and padding are now applied via inline styles with !important
  * This ensures they override any conflicting CSS rules
  */
+
+/* Enhanced specificity for iframe alignment overrides */
+	div[id^="iwz-banner-blabber_footer_start-"] .iwz-blabber-footer-banner.align-right iframe.blabber_noresize.trx_addons_noresize.trx_addons_resize {
+		margin: 0 0 1rem 0 !important;
+	}
+
+	div[id^="iwz-banner-blabber_footer_start-"] .iwz-blabber-footer-banner.align-center iframe.blabber_noresize.trx_addons_noresize.trx_addons_resize {
+		margin: 0 auto 1rem auto !important;
+	}
+
+	div[id^="iwz-banner-blabber_footer_start-"] .iwz-blabber-footer-banner.align-left iframe.blabber_noresize.trx_addons_noresize.trx_addons_resize {
+		margin: 0 0 1rem 0 !important;
+	}
