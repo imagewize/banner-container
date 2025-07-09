@@ -2,9 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.9.15]
+* Bug Fix: Fixed Blabber Footer Start banner unique ID indexing to start from 1 instead of 0, matching footer banner behavior.
+* Enhancement: Standardized unique ID logic across all banner types to use consistent `$banner_index > 0` pattern.
+* Technical Enhancement: Updated `display_blabber_footer_start_banner()` method to start banner index from 1.
+* Technical Enhancement: Removed special case logic for blabber footer banners in `wrap_banner_html()` method.
+* Code Quality: Improved consistency between footer banner and blabber footer banner unique ID systems.
+* User Experience: Enhanced backward compatibility by avoiding index 0 conflicts with legacy single banner configurations.
+
 ## [1.9.14]
 * Enhancement: Added unique ID system for Blabber Footer Start banners to prevent alignment conflicts between multiple banners.
-* Enhancement: Each Blabber Footer Start banner now gets a unique ID (iwz-banner-blabber_footer_start-0, iwz-banner-blabber_footer_start-1, etc.).
+* Enhancement: Each Blabber Footer Start banner now gets a unique ID (iwz-banner-blabber_footer_start-1, iwz-banner-blabber_footer_start-2, etc.).
 * Enhancement: Enhanced CSS specificity with unique banner ID targeting to ensure individual banner alignment settings work independently.
 * Technical Enhancement: Updated banner rendering logic to include banner index tracking for Blabber Footer Start banners.
 * Technical Enhancement: Improved CSS selectors with div[id^="iwz-banner-blabber_footer_start-"] targeting for better specificity.
