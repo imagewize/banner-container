@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.9.16]
+* Bug Fix: Fixed conflicting CSS rule that was overriding per-banner alignment settings for Blabber Footer Start banners.
+* Enhancement: Removed conflicting `text-align: center` from general `.iwz-banner-container[data-location="blabber_footer"]` rule.
+* Enhancement: Added mobile-specific centering that only applies on screens ≤768px to preserve mobile banner behavior.
+* Enhancement: Enhanced desktop alignment with proper per-banner alignment classes that work with unique IDs.
+* Enhancement: Added default left alignment for desktop Blabber Footer Start banners with proper override system.
+* Technical Enhancement: Improved CSS specificity to ensure desktop alignment settings (left, center, right) are respected per banner.
+* Technical Enhancement: Added explicit container-level alignment rules for desktop banner containers.
+* Code Quality: Enhanced CSS organization with clear separation between mobile centering and desktop per-banner alignment.
+* Code Quality: Improved CSS commenting and documentation following PHPCS standards.
+* User Experience: Per-banner alignment settings now work correctly on desktop without mobile centering interference.
+* CSS Fix: Ensured iframe alignment matches container alignment for each individual banner configuration.
+
 ## [1.9.15]
 * Bug Fix: Fixed Blabber Footer Start banner unique ID indexing to start from 1 instead of 0, matching footer banner behavior.
 * Enhancement: Standardized unique ID logic across all banner types to use consistent `$banner_index > 0` pattern.

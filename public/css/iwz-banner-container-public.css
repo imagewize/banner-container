@@ -83,6 +83,11 @@
 
 /* Desktop alignment for blabber footer banner */
 @media screen and (min-width: 769px) {
+	/* Default left alignment for desktop */
+	.iwz-banner-container[data-location="blabber_footer"] {
+		text-align: left;
+	}
+	
 	/* Default left alignment */
 	.iwz-blabber-footer-banner,
 	div[id^="iwz-banner-blabber_footer_start-"] .iwz-blabber-footer-banner {
@@ -95,7 +100,7 @@
 		margin: 0 0 1rem 0;
 	}
 
-	/* Center alignment */
+	/* Center alignment override */
 	.iwz-blabber-footer-banner.align-center,
 	div[id^="iwz-banner-blabber_footer_start-"] .iwz-blabber-footer-banner.align-center {
 		justify-content: center !important;
@@ -107,7 +112,7 @@
 		margin: 0 auto 1rem auto !important;
 	}
 
-	/* Right alignment */
+	/* Right alignment override */
 	.iwz-blabber-footer-banner.align-right,
 	div[id^="iwz-banner-blabber_footer_start-"] .iwz-blabber-footer-banner.align-right {
 		justify-content: flex-end !important;
@@ -119,7 +124,7 @@
 		margin: 0 0 1rem 0 !important;
 	}
 
-	/* Left alignment (explicit) */
+	/* Left alignment override (explicit) */
 	.iwz-blabber-footer-banner.align-left,
 	div[id^="iwz-banner-blabber_footer_start-"] .iwz-blabber-footer-banner.align-left {
 		justify-content: flex-start !important;
@@ -134,6 +139,11 @@
 
 /* Mobile-specific centering for blabber footer banner */
 @media screen and (max-width: 768px) {
+	/* Force center alignment for all blabber footer banners on mobile */
+	.iwz-banner-container[data-location="blabber_footer"] {
+		text-align: center !important;
+	}
+	
 	.iwz-blabber-footer-banner,
 	div[id^="iwz-banner-blabber_footer_start-"] .iwz-blabber-footer-banner {
 		display: flex !important;
@@ -303,7 +313,7 @@
  */
 .iwz-banner-container[data-location="blabber_footer"] {
 	margin-bottom: 1rem;               /* Bottom spacing for footer banners */
-	text-align: center;                /* Center-align footer banners */
+	/* Removed text-align: center to allow per-banner alignment settings */
 }
 
 /*
