@@ -2,6 +2,97 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.9.19]
+* Bug Fix: Fixed CSS selector specificity issue preventing right alignment of Blabber Footer Start banners with inline styles.
+* Bug Fix: Removed obsolete CSS selectors targeting non-existent wrapper structure for Blabber Footer Start banners.
+* Enhancement: Improved CSS specificity to properly override inline `margin: 0px auto !important` styles on right-aligned banners.
+* Enhancement: Added more targeted CSS selectors for iframe elements with specific classes (`blabber_noresize trx_addons_noresize trx_addons_resize`).
+* Technical Enhancement: Cleaned up CSS architecture by removing wrapper-based selectors that don't match actual HTML output structure.
+* Technical Enhancement: Enhanced iframe alignment override rules to target banner divs directly without expecting wrapper elements.
+* Code Quality: Applied PHPCS standards to CSS file organization and commenting structure.
+* Code Quality: Improved CSS selector organization for better maintainability and specificity management.
+* User Experience: Right-aligned Blabber Footer Start banners now display correctly without being forced to center position by inline styles.
+* CSS Fix: Resolved specificity conflicts between inline styles and alignment CSS rules for unique banner IDs.
+* Theme Compatibility: Added documentation for Blabber theme users requiring child theme JavaScript to prevent iframe resizing conflicts.
+* Theme Compatibility: Enhanced child theme functions.php with improved banner type detection for Blabber Footer Start banners.
+* Documentation: Enhanced code comments explaining the need for theme-specific workarounds when using Blabber theme with banner alignment features.
+* Technical Note: For Blabber theme users, child theme JavaScript is required to prevent theme's iframe resizing from overriding banner alignment CSS rules.
+
+## [1.9.18]
+* Bug Fix: Fixed CSS selector specificity issue preventing right alignment of Blabber Footer Start banners.
+* Bug Fix: Corrected iframe alignment override selectors to target actual HTML structure without wrapper classes.
+* Enhancement: Added explicit margin-left and margin-right properties to ensure proper right alignment of banners.
+* Enhancement: Enhanced CSS specificity for iframe elements with classes `blabber_noresize trx_addons_noresize trx_addons_resize`.
+* Technical Enhancement: Updated CSS selectors to directly target banner divs with ID `[id^="iwz-banner-blabber_footer_start-"]` instead of expecting wrapper structure.
+* Technical Enhancement: Improved CSS organization by removing incorrect wrapper-based selectors that don't match actual HTML output.
+* Code Quality: Fixed CSS selector syntax to follow PHPCS standards with proper indentation and structure.
+* Code Quality: Enhanced CSS commenting and documentation for iframe alignment override rules.
+* User Experience: Right-aligned Blabber Footer Start banners now display correctly without being forced to center position.
+* CSS Fix: Resolved conflict between inline styles `margin: 0px auto !important` and alignment CSS rules.
+
+## [1.9.17]
+* Enhancement: Added comprehensive wrapper system for Blabber Footer Start banners matching regular footer banner functionality.
+* Enhancement: Implemented individual banner isolation using unique IDs to prevent spacing conflicts between multiple blabber footer banners.
+* Enhancement: Added custom margin and padding wrapper support for Blabber Footer Start banners with inline style override system.
+* Enhancement: Implemented wrapper-based alignment system (align-left, align-center, align-right) for Blabber Footer Start banners.
+* Technical Enhancement: Added `.iwz-banner-wrapper.iwz-blabber-footer-wrapper` class support for consistent banner wrapping.
+* Technical Enhancement: Enhanced unique ID selector support with `[id^="iwz-banner-blabber_footer_start-"]` for individual banner isolation.
+* Technical Enhancement: Added responsive wrapper alignment with desktop and mobile specific behavior.
+* Technical Enhancement: Implemented iframe alignment support that works with wrapper classes and unique IDs.
+* Bug Fix: Added enhanced CSS specificity rules to override inline styles that were preventing proper alignment of blabber footer banners.
+* Bug Fix: Added specific targeting for iframe elements with inline margin styles to ensure alignment settings are respected.
+* Code Quality: Standardized Blabber Footer Start banner CSS architecture to match regular footer banner system.
+* Code Quality: Improved CSS organization with comprehensive wrapper support and individual banner isolation.
+* Code Quality: Enhanced CSS commenting and documentation following PHPCS standards.
+* User Experience: Per-banner alignment, margin, and padding settings now work consistently across all banner types.
+* CSS Enhancement: Added wrapper-level alignment classes that work seamlessly with unique banner IDs.
+* CSS Enhancement: Implemented mobile-first responsive design for blabber footer banner wrappers.
+* CSS Enhancement: Ensured iframe alignment matches wrapper alignment for proper banner display.
+* CSS Enhancement: Added highly specific CSS selectors to override JavaScript-generated inline styles.
+
+## [1.9.16]
+* Bug Fix: Fixed conflicting CSS rule that was overriding per-banner alignment settings for Blabber Footer Start banners.
+* Enhancement: Removed conflicting `text-align: center` from general `.iwz-banner-container[data-location="blabber_footer"]` rule.
+* Enhancement: Added mobile-specific centering that only applies on screens ≤768px to preserve mobile banner behavior.
+* Enhancement: Enhanced desktop alignment with proper per-banner alignment classes that work with unique IDs.
+* Enhancement: Added default left alignment for desktop Blabber Footer Start banners with proper override system.
+* Technical Enhancement: Improved CSS specificity to ensure desktop alignment settings (left, center, right) are respected per banner.
+* Technical Enhancement: Added explicit container-level alignment rules for desktop banner containers.
+* Code Quality: Enhanced CSS organization with clear separation between mobile centering and desktop per-banner alignment.
+* Code Quality: Improved CSS commenting and documentation following PHPCS standards.
+* User Experience: Per-banner alignment settings now work correctly on desktop without mobile centering interference.
+* CSS Fix: Ensured iframe alignment matches container alignment for each individual banner configuration.
+
+## [1.9.15]
+* Bug Fix: Fixed Blabber Footer Start banner unique ID indexing to start from 1 instead of 0, matching footer banner behavior.
+* Enhancement: Standardized unique ID logic across all banner types to use consistent `$banner_index > 0` pattern.
+* Technical Enhancement: Updated `display_blabber_footer_start_banner()` method to start banner index from 1.
+* Technical Enhancement: Removed special case logic for blabber footer banners in `wrap_banner_html()` method.
+* Code Quality: Improved consistency between footer banner and blabber footer banner unique ID systems.
+* User Experience: Enhanced backward compatibility by avoiding index 0 conflicts with legacy single banner configurations.
+
+## [1.9.14]
+* Enhancement: Added unique ID system for Blabber Footer Start banners to prevent alignment conflicts between multiple banners.
+* Enhancement: Each Blabber Footer Start banner now gets a unique ID (iwz-banner-blabber_footer_start-1, iwz-banner-blabber_footer_start-2, etc.).
+* Enhancement: Enhanced CSS specificity with unique banner ID targeting to ensure individual banner alignment settings work independently.
+* Technical Enhancement: Updated banner rendering logic to include banner index tracking for Blabber Footer Start banners.
+* Technical Enhancement: Improved CSS selectors with div[id^="iwz-banner-blabber_footer_start-"] targeting for better specificity.
+* Bug Fix: Resolved alignment conflicts when multiple Blabber Footer Start banners have different alignment settings.
+* Code Quality: Enhanced banner wrapper HTML generation to support unique IDs for both styled and non-styled banner wrappers.
+* User Experience: Multiple Blabber Footer Start banners now maintain individual alignment settings without interference.
+
+## [1.9.13]
+* Bug Fix: Fixed desktop alignment for Blabber Footer Start banners being overridden by mobile centering styles.
+* Enhancement: Improved CSS specificity to ensure desktop alignment settings (left, center, right) are respected.
+* Enhancement: Reorganized CSS media queries to properly separate desktop and mobile banner alignment behavior.
+* Technical Enhancement: Added desktop-specific media query (@media screen and (min-width: 769px)) for proper alignment control.
+* Technical Enhancement: Implemented explicit alignment classes (.align-left, .align-center, .align-right) for desktop banners.
+* Technical Enhancement: Enhanced mobile centering to only apply on screens 768px and below without affecting desktop alignment.
+* Code Quality: Restructured Blabber Footer Start banner CSS to use proper media query hierarchy.
+* Code Quality: Updated base styles to remove conflicting centering that was overriding desktop alignment.
+* User Experience: Desktop alignment now uses flexbox justify-content for precise control while maintaining mobile centering.
+* CSS Enhancement: Improved CSS organization with clear separation between desktop and mobile behavior.
+
 ## [1.9.12]
 * Bug Fix: Fixed centering issue for Blabber Footer Start banners on mobile devices.
 * Enhancement: Updated CSS to use `margin: 0 auto` for proper iframe centering within banner containers.
