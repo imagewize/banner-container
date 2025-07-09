@@ -2,6 +2,30 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.9.19]
+* Bug Fix: Fixed CSS selector specificity issue preventing right alignment of Blabber Footer Start banners with inline styles.
+* Bug Fix: Removed obsolete CSS selectors targeting non-existent wrapper structure for Blabber Footer Start banners.
+* Enhancement: Improved CSS specificity to properly override inline `margin: 0px auto !important` styles on right-aligned banners.
+* Enhancement: Added more targeted CSS selectors for iframe elements with specific classes (`blabber_noresize trx_addons_noresize trx_addons_resize`).
+* Technical Enhancement: Cleaned up CSS architecture by removing wrapper-based selectors that don't match actual HTML output structure.
+* Technical Enhancement: Enhanced iframe alignment override rules to target banner divs directly without expecting wrapper elements.
+* Code Quality: Applied PHPCS standards to CSS file organization and commenting structure.
+* Code Quality: Improved CSS selector organization for better maintainability and specificity management.
+* User Experience: Right-aligned Blabber Footer Start banners now display correctly without being forced to center position by inline styles.
+* CSS Fix: Resolved specificity conflicts between inline styles and alignment CSS rules for unique banner IDs.
+
+## [1.9.18]
+* Bug Fix: Fixed CSS selector specificity issue preventing right alignment of Blabber Footer Start banners.
+* Bug Fix: Corrected iframe alignment override selectors to target actual HTML structure without wrapper classes.
+* Enhancement: Added explicit margin-left and margin-right properties to ensure proper right alignment of banners.
+* Enhancement: Enhanced CSS specificity for iframe elements with classes `blabber_noresize trx_addons_noresize trx_addons_resize`.
+* Technical Enhancement: Updated CSS selectors to directly target banner divs with ID `[id^="iwz-banner-blabber_footer_start-"]` instead of expecting wrapper structure.
+* Technical Enhancement: Improved CSS organization by removing incorrect wrapper-based selectors that don't match actual HTML output.
+* Code Quality: Fixed CSS selector syntax to follow PHPCS standards with proper indentation and structure.
+* Code Quality: Enhanced CSS commenting and documentation for iframe alignment override rules.
+* User Experience: Right-aligned Blabber Footer Start banners now display correctly without being forced to center position.
+* CSS Fix: Resolved conflict between inline styles `margin: 0px auto !important` and alignment CSS rules.
+
 ## [1.9.17]
 * Enhancement: Added comprehensive wrapper system for Blabber Footer Start banners matching regular footer banner functionality.
 * Enhancement: Implemented individual banner isolation using unique IDs to prevent spacing conflicts between multiple blabber footer banners.

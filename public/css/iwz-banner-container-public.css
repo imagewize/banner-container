@@ -534,14 +534,18 @@
  */
 
 /* Enhanced specificity for iframe alignment overrides */
-	div[id^="iwz-banner-blabber_footer_start-"] .iwz-blabber-footer-banner.align-right iframe.blabber_noresize.trx_addons_noresize.trx_addons_resize {
-		margin: 0 0 1rem 0 !important;
-	}
+div[id^="iwz-banner-blabber_footer_start-"].iwz-blabber-footer-banner.align-right iframe.blabber_noresize.trx_addons_noresize.trx_addons_resize {
+	margin: 0 0 1rem 0 !important;
+	margin-left: auto !important;
+	margin-right: 0 !important;
+}
 
-	div[id^="iwz-banner-blabber_footer_start-"] .iwz-blabber-footer-banner.align-center iframe.blabber_noresize.trx_addons_noresize.trx_addons_resize {
-		margin: 0 auto 1rem auto !important;
-	}
+div[id^="iwz-banner-blabber_footer_start-"].iwz-blabber-footer-banner.align-center iframe.blabber_noresize.trx_addons_noresize.trx_addons_resize {
+	margin: 0 auto 1rem auto !important;
+}
 
-	div[id^="iwz-banner-blabber_footer_start-"] .iwz-blabber-footer-banner.align-left iframe.blabber_noresize.trx_addons_noresize.trx_addons_resize {
-		margin: 0 0 1rem 0 !important;
-	}
+div[id^="iwz-banner-blabber_footer_start-"].iwz-blabber-footer-banner.align-left iframe.blabber_noresize.trx_addons_noresize.trx_addons_resize {
+	margin: 0 0 1rem 0 !important;
+	margin-left: 0 !important;
+	margin-right: auto !important;
+}
