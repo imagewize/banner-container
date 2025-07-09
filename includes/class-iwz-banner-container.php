@@ -689,7 +689,8 @@ class IWZ_Banner_Container {
 		}
 
 		// Display multiple banners with device targeting and individual settings.
-		$banner_html = '';
+		$banner_html  = '';
+		$banner_index = 0;
 		foreach ( $banners as $banner ) {
 			if ( empty( $banner['enabled'] ) || empty( $banner['code'] ) ) {
 				continue;
@@ -716,9 +717,10 @@ class IWZ_Banner_Container {
 				$wrapper_margin,
 				$wrapper_padding,
 				'',
-				0
+				$banner_index
 			);
 			$banner_html   .= $wrapped_banner;
+			++$banner_index;
 		}
 
 		if ( ! empty( $banner_html ) ) {
@@ -962,7 +964,7 @@ class IWZ_Banner_Container {
 
 			// Add unique ID for multiple banners to prevent conflicts.
 			$wrapper_id = '';
-			if ( $banner_index > 0 ) {
+			if ( $banner_index > 0 || 'blabber_footer_start' === $location ) {
 				$wrapper_id = ' id="iwz-banner-' . esc_attr( $location ) . '-' . esc_attr( $banner_index ) . '"';
 			}
 
@@ -971,6 +973,12 @@ class IWZ_Banner_Container {
 					'</div>';
 		}
 
-		return '<div class="' . esc_attr( $class_string ) . '">' . $banner_html . '</div>';
+		// For locations without wrapper styling, add unique ID for blabber footer banners.
+		$banner_id = '';
+		if ( $banner_index > 0 || 'blabber_footer_start' === $location ) {
+			$banner_id = ' id="iwz-banner-' . esc_attr( $location ) . '-' . esc_attr( $banner_index ) . '"';
+		}
+
+		return '<div class="' . esc_attr( $class_string ) . '"' . $banner_id . '>' . $banner_html . '</div>';
 	}
 }

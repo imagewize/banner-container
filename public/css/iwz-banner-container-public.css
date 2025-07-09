@@ -66,9 +66,7 @@
 /* Blabber Footer Banner Styling */
 .iwz-blabber-footer-banner {
 	margin-bottom: 1rem;
-	text-align: center;
 	display: flex;
-	justify-content: center;
 	align-items: center;
 	width: 100%;
 }
@@ -80,13 +78,64 @@
 	max-height: 100px !important;
 	width: 640px !important;
 	max-width: 100% !important;
-	margin: 0 auto 1rem auto !important;
 	display: block !important;
+}
+
+/* Desktop alignment for blabber footer banner */
+@media screen and (min-width: 769px) {
+	/* Default left alignment */
+	.iwz-blabber-footer-banner,
+	div[id^="iwz-banner-blabber_footer_start-"] .iwz-blabber-footer-banner {
+		justify-content: flex-start;
+		text-align: left;
+	}
+
+	.iwz-blabber-footer-banner iframe,
+	div[id^="iwz-banner-blabber_footer_start-"] .iwz-blabber-footer-banner iframe {
+		margin: 0 0 1rem 0;
+	}
+
+	/* Center alignment */
+	.iwz-blabber-footer-banner.align-center,
+	div[id^="iwz-banner-blabber_footer_start-"] .iwz-blabber-footer-banner.align-center {
+		justify-content: center !important;
+		text-align: center !important;
+	}
+
+	.iwz-blabber-footer-banner.align-center iframe,
+	div[id^="iwz-banner-blabber_footer_start-"] .iwz-blabber-footer-banner.align-center iframe {
+		margin: 0 auto 1rem auto !important;
+	}
+
+	/* Right alignment */
+	.iwz-blabber-footer-banner.align-right,
+	div[id^="iwz-banner-blabber_footer_start-"] .iwz-blabber-footer-banner.align-right {
+		justify-content: flex-end !important;
+		text-align: right !important;
+	}
+
+	.iwz-blabber-footer-banner.align-right iframe,
+	div[id^="iwz-banner-blabber_footer_start-"] .iwz-blabber-footer-banner.align-right iframe {
+		margin: 0 0 1rem 0 !important;
+	}
+
+	/* Left alignment (explicit) */
+	.iwz-blabber-footer-banner.align-left,
+	div[id^="iwz-banner-blabber_footer_start-"] .iwz-blabber-footer-banner.align-left {
+		justify-content: flex-start !important;
+		text-align: left !important;
+	}
+
+	.iwz-blabber-footer-banner.align-left iframe,
+	div[id^="iwz-banner-blabber_footer_start-"] .iwz-blabber-footer-banner.align-left iframe {
+		margin: 0 0 1rem 0 !important;
+	}
 }
 
 /* Mobile-specific centering for blabber footer banner */
 @media screen and (max-width: 768px) {
-	.iwz-blabber-footer-banner {
+	.iwz-blabber-footer-banner,
+	div[id^="iwz-banner-blabber_footer_start-"] .iwz-blabber-footer-banner {
 		display: flex !important;
 		justify-content: center !important;
 		align-items: center !important;
@@ -95,7 +144,8 @@
 		margin: 0 auto 1rem auto !important;
 	}
 
-	.iwz-blabber-footer-banner iframe {
+	.iwz-blabber-footer-banner iframe,
+	div[id^="iwz-banner-blabber_footer_start-"] .iwz-blabber-footer-banner iframe {
 		margin: 0 auto !important;
 		display: block !important;
 		width: 250px !important;

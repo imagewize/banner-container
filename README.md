@@ -390,33 +390,60 @@ The plugin includes comprehensive mobile responsive styling to ensure banners di
 
 ### Blabber Footer Banner Mobile Optimization
 
-Blabber Footer Start banners have been specifically optimized for mobile devices:
+Blabber Footer Start banners have been specifically optimized for mobile devices while preserving desktop alignment settings:
 
 - **250x250 Mobile Format**: Automatically adjusts to proper mobile banner dimensions
 - **Dual Centering Approach**: Uses both flexbox and auto margins for maximum compatibility
 - **Responsive Width**: Ensures banners don't exceed screen width on small devices
 - **Preserved Aspect Ratio**: Maintains banner proportions across all screen sizes
+- **Desktop Alignment Preserved**: Desktop alignment settings (left, center, right) are respected while mobile devices always center banners
+
+### Desktop vs Mobile Behavior
+
+The plugin implements different behavior for desktop and mobile devices:
+
+- **Desktop (769px and above)**: Respects individual banner alignment settings (left, center, right)
+- **Mobile (768px and below)**: Always centers banners for optimal mobile experience
+- **Responsive Breakpoint**: Clear separation at 769px/768px ensures no conflicts between desktop and mobile styles
 
 ### Technical Implementation
 
-The plugin uses a combination of CSS and JavaScript to ensure proper mobile display:
+The plugin uses a combination of CSS and JavaScript to ensure proper mobile display while preserving desktop alignment settings:
 
 ```css
-/* Mobile-specific centering for blabber footer banner */
+/* Desktop alignment (769px and above) */
+@media screen and (min-width: 769px) {
+	.iwz-blabber-footer-banner.align-left {
+		justify-content: flex-start !important;
+		text-align: left !important;
+	}
+
+	.iwz-blabber-footer-banner.align-center {
+		justify-content: center !important;
+		text-align: center !important;
+	}
+
+	.iwz-blabber-footer-banner.align-right {
+		justify-content: flex-end !important;
+		text-align: right !important;
+	}
+}
+
+/* Mobile centering (768px and below) */
 @media screen and (max-width: 768px) {
-    .iwz-blabber-footer-banner {
-        display: flex !important;
-        justify-content: center !important;
-        align-items: center !important;
-        text-align: center !important;
-    }
-    
-    .iwz-blabber-footer-banner iframe {
-        margin: 0 auto !important;
-        display: block !important;
-        width: 250px !important;
-        height: 250px !important;
-        max-width: 100% !important;
-    }
+	.iwz-blabber-footer-banner {
+		display: flex !important;
+		justify-content: center !important;
+		align-items: center !important;
+		text-align: center !important;
+	}
+
+	.iwz-blabber-footer-banner iframe {
+		margin: 0 auto !important;
+		display: block !important;
+		width: 250px !important;
+		height: 250px !important;
+		max-width: 100% !important;
+	}
 }
 ```

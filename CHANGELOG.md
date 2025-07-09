@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.9.14]
+* Enhancement: Added unique ID system for Blabber Footer Start banners to prevent alignment conflicts between multiple banners.
+* Enhancement: Each Blabber Footer Start banner now gets a unique ID (iwz-banner-blabber_footer_start-0, iwz-banner-blabber_footer_start-1, etc.).
+* Enhancement: Enhanced CSS specificity with unique banner ID targeting to ensure individual banner alignment settings work independently.
+* Technical Enhancement: Updated banner rendering logic to include banner index tracking for Blabber Footer Start banners.
+* Technical Enhancement: Improved CSS selectors with div[id^="iwz-banner-blabber_footer_start-"] targeting for better specificity.
+* Bug Fix: Resolved alignment conflicts when multiple Blabber Footer Start banners have different alignment settings.
+* Code Quality: Enhanced banner wrapper HTML generation to support unique IDs for both styled and non-styled banner wrappers.
+* User Experience: Multiple Blabber Footer Start banners now maintain individual alignment settings without interference.
+
+## [1.9.13]
+* Bug Fix: Fixed desktop alignment for Blabber Footer Start banners being overridden by mobile centering styles.
+* Enhancement: Improved CSS specificity to ensure desktop alignment settings (left, center, right) are respected.
+* Enhancement: Reorganized CSS media queries to properly separate desktop and mobile banner alignment behavior.
+* Technical Enhancement: Added desktop-specific media query (@media screen and (min-width: 769px)) for proper alignment control.
+* Technical Enhancement: Implemented explicit alignment classes (.align-left, .align-center, .align-right) for desktop banners.
+* Technical Enhancement: Enhanced mobile centering to only apply on screens 768px and below without affecting desktop alignment.
+* Code Quality: Restructured Blabber Footer Start banner CSS to use proper media query hierarchy.
+* Code Quality: Updated base styles to remove conflicting centering that was overriding desktop alignment.
+* User Experience: Desktop alignment now uses flexbox justify-content for precise control while maintaining mobile centering.
+* CSS Enhancement: Improved CSS organization with clear separation between desktop and mobile behavior.
+
 ## [1.9.12]
 * Bug Fix: Fixed centering issue for Blabber Footer Start banners on mobile devices.
 * Enhancement: Updated CSS to use `margin: 0 auto` for proper iframe centering within banner containers.
