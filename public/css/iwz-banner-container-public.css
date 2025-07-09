@@ -87,7 +87,7 @@
 	.iwz-banner-container[data-location="blabber_footer"] {
 		text-align: left;
 	}
-	
+
 	/* Default left alignment */
 	.iwz-blabber-footer-banner,
 	div[id^="iwz-banner-blabber_footer_start-"] .iwz-blabber-footer-banner {
@@ -143,7 +143,7 @@
 	.iwz-banner-container[data-location="blabber_footer"] {
 		text-align: center !important;
 	}
-	
+
 	.iwz-blabber-footer-banner,
 	div[id^="iwz-banner-blabber_footer_start-"] .iwz-blabber-footer-banner {
 		display: flex !important;
@@ -436,7 +436,7 @@
 	justify-content: flex-end !important;
 }
 
-/* 
+/*
  * Blabber Footer Banner Custom Margin and Padding Support
  * Custom margin and padding are applied via inline styles with !important
  * The .iwz-has-custom-margin and .iwz-has-custom-padding classes indicate
@@ -462,15 +462,15 @@
 	.iwz-banner-wrapper.iwz-blabber-footer-wrapper {
 		text-align: left;
 	}
-	
+
 	.iwz-banner-wrapper.iwz-blabber-footer-wrapper.align-left {
 		text-align: left !important;
 	}
-	
+
 	.iwz-banner-wrapper.iwz-blabber-footer-wrapper.align-center {
 		text-align: center !important;
 	}
-	
+
 	.iwz-banner-wrapper.iwz-blabber-footer-wrapper.align-right {
 		text-align: right !important;
 	}
