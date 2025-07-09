@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.9.12]
+* Bug Fix: Fixed centering issue for Blabber Footer Start banners on mobile devices.
+* Enhancement: Updated CSS to use `margin: 0 auto` for proper iframe centering within banner containers.
+* Enhancement: Added mobile-specific CSS rules using flexbox for improved centering on smaller screens.
+* Enhancement: Updated JavaScript to use `margin: 0 auto` specifically for blabber footer banner iframes to maintain centering.
+* Technical Enhancement: Added comprehensive mobile responsive styles for 250x250 banner dimensions.
+* Code Quality: Fixed PHPCS whitespace error in CSS file.
+* User Experience: Blabber Footer Start banners now properly center on all device sizes, particularly mobile.
+* CSS Enhancement: Implemented dual centering approach using both flexbox and auto margins for maximum compatibility.
+
 ## [1.9.11]
 * New Feature: Added "None (Transparent)" option for wrapper background colors on header, footer, and Blabber Footer Start banners.
 * Enhancement: Background color settings now display as radio buttons with "None" and "Custom Color" options instead of simple color picker.

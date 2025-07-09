@@ -376,3 +376,47 @@ You can also run the tools directly:
 2. Run `composer lint` before submitting
 3. Ensure all tests pass with `composer test`
 4. Write tests for new functionality
+
+## Mobile Responsiveness
+
+### Banner Centering
+
+The plugin includes comprehensive mobile responsive styling to ensure banners display correctly on all devices:
+
+- **Automatic Centering**: All banner types automatically center on mobile devices
+- **Flexbox Support**: Uses modern flexbox layout for reliable centering across browsers
+- **Auto Margins**: Implements `margin: 0 auto` for iframe elements to ensure proper centering
+- **Mobile-Specific Styling**: Includes dedicated CSS rules for screens under 768px width
+
+### Blabber Footer Banner Mobile Optimization
+
+Blabber Footer Start banners have been specifically optimized for mobile devices:
+
+- **250x250 Mobile Format**: Automatically adjusts to proper mobile banner dimensions
+- **Dual Centering Approach**: Uses both flexbox and auto margins for maximum compatibility
+- **Responsive Width**: Ensures banners don't exceed screen width on small devices
+- **Preserved Aspect Ratio**: Maintains banner proportions across all screen sizes
+
+### Technical Implementation
+
+The plugin uses a combination of CSS and JavaScript to ensure proper mobile display:
+
+```css
+/* Mobile-specific centering for blabber footer banner */
+@media screen and (max-width: 768px) {
+    .iwz-blabber-footer-banner {
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        text-align: center !important;
+    }
+    
+    .iwz-blabber-footer-banner iframe {
+        margin: 0 auto !important;
+        display: block !important;
+        width: 250px !important;
+        height: 250px !important;
+        max-width: 100% !important;
+    }
+}
+```
