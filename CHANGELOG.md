@@ -13,6 +13,10 @@ All notable changes to this project will be documented in this file.
 * Code Quality: Improved CSS selector organization for better maintainability and specificity management.
 * User Experience: Right-aligned Blabber Footer Start banners now display correctly without being forced to center position by inline styles.
 * CSS Fix: Resolved specificity conflicts between inline styles and alignment CSS rules for unique banner IDs.
+* Theme Compatibility: Added documentation for Blabber theme users requiring child theme JavaScript to prevent iframe resizing conflicts.
+* Theme Compatibility: Enhanced child theme functions.php with improved banner type detection for Blabber Footer Start banners.
+* Documentation: Enhanced code comments explaining the need for theme-specific workarounds when using Blabber theme with banner alignment features.
+* Technical Note: For Blabber theme users, child theme JavaScript is required to prevent theme's iframe resizing from overriding banner alignment CSS rules.
 
 ## [1.9.18]
 * Bug Fix: Fixed CSS selector specificity issue preventing right alignment of Blabber Footer Start banners.
