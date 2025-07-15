@@ -946,7 +946,7 @@ class IWZ_Banner_Container {
 			$wrapper_style = implode( '; ', $wrapper_style_parts ) . ';';
 
 			// Add sticky class to wrapper for footer banners when sticky is enabled.
-			$wrapper_classes = 'iwz-banner-wrapper iwz-' . $wrapper_type . '-wrapper';
+			$wrapper_classes = 'iwz-banner-wrapper iwz-' . $wrapper_type . '-wrapper code-block';
 			if ( 'wp_footer' === $location && $sticky ) {
 				$wrapper_classes .= ' iwz-sticky-wrapper';
 				// Add bottom spacing class for CSS targeting.
