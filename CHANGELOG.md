@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.9.21]
+* Bug Fix: Fixed cut-off issues with banners in "Blabber Footer Start" area where iframes were getting cut off at the bottom
+* Bug Fix: Fixed alignment issues with left-aligned banners still appearing centered in Blabber Footer
+* Enhancement: Added `overflow: visible !important` and other CSS fixes for Blabber Footer banners
+* Enhancement: Added special handling for left-aligned banners with `force-left-align` class and inline styles
+* Enhancement: Improved container height handling with `min-height` to accommodate common banner sizes
+* Enhancement: Added additional wrapper for banner content with proper alignment styles
+* Technical Enhancement: Applied alignment classes to both inner and outer banner wrappers for better specificity
+* User Experience: Banners in Blabber Footer now display correctly without being cut off or misaligned
+
 ## [1.9.20]
 * Bug Fix: Fixed footer banners not being hidden by age verification system due to missing `code-block` class on outer wrapper.
 * Enhancement: Added `code-block` class to outer wrapper div for footer banners with styling to ensure age verification JavaScript can properly target them.

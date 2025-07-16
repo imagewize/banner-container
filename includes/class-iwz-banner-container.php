@@ -877,6 +877,11 @@ class IWZ_Banner_Container {
 		// Add alignment class for header, footer, and blabber footer banners.
 		if ( in_array( $location, array( 'wp_head', 'wp_footer', 'blabber_footer_start' ), true ) && ! empty( $alignment ) ) {
 			$classes[] = 'align-' . sanitize_html_class( $alignment );
+			
+			// Special handling for left alignment to fix centering issues in Blabber theme
+			if ('left' === $alignment && 'blabber_footer_start' === $location) {
+				$classes[] = 'force-left-align';
+			}
 		}
 
 		// Add sticky class for footer banners.
@@ -939,6 +944,15 @@ class IWZ_Banner_Container {
 				$wrapper_style_parts[] = 'margin-bottom: ' . esc_attr( $bottom_spacing );
 			}
 		}
+		
+		// Special handling for Blabber Footer Start banners to prevent cut-off
+		if ('blabber_footer_start' === $location) {
+			// Ensure the container has sufficient height and no overflow restrictions
+			$wrapper_style_parts[] = 'overflow: visible !important';
+			$wrapper_style_parts[] = 'height: auto !important';
+			$wrapper_style_parts[] = 'max-height: none !important';
+			$wrapper_style_parts[] = 'min-height: 250px'; // Minimum height to accommodate common banner sizes
+		}
 
 		// Add wrapper div for header/footer/blabber footer with styling.
 		if ( in_array( $location, array( 'wp_head', 'wp_footer', 'blabber_footer_start' ), true ) && ! empty( $wrapper_style_parts ) ) {
@@ -961,11 +975,29 @@ class IWZ_Banner_Container {
 					$wrapper_classes .= ' iwz-has-custom-padding';
 				}
 			}
+			
+			// Add alignment classes to wrapper for blabber footer
+			if ('blabber_footer_start' === $location && !empty($alignment)) {
+				$wrapper_classes .= ' align-' . sanitize_html_class($alignment);
+				if ('left' === $alignment) {
+					$wrapper_classes .= ' force-left-align';
+				}
+			}
 
 			// Add unique ID for multiple banners to prevent conflicts.
 			$wrapper_id = '';
 			if ( $banner_index > 0 ) {
 				$wrapper_id = ' id="iwz-banner-' . esc_attr( $location ) . '-' . esc_attr( $banner_index ) . '"';
+			}
+
+			// For blabber footer, ensure the iframe is fully visible and properly aligned
+			if ('blabber_footer_start' === $location) {
+				// Apply special styling for left-aligned banners in blabber footer
+				if ('left' === $alignment) {
+					$banner_html = '<div class="iwz-banner-content" style="text-align: left !important; margin: 0 !important; display: block !important; float: left;">' . $banner_html . '</div>';
+				} else {
+					$banner_html = '<div class="iwz-banner-content">' . $banner_html . '</div>';
+				}
 			}
 
 			return '<div class="' . $wrapper_classes . '"' . $wrapper_id . ' style="' . $wrapper_style . '">' .
