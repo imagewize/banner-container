@@ -429,21 +429,102 @@ The plugin uses a combination of CSS and JavaScript to ensure proper mobile disp
 	}
 }
 
-/* Mobile centering (768px and below) */
+/* Mobile alignment (768px and below) - Now respects individual alignment settings */
 @media screen and (max-width: 768px) {
-	.iwz-blabber-footer-banner {
-		display: flex !important;
+	/* Left alignment on mobile (default and explicit) */
+	.iwz-blabber-footer-banner.align-left,
+	.iwz-blabber-footer-banner:not(.align-center):not(.align-right) {
+		justify-content: flex-start !important;
+		text-align: left !important;
+	}
+
+	/* Center alignment on mobile (only when explicitly set) */
+	.iwz-blabber-footer-banner.align-center {
 		justify-content: center !important;
-		align-items: center !important;
 		text-align: center !important;
 	}
 
+	/* Right alignment on mobile */
+	.iwz-blabber-footer-banner.align-right {
+		justify-content: flex-end !important;
+		text-align: right !important;
+	}
+
 	.iwz-blabber-footer-banner iframe {
-		margin: 0 auto !important;
 		display: block !important;
-		width: 250px !important;
-		height: 250px !important;
+		width: auto !important;
+		height: auto !important;
 		max-width: 100% !important;
+		max-height: 250px !important;
+		min-height: 100px !important;
 	}
 }
 ```
+
+## Testing
+
+### Manual Testing Scenarios
+
+To verify that the Banner Container Plugin works correctly, especially for mobile alignment and banner sizing, follow these test scenarios:
+
+#### Mobile Responsiveness Testing
+
+1. **Banner Height Testing**:
+   - Create banners with different sizes (250x250, 300x250, etc.)
+   - Test on mobile devices (or browser developer tools at 768px width or below)
+   - Verify banners are not cut off at 100px height
+   - Confirm banners can display up to 250px height on mobile
+
+2. **Alignment Testing on Mobile**:
+   - Create three Blabber Footer Start banners with different alignments:
+     - One with "Left" alignment
+     - One with "Center" alignment  
+     - One with "Right" alignment
+   - View on mobile device (768px width or below)
+   - Expected behavior:
+     - Left-aligned banner should appear on the left side
+     - Center-aligned banner should appear centered
+     - Right-aligned banner should appear on the right side
+   - Previous behavior (incorrect): All banners were forced to center
+
+3. **Desktop vs Mobile Comparison**:
+   - Test the same banners on desktop (769px width or above)
+   - Verify alignment settings work consistently between desktop and mobile
+   - Confirm no regression in desktop behavior
+
+#### Test Banner Sizes
+
+Test with these common banner dimensions:
+- **250x250** - Square mobile banner
+- **300x250** - Medium rectangle banner
+- **320x50** - Mobile banner (leaderboard)
+- **728x90** - Desktop leaderboard banner
+
+#### Browser Testing
+
+Test in multiple browsers:
+- Chrome/Chromium
+- Firefox
+- Safari (iOS)
+- Edge
+
+#### Viewport Testing
+
+Test at these viewport widths:
+- **1200px+** - Desktop
+- **768px** - Tablet breakpoint
+- **480px** - Mobile
+- **320px** - Small mobile
+
+### Automated Testing (Future Enhancement)
+
+For comprehensive testing, consider implementing:
+- Visual regression tests using tools like Percy or Chromatic
+- Responsive design tests using browser automation
+- Cross-browser compatibility tests
+
+### Known Issues and Limitations
+
+- The plugin specifically targets Blabber theme CSS classes
+- Changes only affect banners in the "Blabber Footer Start" location
+- Some third-party themes may have conflicting CSS that overrides plugin styles
