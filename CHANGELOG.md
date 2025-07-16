@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.9.20]
+* Bug Fix: Fixed footer banners not being hidden by age verification system due to missing `code-block` class on outer wrapper.
+* Enhancement: Added `code-block` class to outer wrapper div for footer banners with styling to ensure age verification JavaScript can properly target them.
+* Technical Enhancement: Modified `wrap_banner_html` method to include `code-block` class in `$wrapper_classes` for styled banners (header, footer, blabber footer).
+* Age Verification Fix: Footer banners now properly hide/show when age verification toggle is activated, matching behavior of other banner types.
+* CSS Enhancement: Ensured consistent class application across all banner wrapper types for uniform age verification functionality.
+* Code Quality: Improved banner wrapper class consistency by adding required age verification classes to outer wrapper elements.
+* User Experience: Age verification controls now work consistently across all banner locations including footer banners.
+* Technical Note: The `code-block` class is now applied to both inner banner div and outer wrapper div for styled banners to ensure JavaScript targeting works correctly.
+
 ## [1.9.19]
 * Bug Fix: Fixed CSS selector specificity issue preventing right alignment of Blabber Footer Start banners with inline styles.
 * Bug Fix: Removed obsolete CSS selectors targeting non-existent wrapper structure for Blabber Footer Start banners.
