@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 ## [1.9.21]
 * Bug Fix: Fixed cut-off issues with banners in "Blabber Footer Start" area where iframes were getting cut off at the bottom
 * Bug Fix: Fixed alignment issues with left-aligned banners still appearing centered in Blabber Footer
+* Enhancement: Added proper height handling and overflow settings for Blabber Footer banners
+* Enhancement: Improved CSS specificity for banner alignment instead of using !important declarations
+* Enhancement: Added nested structure with specific alignment classes for better style control
+* Enhancement: Added unique IDs to all banner containers for more precise CSS targeting
+* Technical Enhancement: Implemented a more structured approach to banner alignment using multiple CSS classes
+* User Experience: Banners in Blabber Footer now display correctly without being cut off or misaligned
+
+## [1.9.20]ngelog
+
+All notable changes to this project will be documented in this file.
+
+## [1.9.21]
+* Bug Fix: Fixed cut-off issues with banners in "Blabber Footer Start" area where iframes were getting cut off at the bottom
+* Bug Fix: Fixed alignment issues with left-aligned banners still appearing centered in Blabber Footer
 * Enhancement: Added `overflow: visible !important` and other CSS fixes for Blabber Footer banners
 * Enhancement: Added special handling for left-aligned banners with `force-left-align` class and inline styles
 * Enhancement: Improved container height handling with `min-height` to accommodate common banner sizes
