@@ -12,20 +12,6 @@ All notable changes to this project will be documented in this file.
 * Technical Enhancement: Implemented a more structured approach to banner alignment using multiple CSS classes
 * User Experience: Banners in Blabber Footer now display correctly without being cut off or misaligned
 
-## [1.9.20]ngelog
-
-All notable changes to this project will be documented in this file.
-
-## [1.9.21]
-* Bug Fix: Fixed cut-off issues with banners in "Blabber Footer Start" area where iframes were getting cut off at the bottom
-* Bug Fix: Fixed alignment issues with left-aligned banners still appearing centered in Blabber Footer
-* Enhancement: Added `overflow: visible !important` and other CSS fixes for Blabber Footer banners
-* Enhancement: Added special handling for left-aligned banners with `force-left-align` class and inline styles
-* Enhancement: Improved container height handling with `min-height` to accommodate common banner sizes
-* Enhancement: Added additional wrapper for banner content with proper alignment styles
-* Technical Enhancement: Applied alignment classes to both inner and outer banner wrappers for better specificity
-* User Experience: Banners in Blabber Footer now display correctly without being cut off or misaligned
-
 ## [1.9.20]
 * Bug Fix: Fixed footer banners not being hidden by age verification system due to missing `code-block` class on outer wrapper.
 * Enhancement: Added `code-block` class to outer wrapper div for footer banners with styling to ensure age verification JavaScript can properly target them.
@@ -386,6 +372,20 @@ All notable changes to this project will be documented in this file.
 * prefix iwz
 * additional renaming
 
+## [1.2.0]
+* proper namespacing
+* plugin renaming
+
+## [1.0.1]
+* Removed dependency on Advanced Custom Fields (ACF) plugin
+* Added native WordPress settings API integration
+* Improved plugin architecture for better separation of concerns
+* Enhanced code organization for better maintainability
+* Optimized admin interface with better settings controls
+* Fixed potential issues in uninstall process
+
+## [1.0.0]
+* Initial release
 ## [1.2.0]
 * proper namespacing
 * plugin renaming
