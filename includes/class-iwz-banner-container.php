@@ -920,22 +920,22 @@ class IWZ_Banner_Container {
 
 		// Apply margin/padding styles.
 		if ( ! empty( $wrapper_margin ) ) {
-			// For sticky footer banners, convert margin to left/right positioning for fixed elements
+			// For sticky footer banners, convert margin to left/right positioning for fixed elements.
 			if ( 'wp_footer' === $location && $sticky ) {
-				// Parse margin value - could be "0 5rem" format
+				// Parse margin value - could be "0 5rem" format.
 				$margin_parts = explode( ' ', trim( $wrapper_margin ) );
 				if ( count( $margin_parts ) >= 2 ) {
-					// "0 5rem" format - use the horizontal value
+					// "0 5rem" format - use the horizontal value.
 					$horizontal_margin     = $margin_parts[1];
 					$wrapper_style_parts[] = 'left: ' . esc_attr( $horizontal_margin ) . ' !important';
 					$wrapper_style_parts[] = 'right: ' . esc_attr( $horizontal_margin ) . ' !important';
 				} elseif ( count( $margin_parts ) === 1 ) {
-					// Single value - use it for all sides, but we only care about horizontal
+					// Single value - use it for all sides, but we only care about horizontal.
 					$wrapper_style_parts[] = 'left: ' . esc_attr( $margin_parts[0] ) . ' !important';
 					$wrapper_style_parts[] = 'right: ' . esc_attr( $margin_parts[0] ) . ' !important';
 				}
 			} else {
-				// For non-sticky banners, use regular margin
+				// For non-sticky banners, use regular margin.
 				$wrapper_style_parts[] = 'margin: ' . esc_attr( $wrapper_margin );
 			}
 		}
@@ -983,7 +983,7 @@ class IWZ_Banner_Container {
 				// Add custom margin/padding classes for CSS targeting.
 				if ( ! empty( $wrapper_margin ) ) {
 					$wrapper_classes .= ' iwz-has-custom-margin';
-					// Add override class to allow custom margin to work with sticky positioning
+					// Add override class to allow custom margin to work with sticky positioning.
 					$wrapper_classes .= ' iwz-has-custom-margin-override';
 				}
 				if ( ! empty( $wrapper_padding ) ) {
