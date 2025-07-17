@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.9.22]
+* Bug Fix: Fixed mobile display issue where Blabber Header banners (content_wrap_inside location) were covering blog titles
+* Enhancement: Added mobile-specific CSS for Blabber Header banners to use `display: inline-block` on screens ≤768px
+* Mobile Optimization: Improved mobile layout by preventing banners from taking full width and overlapping content
+* Responsive Design: Desktop display remains unchanged while mobile devices now show banners inline with content
+* User Experience: Blog titles and content are no longer obscured by header banners on mobile devices
+
 ## [1.9.21]
 * Bug Fix: Fixed cut-off issues with banners in "Blabber Footer Start" area where iframes were getting cut off at the bottom
 * Bug Fix: Fixed alignment issues with left-aligned banners still appearing centered in Blabber Footer

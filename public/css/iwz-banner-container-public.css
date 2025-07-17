@@ -63,6 +63,13 @@
 	margin: 1rem 0 0 0;
 }
 
+/* Mobile-specific styling for blabber header banner */
+@media screen and (max-width: 768px) {
+	.iwz-blabber-header-banner {
+		display: inline-block !important;
+	}
+}
+
 /* Blabber Footer Banner Styling */
 .iwz-blabber-footer-banner {
 	margin-bottom: 1rem;
