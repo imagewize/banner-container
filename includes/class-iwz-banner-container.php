@@ -877,9 +877,9 @@ class IWZ_Banner_Container {
 		// Add alignment class for header, footer, and blabber footer banners.
 		if ( in_array( $location, array( 'wp_head', 'wp_footer', 'blabber_footer_start' ), true ) && ! empty( $alignment ) ) {
 			$classes[] = 'align-' . sanitize_html_class( $alignment );
-			
-			// Add more specific class for alignment in blabber footer
-			if ('blabber_footer_start' === $location) {
+
+			// Add more specific class for alignment in blabber footer.
+			if ( 'blabber_footer_start' === $location ) {
 				$classes[] = 'iwz-align-' . sanitize_html_class( $alignment );
 			}
 		}
@@ -918,11 +918,11 @@ class IWZ_Banner_Container {
 			$wrapper_style_parts[] = 'background-color: ' . esc_attr( $wrapper_bg_color );
 		}
 
-		// Apply margin/padding styles
+		// Apply margin/padding styles.
 		if ( ! empty( $wrapper_margin ) ) {
 			$wrapper_style_parts[] = 'margin: ' . esc_attr( $wrapper_margin );
 		}
-		
+
 		if ( ! empty( $wrapper_padding ) ) {
 			$wrapper_style_parts[] = 'padding: ' . esc_attr( $wrapper_padding );
 		}
@@ -935,14 +935,15 @@ class IWZ_Banner_Container {
 				$wrapper_style_parts[] = 'margin-bottom: ' . esc_attr( $bottom_spacing );
 			}
 		}
-		
-		// Special handling for Blabber Footer Start banners to prevent cut-off
-		if ('blabber_footer_start' === $location) {
-			// Ensure the container has sufficient height and no overflow restrictions
+
+		// Special handling for Blabber Footer Start banners to prevent cut-off.
+		if ( 'blabber_footer_start' === $location ) {
+			// Ensure the container has sufficient height and no overflow restrictions.
 			$wrapper_style_parts[] = 'overflow: visible';
+			// Maintain auto height with no maximum restrictions.
 			$wrapper_style_parts[] = 'height: auto';
 			$wrapper_style_parts[] = 'max-height: none';
-			$wrapper_style_parts[] = 'min-height: 250px'; // Minimum height to accommodate common banner sizes
+			$wrapper_style_parts[] = 'min-height: 250px'; // Minimum height to accommodate common banner sizes.
 		}
 
 		// Add wrapper div for header/footer/blabber footer with styling.
@@ -966,12 +967,12 @@ class IWZ_Banner_Container {
 					$wrapper_classes .= ' iwz-has-custom-padding';
 				}
 			}
-			
-			// Add alignment classes to wrapper for blabber footer with better specificity
-			if ('blabber_footer_start' === $location && !empty($alignment)) {
-				$wrapper_classes .= ' iwz-wrapper-align-' . sanitize_html_class($alignment);
-				// Add uniquely named alignment class for maximum specificity
-				$wrapper_classes .= ' iwz-blabber-alignment-' . sanitize_html_class($alignment);
+
+			// Add alignment classes to wrapper for blabber footer with better specificity.
+			if ( 'blabber_footer_start' === $location && ! empty( $alignment ) ) {
+				$wrapper_classes .= ' iwz-wrapper-align-' . sanitize_html_class( $alignment );
+				// Add uniquely named alignment class for maximum specificity.
+				$wrapper_classes .= ' iwz-blabber-alignment-' . sanitize_html_class( $alignment );
 			}
 
 			// Add unique ID for multiple banners to prevent conflicts.
@@ -979,28 +980,28 @@ class IWZ_Banner_Container {
 			if ( $banner_index > 0 ) {
 				$wrapper_id = ' id="iwz-banner-' . esc_attr( $location ) . '-' . esc_attr( $banner_index ) . '"';
 			} else {
-				// Ensure even single banners have IDs for CSS specificity
+				// Ensure even single banners have IDs for CSS specificity.
 				$wrapper_id = ' id="iwz-banner-' . esc_attr( $location ) . '"';
 			}
 
-			// For blabber footer, create a more specific structure for better alignment control
-			if ('blabber_footer_start' === $location) {
-				// Create a dedicated content wrapper with specific alignment classes
+			// For blabber footer, create a more specific structure for better alignment control.
+			if ( 'blabber_footer_start' === $location ) {
+				// Create a dedicated content wrapper with specific alignment classes.
 				$content_class = 'iwz-banner-content';
-				
-				// Add alignment-specific classes to content wrapper
-				if ('left' === $alignment) {
+
+				// Add alignment-specific classes to content wrapper.
+				if ( 'left' === $alignment ) {
 					$content_class .= ' iwz-content-align-left';
-					$content_style = 'text-align: left; margin-right: auto; margin-left: 0; display: block;';
-				} elseif ('right' === $alignment) {
+					$content_style  = 'text-align: left; margin-right: auto; margin-left: 0; display: block;';
+				} elseif ( 'right' === $alignment ) {
 					$content_class .= ' iwz-content-align-right';
-					$content_style = 'text-align: right; margin-left: auto; margin-right: 0; display: block;';
+					$content_style  = 'text-align: right; margin-left: auto; margin-right: 0; display: block;';
 				} else {
 					$content_class .= ' iwz-content-align-center';
-					$content_style = 'text-align: center; margin: 0 auto; display: block;';
+					$content_style  = 'text-align: center; margin: 0 auto; display: block;';
 				}
-				
-				$banner_html = '<div class="' . esc_attr($content_class) . '" style="' . esc_attr($content_style) . '">' . $banner_html . '</div>';
+
+				$banner_html = '<div class="' . esc_attr( $content_class ) . '" style="' . esc_attr( $content_style ) . '">' . $banner_html . '</div>';
 			}
 
 			return '<div class="' . $wrapper_classes . '"' . $wrapper_id . ' style="' . $wrapper_style . '">' .
@@ -1013,7 +1014,7 @@ class IWZ_Banner_Container {
 		if ( $banner_index > 0 ) {
 			$banner_id = ' id="iwz-banner-' . esc_attr( $location ) . '-' . esc_attr( $banner_index ) . '"';
 		} else {
-			// Ensure even single banners have IDs for CSS specificity
+			// Ensure even single banners have IDs for CSS specificity.
 			$banner_id = ' id="iwz-banner-' . esc_attr( $location ) . '"';
 		}
 
