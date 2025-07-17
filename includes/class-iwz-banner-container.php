@@ -920,7 +920,24 @@ class IWZ_Banner_Container {
 
 		// Apply margin/padding styles.
 		if ( ! empty( $wrapper_margin ) ) {
-			$wrapper_style_parts[] = 'margin: ' . esc_attr( $wrapper_margin );
+			// For sticky footer banners, convert margin to left/right positioning for fixed elements
+			if ( 'wp_footer' === $location && $sticky ) {
+				// Parse margin value - could be "0 5rem" format
+				$margin_parts = explode( ' ', trim( $wrapper_margin ) );
+				if ( count( $margin_parts ) >= 2 ) {
+					// "0 5rem" format - use the horizontal value
+					$horizontal_margin     = $margin_parts[1];
+					$wrapper_style_parts[] = 'left: ' . esc_attr( $horizontal_margin ) . ' !important';
+					$wrapper_style_parts[] = 'right: ' . esc_attr( $horizontal_margin ) . ' !important';
+				} elseif ( count( $margin_parts ) === 1 ) {
+					// Single value - use it for all sides, but we only care about horizontal
+					$wrapper_style_parts[] = 'left: ' . esc_attr( $margin_parts[0] ) . ' !important';
+					$wrapper_style_parts[] = 'right: ' . esc_attr( $margin_parts[0] ) . ' !important';
+				}
+			} else {
+				// For non-sticky banners, use regular margin
+				$wrapper_style_parts[] = 'margin: ' . esc_attr( $wrapper_margin );
+			}
 		}
 
 		if ( ! empty( $wrapper_padding ) ) {
@@ -947,9 +964,13 @@ class IWZ_Banner_Container {
 		}
 
 		// Add wrapper div for header/footer/blabber footer with styling.
-		if ( in_array( $location, array( 'wp_head', 'wp_footer', 'blabber_footer_start' ), true ) && ! empty( $wrapper_style_parts ) ) {
+		$needs_wrapper = in_array( $location, array( 'wp_head', 'wp_footer', 'blabber_footer_start' ), true ) &&
+						( ! empty( $wrapper_style_parts ) ||
+							( 'wp_footer' === $location && $sticky && ! empty( $wrapper_margin ) ) );
+
+		if ( $needs_wrapper ) {
 			$wrapper_type  = 'wp_head' === $location ? 'header' : ( 'wp_footer' === $location ? 'footer' : 'blabber-footer' );
-			$wrapper_style = implode( '; ', $wrapper_style_parts ) . ';';
+			$wrapper_style = ! empty( $wrapper_style_parts ) ? implode( '; ', $wrapper_style_parts ) . ';' : '';
 
 			// Add sticky class to wrapper for footer banners when sticky is enabled.
 			$wrapper_classes = 'iwz-banner-wrapper iwz-' . $wrapper_type . '-wrapper code-block';
@@ -962,6 +983,8 @@ class IWZ_Banner_Container {
 				// Add custom margin/padding classes for CSS targeting.
 				if ( ! empty( $wrapper_margin ) ) {
 					$wrapper_classes .= ' iwz-has-custom-margin';
+					// Add override class to allow custom margin to work with sticky positioning
+					$wrapper_classes .= ' iwz-has-custom-margin-override';
 				}
 				if ( ! empty( $wrapper_padding ) ) {
 					$wrapper_classes .= ' iwz-has-custom-padding';
@@ -1004,7 +1027,8 @@ class IWZ_Banner_Container {
 				$banner_html = '<div class="' . esc_attr( $content_class ) . '" style="' . esc_attr( $content_style ) . '">' . $banner_html . '</div>';
 			}
 
-			return '<div class="' . $wrapper_classes . '"' . $wrapper_id . ' style="' . $wrapper_style . '">' .
+			$style_attr = ! empty( $wrapper_style ) ? ' style="' . esc_attr( $wrapper_style ) . '"' : '';
+			return '<div class="' . $wrapper_classes . '"' . $wrapper_id . $style_attr . '>' .
 					'<div class="' . esc_attr( $class_string ) . '">' . $banner_html . '</div>' .
 					'</div>';
 		}

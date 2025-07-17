@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.9.23]
+* Bug Fix: Fixed inline margin not working for sticky footer banners due to `position: fixed` elements not supporting margin-based positioning
+* Enhancement: Modified sticky footer banner positioning to use `left` and `right` properties instead of margins for proper fixed positioning
+* Technical Enhancement: Added logic to parse margin values (e.g., "0 5rem") and convert horizontal margins to left/right positioning for sticky banners
+* CSS Enhancement: Updated CSS specificity rules to exclude elements with override class from conflicting positioning rules
+* Bug Fix: Fixed wrapper generation logic to ensure sticky footer banners with custom margins always get a wrapper even without other styling
+* Technical Fix: Enhanced wrapper condition logic to create wrappers for sticky footer banners with custom margins regardless of other style properties
+* Technical Fix: Improved wrapper HTML generation to only include style attributes when styles are present, preventing empty style attributes
+* User Experience: Sticky footer banners with custom margins now display correctly positioned from the edges as intended
+* Compatibility: Non-sticky banners continue to use regular margin properties and remain unaffected
+
 ## [1.9.22]
 * Bug Fix: Fixed mobile display issue where Blabber Header banners (content_wrap_inside location) were covering blog titles
 * Enhancement: Added mobile-specific CSS for Blabber Header banners to use `display: inline-block` on screens ≤768px
