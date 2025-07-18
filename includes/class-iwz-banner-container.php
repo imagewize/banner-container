@@ -877,6 +877,11 @@ class IWZ_Banner_Container {
 		// Add alignment class for header, footer, and blabber footer banners.
 		if ( in_array( $location, array( 'wp_head', 'wp_footer', 'blabber_footer_start' ), true ) && ! empty( $alignment ) ) {
 			$classes[] = 'align-' . sanitize_html_class( $alignment );
+
+			// Add more specific class for alignment in blabber footer.
+			if ( 'blabber_footer_start' === $location ) {
+				$classes[] = 'iwz-align-' . sanitize_html_class( $alignment );
+			}
 		}
 
 		// Add sticky class for footer banners.
@@ -913,37 +918,59 @@ class IWZ_Banner_Container {
 			$wrapper_style_parts[] = 'background-color: ' . esc_attr( $wrapper_bg_color );
 		}
 
-		// For sticky footer banners with custom margin/padding, apply with !important.
-		if ( 'wp_footer' === $location && $sticky ) {
-			if ( ! empty( $wrapper_margin ) ) {
-				$wrapper_style_parts[] = 'margin: ' . esc_attr( $wrapper_margin ) . ' !important';
-			}
-			if ( ! empty( $wrapper_padding ) ) {
-				$wrapper_style_parts[] = 'padding: ' . esc_attr( $wrapper_padding ) . ' !important';
-			}
-		} else {
-			// For non-sticky banners, apply margin/padding directly.
-			if ( ! empty( $wrapper_margin ) ) {
+		// Apply margin/padding styles.
+		if ( ! empty( $wrapper_margin ) ) {
+			// For sticky footer banners, convert margin to left/right positioning for fixed elements.
+			if ( 'wp_footer' === $location && $sticky ) {
+				// Parse margin value - could be "0 5rem" format.
+				$margin_parts = explode( ' ', trim( $wrapper_margin ) );
+				if ( count( $margin_parts ) >= 2 ) {
+					// "0 5rem" format - use the horizontal value.
+					$horizontal_margin     = $margin_parts[1];
+					$wrapper_style_parts[] = 'left: ' . esc_attr( $horizontal_margin ) . ' !important';
+					$wrapper_style_parts[] = 'right: ' . esc_attr( $horizontal_margin ) . ' !important';
+				} elseif ( count( $margin_parts ) === 1 ) {
+					// Single value - use it for all sides, but we only care about horizontal.
+					$wrapper_style_parts[] = 'left: ' . esc_attr( $margin_parts[0] ) . ' !important';
+					$wrapper_style_parts[] = 'right: ' . esc_attr( $margin_parts[0] ) . ' !important';
+				}
+			} else {
+				// For non-sticky banners, use regular margin.
 				$wrapper_style_parts[] = 'margin: ' . esc_attr( $wrapper_margin );
 			}
-			if ( ! empty( $wrapper_padding ) ) {
-				$wrapper_style_parts[] = 'padding: ' . esc_attr( $wrapper_padding );
-			}
+		}
+
+		if ( ! empty( $wrapper_padding ) ) {
+			$wrapper_style_parts[] = 'padding: ' . esc_attr( $wrapper_padding );
 		}
 
 		if ( ! empty( $bottom_spacing ) && 'wp_footer' === $location ) {
 			// Use 'bottom' property for sticky banners, 'margin-bottom' for non-sticky.
 			if ( $sticky ) {
-				$wrapper_style_parts[] = 'bottom: ' . esc_attr( $bottom_spacing ) . ' !important';
+				$wrapper_style_parts[] = 'bottom: ' . esc_attr( $bottom_spacing );
 			} else {
 				$wrapper_style_parts[] = 'margin-bottom: ' . esc_attr( $bottom_spacing );
 			}
 		}
 
+		// Special handling for Blabber Footer Start banners to prevent cut-off.
+		if ( 'blabber_footer_start' === $location ) {
+			// Ensure the container has sufficient height and no overflow restrictions.
+			$wrapper_style_parts[] = 'overflow: visible';
+			// Maintain auto height with no maximum restrictions.
+			$wrapper_style_parts[] = 'height: auto';
+			$wrapper_style_parts[] = 'max-height: none';
+			$wrapper_style_parts[] = 'min-height: 250px'; // Minimum height to accommodate common banner sizes.
+		}
+
 		// Add wrapper div for header/footer/blabber footer with styling.
-		if ( in_array( $location, array( 'wp_head', 'wp_footer', 'blabber_footer_start' ), true ) && ! empty( $wrapper_style_parts ) ) {
+		$needs_wrapper = in_array( $location, array( 'wp_head', 'wp_footer', 'blabber_footer_start' ), true ) &&
+						( ! empty( $wrapper_style_parts ) ||
+							( 'wp_footer' === $location && $sticky && ! empty( $wrapper_margin ) ) );
+
+		if ( $needs_wrapper ) {
 			$wrapper_type  = 'wp_head' === $location ? 'header' : ( 'wp_footer' === $location ? 'footer' : 'blabber-footer' );
-			$wrapper_style = implode( '; ', $wrapper_style_parts ) . ';';
+			$wrapper_style = ! empty( $wrapper_style_parts ) ? implode( '; ', $wrapper_style_parts ) . ';' : '';
 
 			// Add sticky class to wrapper for footer banners when sticky is enabled.
 			$wrapper_classes = 'iwz-banner-wrapper iwz-' . $wrapper_type . '-wrapper code-block';
@@ -956,19 +983,52 @@ class IWZ_Banner_Container {
 				// Add custom margin/padding classes for CSS targeting.
 				if ( ! empty( $wrapper_margin ) ) {
 					$wrapper_classes .= ' iwz-has-custom-margin';
+					// Add override class to allow custom margin to work with sticky positioning.
+					$wrapper_classes .= ' iwz-has-custom-margin-override';
 				}
 				if ( ! empty( $wrapper_padding ) ) {
 					$wrapper_classes .= ' iwz-has-custom-padding';
 				}
 			}
 
+			// Add alignment classes to wrapper for blabber footer with better specificity.
+			if ( 'blabber_footer_start' === $location && ! empty( $alignment ) ) {
+				$wrapper_classes .= ' iwz-wrapper-align-' . sanitize_html_class( $alignment );
+				// Add uniquely named alignment class for maximum specificity.
+				$wrapper_classes .= ' iwz-blabber-alignment-' . sanitize_html_class( $alignment );
+			}
+
 			// Add unique ID for multiple banners to prevent conflicts.
 			$wrapper_id = '';
 			if ( $banner_index > 0 ) {
 				$wrapper_id = ' id="iwz-banner-' . esc_attr( $location ) . '-' . esc_attr( $banner_index ) . '"';
+			} else {
+				// Ensure even single banners have IDs for CSS specificity.
+				$wrapper_id = ' id="iwz-banner-' . esc_attr( $location ) . '"';
 			}
 
-			return '<div class="' . $wrapper_classes . '"' . $wrapper_id . ' style="' . $wrapper_style . '">' .
+			// For blabber footer, create a more specific structure for better alignment control.
+			if ( 'blabber_footer_start' === $location ) {
+				// Create a dedicated content wrapper with specific alignment classes.
+				$content_class = 'iwz-banner-content';
+
+				// Add alignment-specific classes to content wrapper.
+				if ( 'left' === $alignment ) {
+					$content_class .= ' iwz-content-align-left';
+					$content_style  = 'text-align: left; margin-right: auto; margin-left: 0; display: block;';
+				} elseif ( 'right' === $alignment ) {
+					$content_class .= ' iwz-content-align-right';
+					$content_style  = 'text-align: right; margin-left: auto; margin-right: 0; display: block;';
+				} else {
+					$content_class .= ' iwz-content-align-center';
+					$content_style  = 'text-align: center; margin: 0 auto; display: block;';
+				}
+
+				$banner_html = '<div class="' . esc_attr( $content_class ) . '" style="' . esc_attr( $content_style ) . '">' . $banner_html . '</div>';
+			}
+
+			$style_attr = ! empty( $wrapper_style ) ? ' style="' . esc_attr( $wrapper_style ) . '"' : '';
+			return '<div class="' . $wrapper_classes . '"' . $wrapper_id . $style_attr . '>' .
 					'<div class="' . esc_attr( $class_string ) . '">' . $banner_html . '</div>' .
 					'</div>';
 		}
@@ -977,6 +1037,9 @@ class IWZ_Banner_Container {
 		$banner_id = '';
 		if ( $banner_index > 0 ) {
 			$banner_id = ' id="iwz-banner-' . esc_attr( $location ) . '-' . esc_attr( $banner_index ) . '"';
+		} else {
+			// Ensure even single banners have IDs for CSS specificity.
+			$banner_id = ' id="iwz-banner-' . esc_attr( $location ) . '"';
 		}
 
 		return '<div class="' . esc_attr( $class_string ) . '"' . $banner_id . '>' . $banner_html . '</div>';

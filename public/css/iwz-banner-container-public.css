@@ -1,12 +1,35 @@
 /*
- * Banner Container Styles
- * This file contains specific styling overrides for banner containers in different locations
+ * ========================================================================
+ * IWZ BANNER CONTAINER PUBLIC STYLES
+ * ========================================================================
+ *
+ * This stylesheet provides styling for banner containers in different
+ * locations throughout the website. It includes support for:
+ * - Age verification compatibility
+ * - Responsive design
+ * - Sticky positioning
+ * - Multiple alignment options
+ * - Custom margin/padding overrides
+ *
+ * Structure:
+ * 1. Age Verification & Utility Classes
+ * 2. Base Banner Wrapper Styles
+ * 3. Location-Specific Banner Styles
+ * 4. Sticky Footer Banner System
+ * 5. Alignment & Layout Controls
+ * 6. Responsive Design Rules
+ * 7. Legacy Support & Compatibility
+ * ========================================================================
  */
+
+/* ========================================================================
+	1. AGE VERIFICATION & UTILITY CLASSES
+	======================================================================== */
 
 /*
  * Age Verification Support
- * Utility class for hiding age-restricted content
- * All banner containers automatically include the 'code-block' class for age verification compatibility
+ * All banner containers automatically include the 'code-block' class
+ * for compatibility with age verification systems
  */
 .d-none,
 .code-block.d-none,
@@ -15,10 +38,24 @@
 	visibility: hidden !important;
 }
 
+/* ========================================================================
+	2. BASE BANNER WRAPPER STYLES
+	======================================================================== */
+
 /*
- * Default Banner Wrapper Classes
- * These classes provide consistent styling for banners across different locations
+ * Universal Banner Wrapper
+ * Provides consistent base styling for all banner containers
+ * Background colors are controlled by plugin settings
  */
+.iwz-banner-wrapper {
+	width: 100%;
+	padding: 0;
+	margin: 0;
+}
+
+/* ========================================================================
+	3. LOCATION-SPECIFIC BANNER STYLES
+	======================================================================== */
 
 /* Head Banner Styling */
 .iwz-head-banner {
@@ -46,24 +83,42 @@
 	text-align: center;
 }
 
-/* Menu Banner Styling */
+/* Menu Banner Styling - Minimal styling to avoid layout conflicts */
 .iwz-menu-banner {
-	/* Minimal styling for menu banners to avoid layout issues */
 	display: block;
 }
 
-/* Blabber Header Banner Styling */
-.iwz-blabber-header-banner {
+/* ========================================================================
+	3.1 BLABBER THEME SPECIFIC STYLES
+	======================================================================== */
+
+/*
+ * Blabber Header Banner
+ * Optimized for theme header area with responsive height limits
+ */
+.iwz-blabber-header-banner,
+.iwz-header-banner {
 	margin-bottom: 1rem;
 	margin-top: -1rem;
 	max-height: 120px;
 }
 
-.home .iwz-blabber-header-banner {
+.home .iwz-blabber-header-banner,
+.home .iwz-header-banner {
 	margin: 1rem 0 0 0;
 }
 
-/* Blabber Footer Banner Styling */
+/* Mobile-specific styling for header banners */
+@media screen and (max-width: 768px) {
+	.iwz-blabber-header-banner {
+		display: inline-block !important;
+	}
+}
+
+/*
+ * Blabber Footer Banner Base Styles
+ * Provides foundation for footer banner positioning and sizing
+ */
 .iwz-blabber-footer-banner {
 	margin-bottom: 1rem;
 	display: flex;
@@ -71,6 +126,7 @@
 	width: 100%;
 }
 
+/* Standard iframe sizing for footer banners */
 .iwz-blabber-footer-banner iframe.blabber_resize.trx_addons_resize,
 .iwz-blabber-footer-banner .blabber_resize.trx_addons_resize,
 .iwz-blabber-footer-banner iframe {
@@ -81,14 +137,224 @@
 	display: block !important;
 }
 
-/* Desktop alignment for blabber footer banner */
+/*
+ * Blabber Footer Banner Container
+ * Wrapper-level styling for footer banner positioning
+ */
+.iwz-banner-container[data-location="blabber_footer"] {
+	margin-bottom: 1rem;
+}
+
+.iwz-banner-container[data-location="blabber_footer"] iframe.blabber_resize.trx_addons_resize,
+.iwz-banner-container[data-location="blabber_footer"] .blabber_resize.trx_addons_resize,
+.iwz-banner-container[data-location="blabber_footer"] iframe {
+	height: 100px !important;
+	max-height: 100px !important;
+	width: 640px !important;
+	max-width: 100% !important;
+	margin-bottom: 1rem;
+}
+
+/* ========================================================================
+	4. STICKY FOOTER BANNER SYSTEM
+	======================================================================== */
+
+/*
+ * Sticky Banner Positioning Logic:
+ * - Wrappers handle fixed positioning when they have special classes
+ * - Inner banners use relative positioning when wrapper handles sticky
+ * - Custom margins/padding are applied via inline styles with !important
+ */
+
+/* Inner banner sticky positioning (when wrapper doesn't handle it) */
+.iwz-footer-banner.iwz-sticky:not(.iwz-has-bottom-spacing):not(.iwz-banner-wrapper.iwz-sticky-wrapper.iwz-has-custom-margin-override *) {
+	position: fixed !important;
+	bottom: 0 !important;
+	left: 0 !important;
+	right: 0 !important;
+	width: 100% !important;
+	z-index: 99999 !important;
+	margin: 0 !important;
+	padding: 0 !important;
+	box-sizing: border-box !important;
+	visibility: visible !important;
+	opacity: 1 !important;
+}
+
+/* Banners with custom margin override - use relative positioning */
+.iwz-banner-wrapper.iwz-sticky-wrapper.iwz-has-custom-margin-override .iwz-footer-banner.iwz-sticky {
+	position: relative !important;
+	bottom: auto !important;
+	left: auto !important;
+	right: auto !important;
+	width: auto !important;
+	z-index: 99999 !important;
+	margin: 0 !important;
+	padding: 0 !important;
+	box-sizing: border-box !important;
+	visibility: visible !important;
+	opacity: 1 !important;
+}
+
+/* Banners with bottom spacing - wrapper handles positioning */
+.iwz-footer-banner.iwz-sticky.iwz-has-bottom-spacing {
+	z-index: 99999 !important;
+	margin: 0 !important;
+	padding: 0 !important;
+	box-sizing: border-box !important;
+	visibility: visible !important;
+	opacity: 1 !important;
+}
+
+/*
+ * Sticky Wrapper Positioning
+ * Different rules based on custom spacing and margin configurations
+ */
+
+/* Basic sticky wrapper without custom spacing */
+.iwz-banner-wrapper.iwz-footer-wrapper.iwz-sticky-wrapper:not(.iwz-has-bottom-spacing):not(.iwz-has-custom-margin):not(.iwz-has-custom-padding) {
+	position: fixed !important;
+	bottom: 0 !important;
+	left: 0 !important;
+	right: 0 !important;
+	width: 100% !important;
+	z-index: 99999 !important;
+	margin: 0 !important;
+	padding: 0 !important;
+	box-sizing: border-box !important;
+	display: block !important;
+	visibility: visible !important;
+	opacity: 1 !important;
+}
+
+/* Sticky wrapper with custom margin/padding (preserves custom values) */
+.iwz-banner-wrapper.iwz-footer-wrapper.iwz-sticky-wrapper:not(.iwz-has-bottom-spacing).iwz-has-custom-margin:not(.iwz-has-custom-margin-override),
+.iwz-banner-wrapper.iwz-footer-wrapper.iwz-sticky-wrapper:not(.iwz-has-bottom-spacing).iwz-has-custom-padding {
+	position: fixed !important;
+	bottom: 0 !important;
+	left: 0 !important;
+	right: 0 !important;
+	width: 100% !important;
+	z-index: 99999 !important;
+	box-sizing: border-box !important;
+	display: block !important;
+	visibility: visible !important;
+	opacity: 1 !important;
+}
+
+/* Sticky wrapper with bottom spacing - bottom position set via inline styles */
+.iwz-banner-wrapper.iwz-footer-wrapper.iwz-sticky-wrapper.iwz-has-bottom-spacing {
+	position: fixed !important;
+	left: 0 !important;
+	right: 0 !important;
+	width: 100% !important;
+	z-index: 99999 !important;
+	box-sizing: border-box !important;
+	display: block !important;
+	visibility: visible !important;
+	opacity: 1 !important;
+}
+
+/* Sticky wrapper with custom margin override - handles all positioning */
+.iwz-banner-wrapper.iwz-footer-wrapper.iwz-sticky-wrapper.iwz-has-custom-margin-override {
+	position: fixed !important;
+	bottom: 0 !important;
+	width: 100% !important;
+	z-index: 99999 !important;
+	box-sizing: border-box !important;
+	display: block !important;
+	visibility: visible !important;
+	opacity: 1 !important;
+}
+
+/* Ensure iframes in sticky banners display properly */
+.iwz-footer-banner.iwz-sticky iframe,
+.iwz-banner-wrapper.iwz-footer-wrapper.iwz-sticky-wrapper iframe {
+	display: block !important;
+	visibility: visible !important;
+	opacity: 1 !important;
+	position: relative !important;
+	z-index: 1 !important;
+}
+
+/* ========================================================================
+	5. ALIGNMENT & LAYOUT CONTROLS
+	======================================================================== */
+
+/*
+ * Banner Alignment System
+ * Supports left, center, and right alignment for all banner types
+ * Uses flexbox for reliable positioning
+ */
+
+/* Standard Footer Banner Alignment */
+.iwz-footer-banner.align-left {
+	display: flex !important;
+	justify-content: flex-start !important;
+}
+
+.iwz-footer-banner.align-center {
+	display: flex !important;
+	justify-content: center !important;
+}
+
+.iwz-footer-banner.align-right {
+	display: flex !important;
+	justify-content: flex-end !important;
+}
+
+/* Sticky Footer Banner Alignment */
+.iwz-footer-banner.iwz-sticky.align-left {
+	display: flex !important;
+	justify-content: flex-start !important;
+}
+
+.iwz-footer-banner.iwz-sticky.align-center {
+	display: flex !important;
+	justify-content: center !important;
+}
+
+.iwz-footer-banner.iwz-sticky.align-right {
+	display: flex !important;
+	justify-content: flex-end !important;
+}
+
+/* Iframe Alignment Overrides */
+.iwz-footer-banner.align-center iframe {
+	max-width: 100% !important;
+	display: block !important;
+	margin: 0 auto !important;
+	height: auto !important;
+}
+
+.iwz-footer-banner.align-left iframe {
+	max-width: 100% !important;
+	display: block !important;
+	margin: 0 !important;
+	height: auto !important;
+}
+
+.iwz-footer-banner.align-right iframe {
+	max-width: 100% !important;
+	display: block !important;
+	margin: 0 0 0 auto !important;
+	height: auto !important;
+}
+
+/* ========================================================================
+	6. RESPONSIVE DESIGN RULES
+	======================================================================== */
+
+/*
+ * Desktop Alignment (769px and up)
+ * Respects individual banner alignment settings
+ */
 @media screen and (min-width: 769px) {
-	/* Default left alignment for desktop */
+	/* Blabber Footer Banner Desktop Alignment */
 	.iwz-banner-container[data-location="blabber_footer"] {
 		text-align: left;
 	}
 
-	/* Default left alignment */
 	.iwz-blabber-footer-banner,
 	div[id^="iwz-banner-blabber_footer_start-"] .iwz-blabber-footer-banner {
 		justify-content: flex-start;
@@ -100,7 +366,7 @@
 		margin: 0 0 1rem 0;
 	}
 
-	/* Center alignment override */
+	/* Alignment overrides for desktop */
 	.iwz-blabber-footer-banner.align-center,
 	div[id^="iwz-banner-blabber_footer_start-"] .iwz-blabber-footer-banner.align-center {
 		justify-content: center !important;
@@ -112,7 +378,6 @@
 		margin: 0 auto 1rem auto !important;
 	}
 
-	/* Right alignment override */
 	.iwz-blabber-footer-banner.align-right,
 	div[id^="iwz-banner-blabber_footer_start-"] .iwz-blabber-footer-banner.align-right {
 		justify-content: flex-end !important;
@@ -124,7 +389,6 @@
 		margin: 0 0 1rem 0 !important;
 	}
 
-	/* Left alignment override (explicit) */
 	.iwz-blabber-footer-banner.align-left,
 	div[id^="iwz-banner-blabber_footer_start-"] .iwz-blabber-footer-banner.align-left {
 		justify-content: flex-start !important;
@@ -135,9 +399,29 @@
 	div[id^="iwz-banner-blabber_footer_start-"] .iwz-blabber-footer-banner.align-left iframe {
 		margin: 0 0 1rem 0 !important;
 	}
+
+	/* Banner Wrapper Desktop Alignment */
+	.iwz-banner-wrapper.iwz-blabber-footer-wrapper {
+		text-align: left;
+	}
+
+	.iwz-banner-wrapper.iwz-blabber-footer-wrapper.align-left {
+		text-align: left !important;
+	}
+
+	.iwz-banner-wrapper.iwz-blabber-footer-wrapper.align-center {
+		text-align: center !important;
+	}
+
+	.iwz-banner-wrapper.iwz-blabber-footer-wrapper.align-right {
+		text-align: right !important;
+	}
 }
 
-/* Mobile-specific centering for blabber footer banner */
+/*
+ * Mobile Alignment (768px and below)
+ * Forces center alignment for better mobile experience
+ */
 @media screen and (max-width: 768px) {
 	/* Force center alignment for all blabber footer banners on mobile */
 	.iwz-banner-container[data-location="blabber_footer"] {
@@ -163,231 +447,28 @@
 		max-width: 100% !important;
 		max-height: 250px !important;
 	}
+
+	/* Mobile wrapper alignment */
+	.iwz-banner-wrapper.iwz-blabber-footer-wrapper {
+		display: flex !important;
+		justify-content: center !important;
+		text-align: center !important;
+	}
 }
 
-/*
- * Sticky Footer Banner Support
- * Special positioning for footer banners with sticky option enabled
- */
-.iwz-footer-banner.iwz-sticky:not(.iwz-has-bottom-spacing) {
-	position: fixed !important;
-	bottom: 0 !important;
-	left: 0 !important;
-	right: 0 !important;
-	width: 100% !important;
-	z-index: 99999 !important;
-	margin: 0 !important;
-	padding: 0 !important;
-	box-sizing: border-box !important;
-	visibility: visible !important;
-	opacity: 1 !important;
-	/* Removed display: block to allow flexbox alignment */
-}
-
-/* Sticky banner with bottom spacing - wrapper handles positioning */
-.iwz-footer-banner.iwz-sticky.iwz-has-bottom-spacing {
-	/* Remove position: fixed - wrapper handles positioning */
-	z-index: 99999 !important;
-	margin: 0 !important;
-	padding: 0 !important;
-	box-sizing: border-box !important;
-	visibility: visible !important;
-	opacity: 1 !important;
-	/* bottom property is set via inline style with !important */
-}
-
-/* Ensure wrapper also gets sticky positioning when footer banner is sticky */
-.iwz-banner-wrapper.iwz-footer-wrapper.iwz-sticky-wrapper:not(.iwz-has-bottom-spacing):not(.iwz-has-custom-margin):not(.iwz-has-custom-padding) {
-	position: fixed !important;
-	bottom: 0 !important;
-	left: 0 !important;
-	right: 0 !important;
-	width: 100% !important;
-	z-index: 99999 !important;
-	margin: 0 !important;
-	padding: 0 !important;
-	box-sizing: border-box !important;
-	display: block !important;
-	visibility: visible !important;
-	opacity: 1 !important;
-}
-
-/* Sticky wrapper without bottom spacing but with custom margin/padding */
-.iwz-banner-wrapper.iwz-footer-wrapper.iwz-sticky-wrapper:not(.iwz-has-bottom-spacing).iwz-has-custom-margin,
-.iwz-banner-wrapper.iwz-footer-wrapper.iwz-sticky-wrapper:not(.iwz-has-bottom-spacing).iwz-has-custom-padding {
-	position: fixed !important;
-	bottom: 0 !important;
-	left: 0 !important;
-	right: 0 !important;
-	width: 100% !important;
-	z-index: 99999 !important;
-	/* Don't override margin and padding for custom ones */
-	box-sizing: border-box !important;
-	display: block !important;
-	visibility: visible !important;
-	opacity: 1 !important;
-}
-
-/* Sticky wrapper with bottom spacing - bottom position is controlled by inline style */
-.iwz-banner-wrapper.iwz-footer-wrapper.iwz-sticky-wrapper.iwz-has-bottom-spacing {
-	position: fixed !important;
-	left: 0 !important;
-	right: 0 !important;
-	width: 100% !important;
-	z-index: 99999 !important;
-	/* Don't override margin and padding for custom ones */
-	box-sizing: border-box !important;
-	display: block !important;
-	visibility: visible !important;
-	opacity: 1 !important;
-	/* bottom property is set via inline style with !important */
-}
-
-/* Sticky wrapper with bottom spacing and custom margin/padding */
-.iwz-banner-wrapper.iwz-footer-wrapper.iwz-sticky-wrapper.iwz-has-bottom-spacing.iwz-has-custom-margin,
-.iwz-banner-wrapper.iwz-footer-wrapper.iwz-sticky-wrapper.iwz-has-bottom-spacing.iwz-has-custom-padding {
-	position: fixed !important;
-	left: 0 !important;
-	right: 0 !important;
-	width: 100% !important;
-	z-index: 99999 !important;
-	/* Don't override margin and padding for custom ones */
-	box-sizing: border-box !important;
-	display: block !important;
-	visibility: visible !important;
-	opacity: 1 !important;
-	/* bottom property is set via inline style with !important */
-}
-
-/* Ensure iframe inside sticky banners displays properly */
-.iwz-footer-banner.iwz-sticky iframe,
-.iwz-banner-wrapper.iwz-footer-wrapper.iwz-sticky-wrapper iframe {
-	display: block !important;
-	visibility: visible !important;
-	opacity: 1 !important;
-	position: relative !important;
-	z-index: 1 !important;
-}
-
-/* Override iframe inline styles for proper alignment */
-.iwz-footer-banner.align-center iframe {
-	max-width: 100% !important;
-	display: block !important;
-	margin: 0 auto !important;
-	height: auto !important;
-}
-
-.iwz-footer-banner.align-left iframe {
-	max-width: 100% !important;
-	display: block !important;
-	margin: 0 !important;
-	height: auto !important;
-}
-
-.iwz-footer-banner.align-right iframe {
-	max-width: 100% !important;
-	display: block !important;
-	margin: 0 0 0 auto !important;
-	height: auto !important;
-}
-
-/*
- * Banner Wrapper Background Colors
- * Background colors are now controlled by settings with 'none' as default
- * No default background colors are applied
- */
-.iwz-banner-wrapper {
-	width: 100%;
-	padding: 0;
-	margin: 0;
-}
-
-/*
- * Legacy Class Support
- * Maintain backward compatibility with existing wrapper classes
- */
-
-/*
- * Blabber Footer Banner Location Styling
- * Container styling for banners placed in the footer area
- */
-.iwz-banner-container[data-location="blabber_footer"] {
-	margin-bottom: 1rem;               /* Bottom spacing for footer banners */
-	/* Removed text-align: center to allow per-banner alignment settings */
-}
-
-/*
- * Blabber Footer Banner Content Styling
- * Specific styling for iframe and resizable elements within footer banners
- * Ensures consistent sizing and spacing for footer banner content
- */
-.iwz-banner-container[data-location="blabber_footer"] iframe.blabber_resize.trx_addons_resize,
-.iwz-banner-container[data-location="blabber_footer"] .blabber_resize.trx_addons_resize,
-.iwz-banner-container[data-location="blabber_footer"] iframe {
-	height: 100px !important;          /* Consistent height with content_wrap banners */
-	max-height: 100px !important;      /* Prevent footer banners from growing too large */
-	width: 640px !important;           /* Standard banner width */
-	max-width: 100% !important;        /* Responsive width for mobile devices */
-	margin-bottom: 1rem;               /* Bottom spacing for visual separation */
-}
-
-/*
- * Legacy Blabber Header Banner Location Styling
- * Specific styles for banners placed in the header area
- */
-.iwz-header-banner {
-	margin-bottom: 1rem;               /* Bottom spacing for header banners */
-	margin-top: -1rem;
-	max-height: 120px;
-}
-.home .iwz-header-banner {
-	margin: 1rem 0 0 0;
-
-}
-
-/* Footer Banner Alignment (both sticky and non-sticky) - Using Flexbox */
-.iwz-footer-banner.align-left {
-	display: flex !important;
-	justify-content: flex-start !important;
-}
-
-.iwz-footer-banner.align-center {
-	display: flex !important;
-	justify-content: center !important;
-}
-
-.iwz-footer-banner.align-right {
-	display: flex !important;
-	justify-content: flex-end !important;
-}
-
-/* Sticky Footer Banner Alignment - Using Flexbox (more reliable for fixed positioning) */
-.iwz-footer-banner.iwz-sticky.align-left {
-	display: flex !important;
-	justify-content: flex-start !important;
-}
-
-.iwz-footer-banner.iwz-sticky.align-center {
-	display: flex !important;
-	justify-content: center !important;
-}
-
-.iwz-footer-banner.iwz-sticky.align-right {
-	display: flex !important;
-	justify-content: flex-end !important;
-}
+/* ========================================================================
+	7. LEGACY SUPPORT & COMPATIBILITY
+	======================================================================== */
 
 /*
  * Individual Banner Isolation
- * Prevent spacing conflicts between multiple banners by using unique IDs
+ * Prevents spacing conflicts between multiple banners using unique IDs
  */
 [id^="iwz-banner-wp_footer-"] {
-	/* Ensure each footer banner wrapper is isolated */
 	position: relative;
 	z-index: auto;
 }
 
-/* Sticky banners with unique IDs should maintain their individual positioning */
 [id^="iwz-banner-wp_footer-"].iwz-sticky-wrapper {
 	position: fixed !important;
 	left: 0 !important;
@@ -402,25 +483,21 @@
 	opacity: 1 !important;
 }
 
-/*
- * Individual Blabber Footer Banner Isolation
- * Prevent spacing conflicts between multiple blabber footer banners by using unique IDs
- * Ensures each banner maintains its individual settings and positioning
- */
 [id^="iwz-banner-blabber_footer_start-"] {
-	/* Ensure each blabber footer banner wrapper is isolated */
 	position: relative;
 	z-index: auto;
 }
 
-/* Blabber Footer Banner Wrapper Support */
+/*
+ * Blabber Footer Banner Wrapper Support
+ * Enhanced wrapper system for better control and customization
+ */
 .iwz-banner-wrapper.iwz-blabber-footer-wrapper {
 	width: 100%;
 	position: relative;
 	z-index: auto;
 }
 
-/* Blabber Footer Banner Alignment with Wrapper Support */
 .iwz-banner-wrapper.iwz-blabber-footer-wrapper.align-left {
 	display: flex !important;
 	justify-content: flex-start !important;
@@ -436,116 +513,51 @@
 	justify-content: flex-end !important;
 }
 
-/*
- * Blabber Footer Banner Custom Margin and Padding Support
- * Custom margin and padding are applied via inline styles with !important
- * The .iwz-has-custom-margin and .iwz-has-custom-padding classes indicate
- * that custom styling is applied but don't need CSS rules as they use inline styles
- */
-
-/* Specific targeting for inline style overrides */
-	.iwz-banner-container[data-location="blabber_footer"] div[id^="iwz-banner-blabber_footer_start-"].iwz-blabber-footer-banner.align-right iframe[style*="margin"] {
-		margin: 0 0 1rem 0 !important;
-	}
-
-	.iwz-banner-container[data-location="blabber_footer"] div[id^="iwz-banner-blabber_footer_start-"].iwz-blabber-footer-banner.align-center iframe[style*="margin"] {
-		margin: 0 auto 1rem auto !important;
-	}
-
-	.iwz-banner-container[data-location="blabber_footer"] div[id^="iwz-banner-blabber_footer_start-"].iwz-blabber-footer-banner.align-left iframe[style*="margin"] {
-		margin: 0 0 1rem 0 !important;
-	}
-
-/* Responsive alignment for blabber footer banner wrappers */
-@media screen and (min-width: 769px) {
-	/* Desktop wrapper alignment */
-	.iwz-banner-wrapper.iwz-blabber-footer-wrapper {
-		text-align: left;
-	}
-
-	.iwz-banner-wrapper.iwz-blabber-footer-wrapper.align-left {
-		text-align: left !important;
-	}
-
-	.iwz-banner-wrapper.iwz-blabber-footer-wrapper.align-center {
-		text-align: center !important;
-	}
-
-	.iwz-banner-wrapper.iwz-blabber-footer-wrapper.align-right {
-		text-align: right !important;
-	}
-}
-
-@media screen and (max-width: 768px) {
-	/* Mobile wrapper alignment - force center */
-	.iwz-banner-wrapper.iwz-blabber-footer-wrapper {
-		display: flex !important;
-		justify-content: center !important;
-		text-align: center !important;
-	}
-}
-
-/* Ensure blabber footer banners with unique IDs respect wrapper alignment */
-[id^="iwz-banner-blabber_footer_start-"] .iwz-banner-wrapper.iwz-blabber-footer-wrapper.align-left .iwz-blabber-footer-banner {
-	justify-content: flex-start !important;
-	text-align: left !important;
-}
-
-[id^="iwz-banner-blabber_footer_start-"] .iwz-banner-wrapper.iwz-blabber-footer-wrapper.align-center .iwz-blabber-footer-banner {
-	justify-content: center !important;
-	text-align: center !important;
-}
-
-[id^="iwz-banner-blabber_footer_start-"] .iwz-banner-wrapper.iwz-blabber-footer-wrapper.align-right .iwz-blabber-footer-banner {
-	justify-content: flex-end !important;
-	text-align: right !important;
-}
-
-/* Blabber Footer Banner Wrapper iframe alignment support */
-.iwz-banner-wrapper.iwz-blabber-footer-wrapper.align-left iframe {
-	margin: 0 0 1rem 0 !important;
-}
-
-.iwz-banner-wrapper.iwz-blabber-footer-wrapper.align-center iframe {
-	margin: 0 auto 1rem auto !important;
-}
-
-.iwz-banner-wrapper.iwz-blabber-footer-wrapper.align-right iframe {
-	margin: 0 0 1rem 0 !important;
-}
-
-/* Unique ID support for blabber footer banner wrapper iframe alignment */
+/* Legacy wrapper iframe alignment */
+.iwz-banner-wrapper.iwz-blabber-footer-wrapper.align-left iframe,
 [id^="iwz-banner-blabber_footer_start-"] .iwz-banner-wrapper.iwz-blabber-footer-wrapper.align-left iframe {
 	margin: 0 0 1rem 0 !important;
 }
 
+.iwz-banner-wrapper.iwz-blabber-footer-wrapper.align-center iframe,
 [id^="iwz-banner-blabber_footer_start-"] .iwz-banner-wrapper.iwz-blabber-footer-wrapper.align-center iframe {
 	margin: 0 auto 1rem auto !important;
 }
 
+.iwz-banner-wrapper.iwz-blabber-footer-wrapper.align-right iframe,
 [id^="iwz-banner-blabber_footer_start-"] .iwz-banner-wrapper.iwz-blabber-footer-wrapper.align-right iframe {
 	margin: 0 0 1rem 0 !important;
 }
 
 /*
- * Custom Margin and Padding Override for Blabber Footer Banners
- * Custom margin and padding are now applied via inline styles with !important
- * This ensures they override any conflicting CSS rules
+ * High-Specificity Iframe Overrides
+ * For handling complex theme interactions and inline style conflicts
  */
-
-/* Enhanced specificity for iframe alignment overrides */
+.iwz-banner-container[data-location="blabber_footer"] div[id^="iwz-banner-blabber_footer_start-"].iwz-blabber-footer-banner.align-right iframe[style*="margin"],
 div[id^="iwz-banner-blabber_footer_start-"].iwz-blabber-footer-banner.align-right iframe.blabber_noresize.trx_addons_noresize.trx_addons_resize {
 	margin: 0 0 1rem 0 !important;
 	margin-left: auto !important;
 	margin-right: 0 !important;
 }
 
+.iwz-banner-container[data-location="blabber_footer"] div[id^="iwz-banner-blabber_footer_start-"].iwz-blabber-footer-banner.align-center iframe[style*="margin"],
 div[id^="iwz-banner-blabber_footer_start-"].iwz-blabber-footer-banner.align-center iframe.blabber_noresize.trx_addons_noresize.trx_addons_resize {
 	margin: 0 auto 1rem auto !important;
 }
 
+.iwz-banner-container[data-location="blabber_footer"] div[id^="iwz-banner-blabber_footer_start-"].iwz-blabber-footer-banner.align-left iframe[style*="margin"],
 div[id^="iwz-banner-blabber_footer_start-"].iwz-blabber-footer-banner.align-left iframe.blabber_noresize.trx_addons_noresize.trx_addons_resize {
 	margin: 0 0 1rem 0 !important;
 	margin-left: 0 !important;
 	margin-right: auto !important;
 }
+
+/*
+ * ========================================================================
+ * END OF BANNER CONTAINER STYLES
+ * ========================================================================
+ *
+ * Note: Custom margin and padding values are applied via inline styles
+ * with !important declarations to ensure they override any conflicting CSS.
+ * The plugin automatically handles responsive adjustments and theme compatibility.
+ */

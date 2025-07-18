@@ -2,6 +2,34 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.9.23]
+* Bug Fix: Fixed inline margin not working for sticky footer banners due to `position: fixed` elements not supporting margin-based positioning
+* Enhancement: Modified sticky footer banner positioning to use `left` and `right` properties instead of margins for proper fixed positioning
+* Technical Enhancement: Added logic to parse margin values (e.g., "0 5rem") and convert horizontal margins to left/right positioning for sticky banners
+* CSS Enhancement: Updated CSS specificity rules to exclude elements with override class from conflicting positioning rules
+* Bug Fix: Fixed wrapper generation logic to ensure sticky footer banners with custom margins always get a wrapper even without other styling
+* Technical Fix: Enhanced wrapper condition logic to create wrappers for sticky footer banners with custom margins regardless of other style properties
+* Technical Fix: Improved wrapper HTML generation to only include style attributes when styles are present, preventing empty style attributes
+* User Experience: Sticky footer banners with custom margins now display correctly positioned from the edges as intended
+* Compatibility: Non-sticky banners continue to use regular margin properties and remain unaffected
+
+## [1.9.22]
+* Bug Fix: Fixed mobile display issue where Blabber Header banners (content_wrap_inside location) were covering blog titles
+* Enhancement: Added mobile-specific CSS for Blabber Header banners to use `display: inline-block` on screens ≤768px
+* Mobile Optimization: Improved mobile layout by preventing banners from taking full width and overlapping content
+* Responsive Design: Desktop display remains unchanged while mobile devices now show banners inline with content
+* User Experience: Blog titles and content are no longer obscured by header banners on mobile devices
+
+## [1.9.21]
+* Bug Fix: Fixed cut-off issues with banners in "Blabber Footer Start" area where iframes were getting cut off at the bottom
+* Bug Fix: Fixed alignment issues with left-aligned banners still appearing centered in Blabber Footer
+* Enhancement: Added proper height handling and overflow settings for Blabber Footer banners
+* Enhancement: Improved CSS specificity for banner alignment instead of using !important declarations
+* Enhancement: Added nested structure with specific alignment classes for better style control
+* Enhancement: Added unique IDs to all banner containers for more precise CSS targeting
+* Technical Enhancement: Implemented a more structured approach to banner alignment using multiple CSS classes
+* User Experience: Banners in Blabber Footer now display correctly without being cut off or misaligned
+
 ## [1.9.20]
 * Bug Fix: Fixed footer banners not being hidden by age verification system due to missing `code-block` class on outer wrapper.
 * Enhancement: Added `code-block` class to outer wrapper div for footer banners with styling to ensure age verification JavaScript can properly target them.
@@ -362,6 +390,20 @@ All notable changes to this project will be documented in this file.
 * prefix iwz
 * additional renaming
 
+## [1.2.0]
+* proper namespacing
+* plugin renaming
+
+## [1.0.1]
+* Removed dependency on Advanced Custom Fields (ACF) plugin
+* Added native WordPress settings API integration
+* Improved plugin architecture for better separation of concerns
+* Enhanced code organization for better maintainability
+* Optimized admin interface with better settings controls
+* Fixed potential issues in uninstall process
+
+## [1.0.0]
+* Initial release
 ## [1.2.0]
 * proper namespacing
 * plugin renaming
