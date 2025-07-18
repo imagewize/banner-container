@@ -24,7 +24,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * This file contains the core functionality for the Banner Container plugin,
  * handling banner display across various WordPress locations.
  *
- * @link       https://example.com
+ * @link       https://imagewize.com
  * @since      1.0.0
  *
  * @package    IWZ_Banner_Container
