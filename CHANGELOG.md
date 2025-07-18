@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.9.24] - 2025-07-18
+* Documentation Update: Updated README.md to focus on end-user instructions and moved technical details to DEVELOPMENT.md.
+* Documentation Update: Reflected current code quality status and deprecated sniff warning in DEVELOPMENT.md.
+* Version Update: Incremented plugin version to 1.9.24 in the main plugin file.
+
 ## [1.9.23]
 * Bug Fix: Fixed inline margin not working for sticky footer banners due to `position: fixed` elements not supporting margin-based positioning
 * Enhancement: Modified sticky footer banner positioning to use `left` and `right` properties instead of margins for proper fixed positioning
